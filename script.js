@@ -102,7 +102,7 @@ function handleDemoSend() {
     // Show typing indicator
     const typing = document.createElement('div');
     typing.className = 'demo-msg bot';
-    typing.innerHTML = '<p style="opacity: 0.5">Adaeze is typing...</p>';
+    typing.innerHTML = '<p style="opacity: 0.5">Temitope\'s AI is typing...</p>';
     typing.id = 'typing';
     demoMessages.appendChild(typing);
     demoMessages.scrollTop = demoMessages.scrollHeight;
