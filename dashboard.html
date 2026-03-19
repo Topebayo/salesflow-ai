@@ -463,8 +463,14 @@
             <a href="#" class="nav-item active" onclick="showSection('dashboard', this)">
                 <i class="fa-solid fa-chart-pie"></i> Dashboard
             </a>
+            <a href="#" class="nav-item" onclick="showSection('orders', this)">
+                <i class="fa-solid fa-box"></i> Orders
+            </a>
             <a href="#" class="nav-item" onclick="showSection('chatLogs', this)">
                 <i class="fa-brands fa-whatsapp"></i> Chat Logs
+            </a>
+            <a href="#" class="nav-item" onclick="showSection('handoffs', this)">
+                <i class="fa-solid fa-hand"></i> Handoffs <span id="handoffBadge" style="background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;display:none;align-items:center;justify-content:center;font-size:0.65rem;margin-left:auto"></span>
             </a>
             <a href="#" class="nav-item" onclick="showSection('settings', this)">
                 <i class="fa-solid fa-gear"></i> Settings
@@ -626,6 +632,52 @@
         </div>
     </main>
 
+    <!-- Orders Section -->
+    <main class="main-content section" id="orders" style="display: none;">
+        <header class="header">
+            <div>
+                <h1>Orders</h1>
+                <p style="color: #94a3b8; margin-top: 5px;">Track and manage all customer orders</p>
+            </div>
+            <button onclick="loadOrders()" style="background: rgba(79,172,254,0.15); border: 1px solid rgba(79,172,254,0.3); color: #4facfe; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+        </header>
+
+        <!-- Revenue Stats -->
+        <div class="stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;"><i class="fa-solid fa-receipt"></i></div>
+                <div class="stat-value" id="valTotalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(16,185,129,0.1); color: #10b981;"><i class="fa-solid fa-naira-sign"></i></div>
+                <div class="stat-value" id="valTotalRevenue">0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(168,85,247,0.1); color: #a855f7;"><i class="fa-solid fa-clock"></i></div>
+                <div class="stat-value" id="valOrdersToday">0</div>
+                <div class="stat-label">Orders Today</div>
+            </div>
+        </div>
+
+        <!-- Order List -->
+        <h2 class="section-title">All Orders</h2>
+        <div id="orderList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+    </main>
+
+    <!-- Handoffs Section -->
+    <main class="main-content section" id="handoffs" style="display: none;">
+        <header class="header">
+            <div>
+                <h1>Human Handoffs</h1>
+                <p style="color: #94a3b8; margin-top: 5px;">Customers waiting to speak to you</p>
+            </div>
+            <button onclick="loadHandoffs()" style="background: rgba(79,172,254,0.15); border: 1px solid rgba(79,172,254,0.3); color: #4facfe; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+        </header>
+        <div id="handoffList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+    </main>
+
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
@@ -644,12 +696,14 @@
 
             if (sectionId === 'dashboard') {
                 dashMain.style.display = '';
-                document.getElementById('chatLogs').style.display = 'none';
-                document.getElementById('settings').style.display = 'none';
+                document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
             } else {
                 dashMain.style.display = 'none';
+                document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
                 document.getElementById(sectionId).style.display = '';
                 if (sectionId === 'chatLogs') loadChats();
+                if (sectionId === 'orders') loadOrders();
+                if (sectionId === 'handoffs') loadHandoffs();
             }
 
             // Update active nav
@@ -659,6 +713,131 @@
             // Close mobile sidebar
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+
+        // Load handoff count on page load
+        async function checkHandoffs() {
+            try {
+                const res = await fetch(API_BASE + '/handoffs');
+                const data = await res.json();
+                const badge = document.getElementById('handoffBadge');
+                if (data.handoffs && data.handoffs.length > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = data.handoffs.length;
+                } else {
+                    badge.style.display = 'none';
+                }
+            } catch(e) {}
+        }
+        checkHandoffs();
+        setInterval(checkHandoffs, 30000);
+
+        async function loadOrders() {
+            const orderList = document.getElementById('orderList');
+            orderList.innerHTML = '<div class="loader" style="display:block"></div>';
+
+            try {
+                const res = await fetch(API_BASE + '/orders');
+                const data = await res.json();
+
+                // Update revenue stats
+                if (data.stats) {
+                    document.getElementById('valTotalOrders').textContent = data.stats.total_orders || 0;
+                    const rev = data.stats.total_revenue || 0;
+                    document.getElementById('valTotalRevenue').textContent = rev >= 1000 ? (rev/1000).toFixed(0) + 'k' : rev;
+                    document.getElementById('valOrdersToday').textContent = data.stats.orders_today || 0;
+                }
+
+                if (!data.orders || data.orders.length === 0) {
+                    orderList.innerHTML = '<div class="empty-state"><i class="fa-solid fa-box" style="font-size:3rem;margin-bottom:1rem;color:#64748b"></i><p>No orders yet. Orders will appear here when customers place them.</p></div>';
+                    return;
+                }
+
+                orderList.innerHTML = '';
+                const statusColors = { pending: '#f59e0b', paid: '#10b981', dispatched: '#4facfe', delivered: '#a855f7', cancelled: '#ef4444' };
+
+                data.orders.forEach(order => {
+                    const card = document.createElement('div');
+                    card.className = 'panel';
+                    card.style.padding = '1.25rem';
+                    const color = statusColors[order.status] || '#94a3b8';
+                    const date = new Date(order.created_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+                    card.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+                            <div>
+                                <span style="color:#fff;font-weight:600">#${order.id} — ${order.customer_name || 'Unknown'}</span>
+                                <span style="color:#64748b;font-size:0.8rem;margin-left:8px">${order.phone_number}</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span class="badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${order.status.toUpperCase()}</span>
+                                <span style="color:#64748b;font-size:0.75rem">${date}</span>
+                            </div>
+                        </div>
+                        <div style="margin-top:0.75rem;color:#e2e8f0;font-size:0.9rem">
+                            <i class="fa-solid fa-cart-shopping" style="color:#94a3b8;margin-right:6px"></i> ${order.items}
+                        </div>
+                        ${order.total_amount > 0 ? '<div style="margin-top:0.5rem;color:#10b981;font-weight:600">₦' + order.total_amount.toLocaleString() + '</div>' : ''}
+                        ${order.delivery_address ? '<div style="margin-top:0.5rem;color:#94a3b8;font-size:0.85rem"><i class="fa-solid fa-location-dot" style="margin-right:6px"></i>' + order.delivery_address + '</div>' : ''}
+                        <div style="margin-top:0.75rem;display:flex;gap:6px;flex-wrap:wrap">
+                            ${['paid','dispatched','delivered','cancelled'].map(s => 
+                                s !== order.status ? '<button onclick="updateOrderStatus(' + order.id + ',\'' + s + '\')" style="background:' + (statusColors[s]||'#666') + '22;color:' + (statusColors[s]||'#666') + ';border:1px solid ' + (statusColors[s]||'#666') + '44;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem">' + s + '</button>' : ''
+                            ).join('')}
+                        </div>
+                    `;
+                    orderList.appendChild(card);
+                });
+            } catch (err) {
+                orderList.innerHTML = '<div class="empty-state"><p>Error loading orders.</p></div>';
+            }
+        }
+
+        async function updateOrderStatus(orderId, status) {
+            try {
+                await fetch(API_BASE + '/orders/' + orderId + '/status?status=' + status, { method: 'PUT' });
+                loadOrders();
+            } catch(e) { alert('Error updating order'); }
+        }
+
+        async function loadHandoffs() {
+            const list = document.getElementById('handoffList');
+            list.innerHTML = '<div class="loader" style="display:block"></div>';
+            try {
+                const res = await fetch(API_BASE + '/handoffs');
+                const data = await res.json();
+                if (!data.handoffs || data.handoffs.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-check-circle" style="font-size:3rem;color:#10b981;margin-bottom:1rem"></i><p>No pending handoffs. All customers are being handled by the AI.</p></div>';
+                    return;
+                }
+                list.innerHTML = '';
+                data.handoffs.forEach(h => {
+                    const card = document.createElement('div');
+                    card.className = 'panel';
+                    card.style.padding = '1.25rem';
+                    card.style.borderLeft = '3px solid #ef4444';
+                    card.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+                            <div>
+                                <span style="color:#ef4444;font-weight:600"><i class="fa-solid fa-exclamation-circle"></i> ${h.name || 'Unknown'}</span>
+                                <span style="color:#64748b;font-size:0.8rem;margin-left:8px">${h.phone_number}</span>
+                            </div>
+                            <button onclick="resumeBot('${h.phone_number}')" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-size:0.85rem"><i class="fa-solid fa-robot"></i> Resume Bot</button>
+                        </div>
+                        <div style="color:#94a3b8;font-size:0.8rem;margin-top:0.5rem">Last active: ${new Date(h.last_seen).toLocaleString()}</div>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch(e) {
+                list.innerHTML = '<div class="empty-state"><p>Error loading handoffs.</p></div>';
+            }
+        }
+
+        async function resumeBot(phone) {
+            try {
+                await fetch(API_BASE + '/handoffs/' + encodeURIComponent(phone) + '/resume', { method: 'POST' });
+                loadHandoffs();
+                checkHandoffs();
+            } catch(e) { alert('Error resuming bot'); }
         }
 
         async function loadChats() {
@@ -680,7 +859,6 @@
                     card.className = 'panel';
                     card.style.cursor = 'pointer';
 
-                    // Build messages HTML
                     let msgsHtml = '';
                     chat.messages.forEach(m => {
                         const isBot = m.role === 'model' || m.role === 'assistant';
