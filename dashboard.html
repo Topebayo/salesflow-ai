@@ -896,7 +896,7 @@
                 statusDiv.style.display = 'block';
                 if (data.status === 'success') {
                     statusDiv.style.color = '#10b981';
-                    statusDiv.innerHTML = \`<i class="fa-solid fa-check-circle"></i> Broadcast complete! Sent to \${data.sent} contacts (\${data.failed} failed).\`;
+                    statusDiv.innerHTML = `<i class="fa-solid fa-check-circle"></i> Broadcast complete! Sent to ${data.sent} contacts (${data.failed} failed).`;
                     document.getElementById('broadcastMessage').value = '';
                 } else {
                     throw new Error('API Error');
