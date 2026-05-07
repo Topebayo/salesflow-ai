@@ -472,6 +472,9 @@
             <a href="#" class="nav-item" onclick="showSection('handoffs', this)">
                 <i class="fa-solid fa-hand"></i> Handoffs <span id="handoffBadge" style="background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;display:none;align-items:center;justify-content:center;font-size:0.65rem;margin-left:auto"></span>
             </a>
+            <a href="#" class="nav-item" onclick="showSection('broadcast', this)">
+                <i class="fa-solid fa-bullhorn"></i> Broadcast
+            </a>
             <a href="#" class="nav-item" onclick="showSection('settings', this)">
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
@@ -678,6 +681,29 @@
         <div id="handoffList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
     </main>
 
+    <!-- Broadcast Section -->
+    <main class="main-content section" id="broadcast" style="display: none;">
+        <header class="header">
+            <div>
+                <h1>Bulk Broadcast</h1>
+                <p style="color: #94a3b8; margin-top: 5px;">Send promotional messages to all captured contacts</p>
+            </div>
+        </header>
+        
+        <div class="panel" style="padding: 2rem; max-width: 800px;">
+            <h3 style="color: #fff; margin: 0 0 1rem 0; font-family: Outfit;">Create Broadcast Message</h3>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                This message will be sent to <strong>all</strong> contacts currently saved in the database. Use this for new stock alerts, weekend promos, or special discounts.
+            </p>
+            <textarea id="broadcastMessage" placeholder="e.g. 🚀 Weekend Promo! Get 10% off all tequila this weekend only..." style="width: 100%; height: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; padding: 1rem; font-family: inherit; resize: vertical; margin-bottom: 1rem;"></textarea>
+            
+            <button id="sendBroadcastBtn" onclick="sendBroadcast()" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-paper-plane"></i> Send Broadcast
+            </button>
+            <div id="broadcastStatus" style="margin-top: 1rem; font-size: 0.9rem; display: none;"></div>
+        </div>
+    </main>
+
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
@@ -838,6 +864,51 @@
                 loadHandoffs();
                 checkHandoffs();
             } catch(e) { alert('Error resuming bot'); }
+        }
+
+        async function sendBroadcast() {
+            const btn = document.getElementById('sendBroadcastBtn');
+            const statusDiv = document.getElementById('broadcastStatus');
+            const message = document.getElementById('broadcastMessage').value.trim();
+
+            if (!message) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#ef4444';
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please enter a message to broadcast.';
+                return;
+            }
+
+            if (!confirm('Are you sure you want to send this message to ALL your contacts?')) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            statusDiv.style.display = 'none';
+
+            try {
+                const res = await fetch(API_BASE + '/broadcast', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await res.json();
+                
+                statusDiv.style.display = 'block';
+                if (data.status === 'success') {
+                    statusDiv.style.color = '#10b981';
+                    statusDiv.innerHTML = \`<i class="fa-solid fa-check-circle"></i> Broadcast complete! Sent to \${data.sent} contacts (\${data.failed} failed).\`;
+                    document.getElementById('broadcastMessage').value = '';
+                } else {
+                    throw new Error('API Error');
+                }
+            } catch (err) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#ef4444';
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Failed to send broadcast. Check server logs.';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Broadcast';
+            }
         }
 
         async function loadChats() {
