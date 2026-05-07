@@ -693,9 +693,15 @@
         <div class="panel" style="padding: 2rem; max-width: 800px;">
             <h3 style="color: #fff; margin: 0 0 1rem 0; font-family: Outfit;">Create Broadcast Message</h3>
             <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">
-                This message will be sent to <strong>all</strong> contacts currently saved in the database. Use this for new stock alerts, weekend promos, or special discounts.
+                Write your promotional message below. You can send it to all contacts or select specific ones.
             </p>
             <textarea id="broadcastMessage" placeholder="e.g. 🚀 Weekend Promo! Get 10% off all tequila this weekend only..." style="width: 100%; height: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; padding: 1rem; font-family: inherit; resize: vertical; margin-bottom: 1rem;"></textarea>
+            
+            <h4 style="color: #fff; margin: 1rem 0 0.5rem 0; font-family: Outfit;">Select Recipients</h4>
+            <div id="broadcastRecipients" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem; max-height: 200px; overflow-y: auto; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <!-- Checkboxes will be populated here -->
+                <div class="loader" style="display:block"></div>
+            </div>
             
             <button id="sendBroadcastBtn" onclick="sendBroadcast()" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-paper-plane"></i> Send Broadcast
@@ -730,6 +736,7 @@
                 if (sectionId === 'chatLogs') loadChats();
                 if (sectionId === 'orders') loadOrders();
                 if (sectionId === 'handoffs') loadHandoffs();
+                if (sectionId === 'broadcast') loadBroadcastContacts();
             }
 
             // Update active nav
@@ -866,10 +873,41 @@
             } catch(e) { alert('Error resuming bot'); }
         }
 
+        async function loadBroadcastContacts() {
+            const container = document.getElementById('broadcastRecipients');
+            container.innerHTML = '<div class="loader" style="display:block"></div>';
+            try {
+                const res = await fetch(API_BASE + '/contacts');
+                const data = await res.json();
+                if (!data.contacts || data.contacts.length === 0) {
+                    container.innerHTML = '<div style="color:#94a3b8; font-size:0.9rem;">No contacts found in the database.</div>';
+                    return;
+                }
+                
+                let html = '<label style="display:flex; align-items:center; gap:8px; color:#fff; cursor:pointer; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:0.5rem;"><input type="checkbox" id="selectAllRecipients" checked onchange="toggleAllRecipients(this)"> <strong>Select All</strong></label>';
+                
+                data.contacts.forEach(c => {
+                    const name = c.name ? c.name : 'Unknown';
+                    html += `<label style="display:flex; align-items:center; gap:8px; color:#94a3b8; cursor:pointer;"><input type="checkbox" class="recipient-checkbox" value="${c.phone_number}" checked> ${name} (${c.phone_number})</label>`;
+                });
+                container.innerHTML = html;
+            } catch(e) {
+                container.innerHTML = '<div style="color:#ef4444; font-size:0.9rem;">Error loading contacts.</div>';
+            }
+        }
+
+        function toggleAllRecipients(source) {
+            const checkboxes = document.querySelectorAll('.recipient-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+
         async function sendBroadcast() {
             const btn = document.getElementById('sendBroadcastBtn');
             const statusDiv = document.getElementById('broadcastStatus');
             const message = document.getElementById('broadcastMessage').value.trim();
+
+            const selectedCheckboxes = document.querySelectorAll('.recipient-checkbox:checked');
+            const selectedPhones = Array.from(selectedCheckboxes).map(cb => cb.value);
 
             if (!message) {
                 statusDiv.style.display = 'block';
@@ -878,7 +916,14 @@
                 return;
             }
 
-            if (!confirm('Are you sure you want to send this message to ALL your contacts?')) return;
+            if (selectedPhones.length === 0) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#ef4444';
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please select at least one recipient.';
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to send this message to ${selectedPhones.length} contact(s)?`)) return;
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
@@ -888,7 +933,7 @@
                 const res = await fetch(API_BASE + '/broadcast', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({ message: message, phones: selectedPhones })
                 });
                 
                 const data = await res.json();
