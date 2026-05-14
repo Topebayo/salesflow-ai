@@ -173,9 +173,9 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptaWZrZG1yeWJqdWVpaXBrcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjI0MDAsImV4cCI6MjA5NDA5ODQwMH0.Ft8iqBoeDzkpaxfnn7p4sxKpdq3uDy0GVW_O1LnQALk';
         
         // Only initialize if keys are provided to avoid errors
-        let supabase = null;
+        let supabaseClient = null;
         if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
-            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         let isSignUp = false;
@@ -200,7 +200,7 @@
             const errorEl = document.getElementById('errorMessage');
             const submitBtn = document.getElementById('submitBtn');
             
-            if (!supabase) {
+            if (!supabaseClient) {
                 errorEl.innerText = "Supabase keys not configured in login.html yet!";
                 errorEl.style.display = 'block';
                 return;
@@ -215,7 +215,7 @@
                     // Sign Up Logic
                     if (!businessName) throw new Error("Business name is required");
                     
-                    const { data, error } = await supabase.auth.signUp({
+                    const { data, error } = await supabaseClient.auth.signUp({
                         email,
                         password,
                         options: {
@@ -229,7 +229,7 @@
                     
                     // Create business record in our new table
                     if (data.user) {
-                        const { error: dbError } = await supabase
+                        const { error: dbError } = await supabaseClient
                             .from('businesses')
                             .insert([
                                 { 
@@ -247,7 +247,7 @@
                     
                 } else {
                     // Login Logic
-                    const { data, error } = await supabase.auth.signInWithPassword({
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
                         email,
                         password
                     });
@@ -268,8 +268,8 @@
         
         // Check if already logged in
         async function checkSession() {
-            if (!supabase) return;
-            const { data } = await supabase.auth.getSession();
+            if (!supabaseClient) return;
+            const { data } = await supabaseClient.auth.getSession();
             if (data.session) {
                 window.location.href = 'dashboard.html'; // Redirect if already authenticated
             }
