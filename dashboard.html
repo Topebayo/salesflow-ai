@@ -889,18 +889,28 @@
             orderList.innerHTML = '<div class="loader" style="display:block"></div>';
 
             try {
-                const res = await fetch(API_BASE + '/orders');
+                const { data: ordersData, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .eq('business_id', businessId)
+                    .order('created_at', { ascending: false });
+                    
+                if (error) throw error;
                 const data = await res.json();
 
                 // Update revenue stats
-                if (data.stats) {
-                    document.getElementById('valTotalOrders').textContent = data.stats.total_orders || 0;
-                    const rev = data.stats.total_revenue || 0;
-                    document.getElementById('valTotalRevenue').textContent = rev >= 1000 ? (rev/1000).toFixed(0) + 'k' : rev;
-                    document.getElementById('valOrdersToday').textContent = data.stats.orders_today || 0;
-                }
 
-                if (!data.orders || data.orders.length === 0) {
+                // Update revenue stats calculation from ordersData
+                const totalOrders = ordersData.length;
+                const totalRevenue = ordersData.reduce((sum, o) => sum + (o.total_amount || 0), 0);
+                const today = new Date().toDateString();
+                const ordersToday = ordersData.filter(o => new Date(o.created_at).toDateString() === today).length;
+
+                document.getElementById('valTotalOrders').textContent = totalOrders || 0;
+                document.getElementById('valTotalRevenue').textContent = totalRevenue >= 1000 ? (totalRevenue/1000).toFixed(0) + 'k' : totalRevenue;
+                document.getElementById('valOrdersToday').textContent = ordersToday || 0;
+
+                if (!ordersData || ordersData.length === 0) {
                     orderList.innerHTML = '<div class="empty-state"><i class="fa-solid fa-box" style="font-size:3rem;margin-bottom:1rem;color:#64748b"></i><p>No orders yet. Orders will appear here when customers place them.</p></div>';
                     return;
                 }
@@ -908,7 +918,7 @@
                 orderList.innerHTML = '';
                 const statusColors = { pending: '#f59e0b', paid: '#10b981', dispatched: '#4facfe', delivered: '#a855f7', cancelled: '#ef4444' };
 
-                data.orders.forEach(order => {
+                ordersData.forEach(order => {
                     const card = document.createElement('div');
                     card.className = 'panel';
                     card.style.padding = '1.25rem';
@@ -955,14 +965,21 @@
             const list = document.getElementById('handoffList');
             list.innerHTML = '<div class="loader" style="display:block"></div>';
             try {
-                const res = await fetch(API_BASE + '/handoffs');
-                const data = await res.json();
-                if (!data.handoffs || data.handoffs.length === 0) {
+                const { data: handoffs, error } = await supabaseClient
+                    .from('contacts')
+                    .select('*')
+                    .eq('business_id', businessId)
+                    .eq('human_handoff', true)
+                    .order('last_seen', { ascending: false });
+                    
+                if (error) throw error;
+                
+                if (!handoffs || handoffs.length === 0) {
                     list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-check-circle" style="font-size:3rem;color:#10b981;margin-bottom:1rem"></i><p>No pending handoffs. All customers are being handled by the AI.</p></div>';
                     return;
                 }
                 list.innerHTML = '';
-                data.handoffs.forEach(h => {
+                handoffs.forEach(h => {
                     const card = document.createElement('div');
                     card.className = 'panel';
                     card.style.padding = '1.25rem';
@@ -996,16 +1013,21 @@
             const container = document.getElementById('broadcastRecipients');
             container.innerHTML = '<div class="loader" style="display:block"></div>';
             try {
-                const res = await fetch(API_BASE + '/contacts');
-                const data = await res.json();
-                if (!data.contacts || data.contacts.length === 0) {
+                const { data: contacts, error } = await supabaseClient
+                    .from('contacts')
+                    .select('phone_number, name')
+                    .eq('business_id', businessId)
+                    .order('last_seen', { ascending: false });
+                    
+                if (error) throw error;
+                if (!contacts || contacts.length === 0) {
                     container.innerHTML = '<div style="color:#94a3b8; font-size:0.9rem;">No contacts found in the database.</div>';
                     return;
                 }
                 
                 let html = '<label style="display:flex; align-items:center; gap:8px; color:#fff; cursor:pointer; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:0.5rem;"><input type="checkbox" id="selectAllRecipients" checked onchange="toggleAllRecipients(this)"> <strong>Select All</strong></label>';
                 
-                data.contacts.forEach(c => {
+                contacts.forEach(c => {
                     const name = c.name ? c.name : 'Unknown';
                     html += `<label style="display:flex; align-items:center; gap:8px; color:#94a3b8; cursor:pointer;"><input type="checkbox" class="recipient-checkbox" value="${c.phone_number}" checked> ${name} (${c.phone_number})</label>`;
                 });
@@ -1080,22 +1102,29 @@
             chatList.innerHTML = '<div class="loader" style="display:block"></div>';
 
             try {
-                const res = await fetch(API_BASE + '/chats');
-                const data = await res.json();
+                // Fetch contacts along with their conversations
+                const { data: chatsData, error } = await supabaseClient
+                    .from('contacts')
+                    .select('phone_number, name, message_count, conversations(role, content, timestamp)')
+                    .eq('business_id', businessId)
+                    .order('last_seen', { ascending: false });
 
-                if (!data.chats || data.chats.length === 0) {
+                if (error) throw error;
+
+                if (!chatsData || chatsData.length === 0) {
                     chatList.innerHTML = '<div class="empty-state"><i class="fa-brands fa-whatsapp" style="font-size:3rem;margin-bottom:1rem"></i><p>No conversations yet</p></div>';
                     return;
                 }
 
                 chatList.innerHTML = '';
-                data.chats.forEach(chat => {
+                chatsData.forEach(chat => {
                     const card = document.createElement('div');
                     card.className = 'panel';
                     card.style.cursor = 'pointer';
 
-                    let msgsHtml = '';
-                    chat.messages.forEach(m => {
+                    // Sort conversations by timestamp ascending
+                    const sortedConvos = chat.conversations ? chat.conversations.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp)) : [];
+                    sortedConvos.forEach(m => {
                         const isBot = m.role === 'model' || m.role === 'assistant';
                         const align = isBot ? 'flex-end' : 'flex-start';
                         const bg = isBot ? 'rgba(79,172,254,0.15)' : 'rgba(255,255,255,0.05)';
