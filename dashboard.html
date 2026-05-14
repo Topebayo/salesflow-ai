@@ -815,19 +815,24 @@
 
         // Load handoff count on page load
         async function checkHandoffs() {
+            if (!businessId) return;
             try {
-                const res = await fetch(API_BASE + '/handoffs');
-                const data = await res.json();
+                const { data: handoffData } = await supabaseClient
+                    .from('contacts')
+                    .select('phone_number', { count: 'exact' })
+                    .eq('business_id', businessId)
+                    .eq('human_handoff', true);
                 const badge = document.getElementById('handoffBadge');
-                if (data.handoffs && data.handoffs.length > 0) {
+                if (handoffData && handoffData.length > 0) {
                     badge.style.display = 'flex';
-                    badge.textContent = data.handoffs.length;
+                    badge.textContent = handoffData.length;
                 } else {
                     badge.style.display = 'none';
                 }
             } catch(e) {}
         }
-        checkHandoffs();
+        // Delay initial check to let auth finish
+        setTimeout(checkHandoffs, 2000);
         setInterval(checkHandoffs, 30000);
 
         // ---- Settings / Agent Mode ----
@@ -852,9 +857,12 @@
 
         async function loadSettings() {
             try {
-                const res = await fetch(API_BASE + '/settings');
-                const data = await res.json();
-                currentMode = data.bot_mode || 'retail';
+                const { data: business } = await supabaseClient
+                    .from('businesses')
+                    .select('bot_mode')
+                    .eq('id', businessId)
+                    .single();
+                currentMode = business?.bot_mode || 'retail';
                 selectMode(currentMode);
             } catch(e) {}
         }
@@ -862,14 +870,12 @@
         async function saveSettings() {
             const statusEl = document.getElementById('settingsStatus');
             try {
-                const res = await fetch(API_BASE + '/settings', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ bot_mode: currentMode, business_name: 'SalesFlow AI' })
-                });
-                const data = await res.json();
+                const { error } = await supabaseClient
+                    .from('businesses')
+                    .update({ bot_mode: currentMode })
+                    .eq('id', businessId);
                 statusEl.style.display = 'block';
-                if (data.status === 'success') {
+                if (!error) {
                     statusEl.style.color = '#10b981';
                     statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Mode saved! AI will switch on next message.';
                 } else {
@@ -896,7 +902,6 @@
                     .order('created_at', { ascending: false });
                     
                 if (error) throw error;
-                const data = await res.json();
 
                 // Update revenue stats
 
@@ -1122,6 +1127,7 @@
                     card.className = 'panel';
                     card.style.cursor = 'pointer';
 
+                    let msgsHtml = '';
                     // Sort conversations by timestamp ascending
                     const sortedConvos = chat.conversations ? chat.conversations.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp)) : [];
                     sortedConvos.forEach(m => {
