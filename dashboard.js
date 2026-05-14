@@ -1,10 +1,13 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    // Wait for the auth check from dashboard.html to finish
+// Wait for auth to finish, then fetch dashboard data
+async function initDashboard() {
     await requireAuth();
     if (businessId) {
         fetchData();
     }
-});
+}
+
+// Start initialization when page loads
+document.addEventListener("DOMContentLoaded", initDashboard);
 
 async function fetchData() {
     const loader = document.getElementById("loader");
@@ -15,10 +18,10 @@ async function fetchData() {
     content.style.opacity = "0.5";
 
     try {
-        // Fetch contacts for THIS business only using Supabase RLS
+        // Fetch contacts for THIS business only
         const { data: contactsData, error } = await supabaseClient
             .from('contacts')
-            .select('*, conversations(count)')
+            .select('*')
             .eq('business_id', businessId)
             .order('last_seen', { ascending: false });
 
@@ -32,8 +35,7 @@ async function fetchData() {
         if (contactsData) {
             contactsData.forEach(c => {
                 totalMsgs += (c.message_count || 0);
-                // Simple logic: if they sent a message in the last 24h, they are active
-                const lastSeen = new Date(c.last_seen + 'Z');
+                const lastSeen = new Date(c.last_seen);
                 const hoursSince = (new Date() - lastSeen) / (1000 * 60 * 60);
                 if (hoursSince < 24) activeChats++;
             });
@@ -55,8 +57,8 @@ async function fetchData() {
                 const name = contact.name || "<span style='color:#64748b;font-style:italic;'>Unknown</span>";
                 const msgs = contact.message_count;
 
-                const firstContact = new Date(contact.first_seen + 'Z').toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                const lastActive = new Date(contact.last_seen + 'Z').toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const firstContact = new Date(contact.first_seen).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const lastActive = new Date(contact.last_seen).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
                 let statusBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Active</span>`;
                 if (msgs < 3) statusBadge = `<span class="badge" style="background: rgba(79, 172, 254, 0.1); color: #4facfe;">New Lead</span>`;
@@ -80,8 +82,12 @@ async function fetchData() {
         content.style.opacity = "1";
 
     } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        alert("Could not load dashboard data from database.");
+        console.error("Dashboard error:", error);
+        // Show empty state instead of error popup for new businesses
+        leadsBody.innerHTML = `<tr><td colspan="6" class="empty-state">No leads captured yet. Your AI is waiting for messages!</td></tr>`;
+        document.getElementById("valLeads").innerText = 0;
+        document.getElementById("valActiveChats").innerText = 0;
+        document.getElementById("valTotalMsgs").innerText = 0;
         loader.style.display = "none";
         content.style.display = "block";
         content.style.opacity = "1";

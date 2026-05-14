@@ -647,54 +647,25 @@
             </div>
 
             <div class="panel" style="padding: 2rem;">
-                <h3 style="color: #fff; margin: 0 0 1.5rem 0; font-family: Outfit;">Bot Information</h3>
+                <h3 style="color: #fff; margin: 0 0 1.5rem 0; font-family: Outfit;">Business Information</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
-                        <div style="color: #94a3b8; font-size: 0.8rem;">Bot Name</div>
-                        <div style="color: #fff; font-size: 1.1rem; margin-top: 4px;">Temitope's AI</div>
+                        <div style="color: #94a3b8; font-size: 0.8rem;">Business Name</div>
+                        <div id="settingsBusinessName" style="color: #fff; font-size: 1.1rem; margin-top: 4px;">Loading...</div>
                     </div>
                     <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
                         <div style="color: #94a3b8; font-size: 0.8rem;">AI Engine</div>
                         <div style="color: #fff; font-size: 1.1rem; margin-top: 4px;">Groq (Llama 3.1)</div>
                     </div>
                     <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
-                        <div style="color: #94a3b8; font-size: 0.8rem;">Business</div>
-                        <div style="color: #fff; font-size: 1.1rem; margin-top: 4px;">Premium Drinks Lagos</div>
+                        <div style="color: #94a3b8; font-size: 0.8rem;">Plan</div>
+                        <div style="color: #10b981; font-size: 1.1rem; margin-top: 4px;">Free Trial</div>
                     </div>
                     <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
-                        <div style="color: #94a3b8; font-size: 0.8rem;">Instagram</div>
-                        <div style="color: #4facfe; font-size: 1.1rem; margin-top: 4px;">@jiggy_kunta</div>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
-                        <div style="color: #94a3b8; font-size: 0.8rem;">Payment</div>
-                        <div style="color: #fff; font-size: 1.1rem; margin-top: 4px;">OPay - 8137048851</div>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
-                        <div style="color: #94a3b8; font-size: 0.8rem;">Business Hours</div>
-                        <div style="color: #fff; font-size: 1.1rem; margin-top: 4px;">9am - 10pm daily</div>
+                        <div style="color: #94a3b8; font-size: 0.8rem;">Status</div>
+                        <div style="color: #10b981; font-size: 1.1rem; margin-top: 4px;">● Active</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="panel" style="padding: 2rem;">
-                <h3 style="color: #fff; margin: 0 0 1.5rem 0; font-family: Outfit;">API Endpoints</h3>
-                    <div
-                        style="background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; color: #4facfe;">
-                        GET /stats &nbsp;&nbsp;- Dashboard stats</div>
-                    <div
-                        style="background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; color: #a855f7;">
-                        GET /contacts - All leads</div>
-                    <div
-                        style="background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; color: #f59e0b;">
-                        GET /chats &nbsp;&nbsp;- Chat logs</div>
-                </div>
-            </div>
-
-            <div class="panel" style="padding: 2rem;">
-                <h3 style="color: #fff; margin: 0 0 1rem 0; font-family: Outfit;">Server URL</h3>
-                <div
-                    style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; color: #4facfe; font-family: monospace; word-break: break-all;">
-                    https://salesflow-ai-bot.onrender.com</div>
             </div>
         </div>
     </main>
@@ -859,11 +830,13 @@
             try {
                 const { data: business } = await supabaseClient
                     .from('businesses')
-                    .select('bot_mode')
+                    .select('bot_mode, name')
                     .eq('id', businessId)
                     .single();
                 currentMode = business?.bot_mode || 'retail';
                 selectMode(currentMode);
+                const nameEl = document.getElementById('settingsBusinessName');
+                if (nameEl && business?.name) nameEl.textContent = business.name;
             } catch(e) {}
         }
 
