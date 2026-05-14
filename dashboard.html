@@ -645,9 +645,79 @@
                     <div id="settingsStatus" style="font-size: 0.9rem; display: none;"></div>
                 </div>
             </div>
+            <!-- Custom Prompt Editor -->
+            <div class="panel" style="padding: 2rem; border: 1px solid rgba(168,85,247,0.2);">
+                <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-family: Outfit;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#a855f7;margin-right:8px"></i>AI Agent Setup</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Customize how your AI agent talks, what it sells, and how it handles customers. No coding needed.</p>
 
+                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+
+                    <!-- Row 1: Agent Name + Tone -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Agent Name</label>
+                            <input id="promptAgentName" type="text" placeholder="e.g. Temitope, Sarah, BotAssist" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Tone / Personality</label>
+                            <select id="promptTone" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                                <option value="friendly">Friendly & Casual</option>
+                                <option value="professional">Professional & Formal</option>
+                                <option value="nigerian_casual">Nigerian Casual (sir/ma)</option>
+                                <option value="gen_z">Gen-Z / Trendy</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Greeting -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Welcome Greeting <span style="color:#64748b; font-size:0.75rem;">(what the bot says when someone texts "hi")</span></label>
+                        <input id="promptGreeting" type="text" placeholder="e.g. Hello! This is Temitope from SalesFlow Properties. How can I help you?" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                    </div>
+
+                    <!-- Business Description -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">What does your business do? <span style="color:#64748b; font-size:0.75rem;">(1-2 sentences)</span></label>
+                        <textarea id="promptDescription" rows="2" placeholder="e.g. We sell premium drinks and spirits in Lagos with same-day delivery. We also do bulk orders for events." style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <!-- Products / Services -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Products / Services & Prices <span style="color:#64748b; font-size:0.75rem;">(list what you sell and prices)</span></label>
+                        <textarea id="promptProducts" rows="5" placeholder="Hennessy VS - 35k&#10;Baileys - 15k&#10;Amarula - 12k&#10;Jack Daniels - 25k&#10;&#10;Or for real estate:&#10;2 Bed Lekki Phase 1 - 3.5m/year&#10;3 Bed Ajah - 1.8m/year" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <!-- Payment Info -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Payment Details <span style="color:#64748b; font-size:0.75rem;">(how customers should pay)</span></label>
+                        <input id="promptPayment" type="text" placeholder="e.g. OPay - 8137048851 (Temitope Bayode)" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                    </div>
+
+                    <!-- Business Hours -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Business Hours <span style="color:#64748b; font-size:0.75rem;">(optional)</span></label>
+                        <input id="promptHours" type="text" placeholder="e.g. 9am - 10pm daily, closed Sundays" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                    </div>
+
+                    <!-- Custom Rules -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Custom Rules <span style="color:#64748b; font-size:0.75rem;">(special instructions for the AI)</span></label>
+                        <textarea id="promptRules" rows="3" placeholder="e.g. Always offer free delivery for orders above 50k&#10;Never give discounts below 10%&#10;If asked about warranty, say we offer 30-day returns" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                        <button onclick="savePromptConfig()" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
+                            <i class="fa-solid fa-floppy-disk"></i> Save AI Configuration
+                        </button>
+                        <div id="promptSaveStatus" style="font-size: 0.9rem; display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Info (read-only summary) -->
             <div class="panel" style="padding: 2rem;">
-                <h3 style="color: #fff; margin: 0 0 1.5rem 0; font-family: Outfit;">Business Information</h3>
+                <h3 style="color: #fff; margin: 0 0 1.5rem 0; font-family: Outfit;">Account Info</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px;">
                         <div style="color: #94a3b8; font-size: 0.8rem;">Business Name</div>
@@ -830,14 +900,61 @@
             try {
                 const { data: business } = await supabaseClient
                     .from('businesses')
-                    .select('bot_mode, name')
+                    .select('bot_mode, name, agent_name, greeting, business_description, products_services, payment_info, business_hours, custom_rules, tone')
                     .eq('id', businessId)
                     .single();
                 currentMode = business?.bot_mode || 'retail';
                 selectMode(currentMode);
                 const nameEl = document.getElementById('settingsBusinessName');
                 if (nameEl && business?.name) nameEl.textContent = business.name;
-            } catch(e) {}
+
+                // Populate prompt editor fields
+                if (business) {
+                    document.getElementById('promptAgentName').value = business.agent_name || '';
+                    document.getElementById('promptTone').value = business.tone || 'friendly';
+                    document.getElementById('promptGreeting').value = business.greeting || '';
+                    document.getElementById('promptDescription').value = business.business_description || '';
+                    document.getElementById('promptProducts').value = business.products_services || '';
+                    document.getElementById('promptPayment').value = business.payment_info || '';
+                    document.getElementById('promptHours').value = business.business_hours || '';
+                    document.getElementById('promptRules').value = business.custom_rules || '';
+                }
+            } catch(e) { console.error('loadSettings error:', e); }
+        }
+
+        async function savePromptConfig() {
+            const statusEl = document.getElementById('promptSaveStatus');
+            try {
+                const updates = {
+                    agent_name: document.getElementById('promptAgentName').value.trim(),
+                    tone: document.getElementById('promptTone').value,
+                    greeting: document.getElementById('promptGreeting').value.trim(),
+                    business_description: document.getElementById('promptDescription').value.trim(),
+                    products_services: document.getElementById('promptProducts').value.trim(),
+                    payment_info: document.getElementById('promptPayment').value.trim(),
+                    business_hours: document.getElementById('promptHours').value.trim(),
+                    custom_rules: document.getElementById('promptRules').value.trim()
+                };
+
+                const { error } = await supabaseClient
+                    .from('businesses')
+                    .update(updates)
+                    .eq('id', businessId);
+
+                statusEl.style.display = 'block';
+                if (!error) {
+                    statusEl.style.color = '#10b981';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> AI configuration saved! Changes take effect on the next message.';
+                } else {
+                    throw error;
+                }
+            } catch(e) {
+                statusEl.style.display = 'block';
+                statusEl.style.color = '#ef4444';
+                statusEl.textContent = 'Error saving configuration.';
+                console.error('savePromptConfig error:', e);
+            }
+            setTimeout(() => { statusEl.style.display = 'none'; }, 4000);
         }
 
         async function saveSettings() {
