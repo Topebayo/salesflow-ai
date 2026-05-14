@@ -9,9 +9,47 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://jmifkdmrybjueiipkqru.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptaWZrZG1yeWJqdWVpaXBrcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjI0MDAsImV4cCI6MjA5NDA5ODQwMH0.Ft8iqBoeDzkpaxfnn7p4sxKpdq3uDy0GVW_O1LnQALk';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let businessId = null;
+
+        async function requireAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Get the user's business ID
+            const { data: business } = await supabaseClient
+                .from('businesses')
+                .select('id, name')
+                .eq('owner_id', session.user.id)
+                .single();
+                
+            if (business) {
+                businessId = business.id;
+                // Update brand name in sidebar
+                const brandEl = document.querySelector('.brand');
+                if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-robot" style="color: #4facfe;"></i> ${business.name}`;
+            }
+        }
+        
+        // Block rendering until auth finishes
+        requireAuth();
+        
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'login.html';
+        }
+    </script>
     <style>
         /* Modern Dashboard Specific Styles */
         body {
@@ -477,6 +515,10 @@
             </a>
             <a href="#" class="nav-item" onclick="showSection('settings', this)">
                 <i class="fa-solid fa-gear"></i> Settings
+            </a>
+            <div style="flex: 1;"></div>
+            <a href="#" class="nav-item" style="color: #ef4444; margin-top: auto;" onclick="logout()">
+                <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
         </nav>
     </aside>
