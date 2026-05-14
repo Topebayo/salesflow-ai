@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalesFlow AI | Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        body {
+            background-color: #0f1115;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% -20%, rgba(79, 172, 254, 0.15), transparent 50%);
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.1s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .auth-switch a {
+            color: #4facfe;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="brand">
+            <i class="fa-solid fa-robot" style="color: #4facfe;"></i> SalesFlow AI
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <form id="authForm">
+            <div class="form-group" id="nameGroup" style="display: none;">
+                <label>Business Name</label>
+                <input type="text" id="businessName" class="form-control" placeholder="e.g. SalesFlow Properties">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="admin@business.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Sign In</button>
+        </form>
+
+        <div class="auth-switch">
+            <span id="switchText">Don't have an account?</span> 
+            <a onclick="toggleAuthMode()" id="switchLink">Create one</a>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Initialization
+        // NOTE: In production, these should be dynamically injected or kept in a config file
+        const SUPABASE_URL = 'https://jmifkdmrybjueiipkqru.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptaWZrZG1yeWJqdWVpaXBrcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjI0MDAsImV4cCI6MjA5NDA5ODQwMH0.Ft8iqBoeDzkpaxfnn7p4sxKpdq3uDy0GVW_O1LnQALk';
+        
+        // Only initialize if keys are provided to avoid errors
+        let supabase = null;
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        let isSignUp = false;
+        
+        function toggleAuthMode() {
+            isSignUp = !isSignUp;
+            document.getElementById('nameGroup').style.display = isSignUp ? 'block' : 'none';
+            document.getElementById('submitBtn').innerText = isSignUp ? 'Create Account' : 'Sign In';
+            document.getElementById('switchText').innerText = isSignUp ? 'Already have an account?' : "Don't have an account?";
+            document.getElementById('switchLink').innerText = isSignUp ? 'Sign In' : 'Create one';
+            
+            // Clear errors
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const businessName = document.getElementById('businessName').value;
+            const errorEl = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!supabase) {
+                errorEl.innerText = "Supabase keys not configured in login.html yet!";
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            submitBtn.innerText = 'Loading...';
+            submitBtn.disabled = true;
+            errorEl.style.display = 'none';
+
+            try {
+                if (isSignUp) {
+                    // Sign Up Logic
+                    if (!businessName) throw new Error("Business name is required");
+                    
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: {
+                                business_name: businessName
+                            }
+                        }
+                    });
+                    
+                    if (error) throw error;
+                    
+                    // Create business record in our new table
+                    if (data.user) {
+                        const { error: dbError } = await supabase
+                            .from('businesses')
+                            .insert([
+                                { 
+                                    owner_id: data.user.id, 
+                                    name: businessName,
+                                    bot_mode: 'retail'
+                                }
+                            ]);
+                            
+                        if (dbError) console.error("Error creating business profile:", dbError);
+                    }
+                    
+                    alert("Account created successfully! Check your email to verify if required, or simply login.");
+                    toggleAuthMode(); // Switch back to login
+                    
+                } else {
+                    // Login Logic
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+                    
+                    if (error) throw error;
+                    
+                    // Redirect to dashboard on success
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                errorEl.innerText = error.message;
+                errorEl.style.display = 'block';
+            } finally {
+                submitBtn.innerText = isSignUp ? 'Create Account' : 'Sign In';
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Check if already logged in
+        async function checkSession() {
+            if (!supabase) return;
+            const { data } = await supabase.auth.getSession();
+            if (data.session) {
+                window.location.href = 'dashboard.html'; // Redirect if already authenticated
+            }
+        }
+        
+        checkSession();
+    </script>
+</body>
+</html>
