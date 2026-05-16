@@ -149,7 +149,7 @@
 
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" id="email" class="form-control" placeholder="admin@business.com" required>
+                <input type="email" id="email" class="form-control" placeholder="admin@business.com">
             </div>
 
             <div class="form-group" id="passwordGroup">
@@ -330,6 +330,7 @@
                     
                 } else {
                     // Login Logic
+                    if (!email) throw new Error("Email is required");
                     if (!password) throw new Error("Password is required");
                     
                     const { data, error } = await supabaseClient.auth.signInWithPassword({
