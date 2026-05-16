@@ -347,7 +347,13 @@
                 errorEl.innerText = error.message;
                 errorEl.style.display = 'block';
             } finally {
-                submitBtn.innerText = isSignUp ? 'Create Account' : 'Sign In';
+                if (isRecoveryMode) {
+                    submitBtn.innerText = 'Update Password';
+                } else if (isForgotPassword) {
+                    submitBtn.innerText = 'Send Reset Link';
+                } else {
+                    submitBtn.innerText = isSignUp ? 'Create Account' : 'Sign In';
+                }
                 submitBtn.disabled = false;
             }
         });
