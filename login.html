@@ -280,8 +280,10 @@
                     // Send Reset Link Logic
                     if (!email) throw new Error("Email is required for password reset");
                     
+                    // Use clean URL without any existing hashes to prevent ## in the email link
+                    const cleanUrl = window.location.origin + window.location.pathname;
                     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                        redirectTo: window.location.href // Redirects back to this page
+                        redirectTo: cleanUrl
                     });
                     
                     if (error) throw error;
