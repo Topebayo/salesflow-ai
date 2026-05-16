@@ -362,15 +362,17 @@
         async function checkSession() {
             if (!supabaseClient) return;
             
-            // Supabase automatically parses hash params. We can check the URL hash to see if we're in recovery mode.
-            if (window.location.hash.includes('type=recovery')) {
-                showRecoveryMode();
-                return;
-            }
+            // Listen for the official password recovery event from Supabase
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === 'PASSWORD_RECOVERY') {
+                    showRecoveryMode();
+                }
+            });
             
             const { data } = await supabaseClient.auth.getSession();
+            // Only redirect if logged in AND not in the middle of a recovery
             if (data.session && !window.location.hash.includes('type=recovery')) {
-                window.location.href = 'dashboard.html'; // Redirect if already authenticated
+                window.location.href = 'dashboard.html';
             }
         }
         
