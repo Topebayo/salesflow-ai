@@ -152,17 +152,24 @@
                 <input type="email" id="email" class="form-control" placeholder="admin@business.com" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="passwordGroup">
                 <label>Password</label>
-                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                <input type="password" id="password" class="form-control" placeholder="••••••••">
+                <div style="text-align: right; margin-top: 0.5rem;" id="forgotPasswordLinkContainer">
+                    <a href="#" onclick="toggleForgotPasswordMode()" style="color: #4facfe; font-size: 0.8rem; text-decoration: none;">Forgot Password?</a>
+                </div>
             </div>
 
             <button type="submit" class="btn-submit" id="submitBtn">Sign In</button>
         </form>
 
-        <div class="auth-switch">
+        <div class="auth-switch" id="authSwitchContainer">
             <span id="switchText">Don't have an account?</span> 
             <a onclick="toggleAuthMode()" id="switchLink">Create one</a>
+        </div>
+        
+        <div class="auth-switch" id="backToLoginContainer" style="display: none;">
+            <a onclick="toggleAuthMode()" style="color: #94a3b8;"><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
         </div>
     </div>
 
@@ -179,16 +186,59 @@
         }
 
         let isSignUp = false;
+        let isForgotPassword = false;
+        let isRecoveryMode = false;
         
         function toggleAuthMode() {
             isSignUp = !isSignUp;
+            isForgotPassword = false;
+            
             document.getElementById('nameGroup').style.display = isSignUp ? 'block' : 'none';
+            document.getElementById('passwordGroup').style.display = 'block';
+            document.getElementById('forgotPasswordLinkContainer').style.display = isSignUp ? 'none' : 'block';
+            
             document.getElementById('submitBtn').innerText = isSignUp ? 'Create Account' : 'Sign In';
+            
+            document.getElementById('authSwitchContainer').style.display = 'block';
+            document.getElementById('backToLoginContainer').style.display = 'none';
+            
             document.getElementById('switchText').innerText = isSignUp ? 'Already have an account?' : "Don't have an account?";
             document.getElementById('switchLink').innerText = isSignUp ? 'Sign In' : 'Create one';
             
-            // Clear errors
             document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function toggleForgotPasswordMode() {
+            isForgotPassword = true;
+            isSignUp = false;
+            
+            document.getElementById('nameGroup').style.display = 'none';
+            document.getElementById('passwordGroup').style.display = 'none';
+            
+            document.getElementById('submitBtn').innerText = 'Send Reset Link';
+            
+            document.getElementById('authSwitchContainer').style.display = 'none';
+            document.getElementById('backToLoginContainer').style.display = 'block';
+            
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function showRecoveryMode() {
+            isRecoveryMode = true;
+            document.getElementById('nameGroup').style.display = 'none';
+            // Hide email input, only show password input for the new password
+            document.getElementById('email').parentElement.style.display = 'none';
+            document.getElementById('passwordGroup').style.display = 'block';
+            document.getElementById('password').placeholder = "Enter new password";
+            document.getElementById('forgotPasswordLinkContainer').style.display = 'none';
+            
+            document.getElementById('submitBtn').innerText = 'Update Password';
+            
+            document.getElementById('authSwitchContainer').style.display = 'none';
+            document.getElementById('backToLoginContainer').style.display = 'none';
+            
+            document.getElementById('errorMessage').style.display = 'none';
+            alert("Please enter your new password below.");
         }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
@@ -211,9 +261,41 @@
             errorEl.style.display = 'none';
 
             try {
+                if (isRecoveryMode) {
+                    // Update Password Logic
+                    if (!password) throw new Error("Please enter a new password");
+                    
+                    const { error } = await supabaseClient.auth.updateUser({
+                        password: password
+                    });
+                    
+                    if (error) throw error;
+                    
+                    alert("Password updated successfully! Redirecting to dashboard...");
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                
+                if (isForgotPassword) {
+                    // Send Reset Link Logic
+                    if (!email) throw new Error("Email is required for password reset");
+                    
+                    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                        redirectTo: window.location.href // Redirects back to this page
+                    });
+                    
+                    if (error) throw error;
+                    
+                    alert("Password reset link sent! Check your email.");
+                    isSignUp = true; // Flips it so toggle goes back to login
+                    toggleAuthMode(); 
+                    return;
+                }
+
                 if (isSignUp) {
                     // Sign Up Logic
                     if (!businessName) throw new Error("Business name is required");
+                    if (!password) throw new Error("Password is required");
                     
                     const { data, error } = await supabaseClient.auth.signUp({
                         email,
@@ -243,10 +325,13 @@
                     }
                     
                     alert("Account created successfully! Check your email to verify if required, or simply login.");
+                    isSignUp = true;
                     toggleAuthMode(); // Switch back to login
                     
                 } else {
                     // Login Logic
+                    if (!password) throw new Error("Password is required");
+                    
                     const { data, error } = await supabaseClient.auth.signInWithPassword({
                         email,
                         password
@@ -266,11 +351,18 @@
             }
         });
         
-        // Check if already logged in
+        // Check if already logged in or recovering password
         async function checkSession() {
             if (!supabaseClient) return;
+            
+            // Supabase automatically parses hash params. We can check the URL hash to see if we're in recovery mode.
+            if (window.location.hash.includes('type=recovery')) {
+                showRecoveryMode();
+                return;
+            }
+            
             const { data } = await supabaseClient.auth.getSession();
-            if (data.session) {
+            if (data.session && !window.location.hash.includes('type=recovery')) {
                 window.location.href = 'dashboard.html'; // Redirect if already authenticated
             }
         }
