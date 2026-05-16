@@ -362,22 +362,36 @@
         async function checkSession() {
             if (!supabaseClient) return;
             
-            // 1. Listen for the official password recovery event (catches active changes)
+            // 1. Listen for the official password recovery event
             supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (event === 'PASSWORD_RECOVERY') {
                     showRecoveryMode();
                 }
             });
             
-            // 2. Fetch the current session
-            const { data, error } = await supabaseClient.auth.getSession();
+            // 2. Check for newer PKCE secure flow (?code=...)
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                const { error } = await supabaseClient.auth.exchangeCodeForSession(code);
+                if (error) {
+                    alert("Reset link invalid: " + error.message);
+                } else {
+                    showRecoveryMode();
+                }
+                // Clear the URL so refreshing doesn't cause errors
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
             
-            // 3. Fallback: If the event fired before we listened, check the URL and session manually
+            // 3. Fetch the current session
+            const { data } = await supabaseClient.auth.getSession();
+            
+            // 4. Fallback for older implicit flow (#access_token=...)
             if (window.location.hash.includes('type=recovery')) {
                 if (data.session) {
                     showRecoveryMode();
                 } else {
-                    // If there's no session, the token was expired or already used
                     alert("This password reset link is invalid or has expired. Please request a new one.");
                 }
                 return;
