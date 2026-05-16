@@ -362,16 +362,29 @@
         async function checkSession() {
             if (!supabaseClient) return;
             
-            // Listen for the official password recovery event from Supabase
+            // 1. Listen for the official password recovery event (catches active changes)
             supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (event === 'PASSWORD_RECOVERY') {
                     showRecoveryMode();
                 }
             });
             
-            const { data } = await supabaseClient.auth.getSession();
-            // Only redirect if logged in AND not in the middle of a recovery
-            if (data.session && !window.location.hash.includes('type=recovery')) {
+            // 2. Fetch the current session
+            const { data, error } = await supabaseClient.auth.getSession();
+            
+            // 3. Fallback: If the event fired before we listened, check the URL and session manually
+            if (window.location.hash.includes('type=recovery')) {
+                if (data.session) {
+                    showRecoveryMode();
+                } else {
+                    // If there's no session, the token was expired or already used
+                    alert("This password reset link is invalid or has expired. Please request a new one.");
+                }
+                return;
+            }
+            
+            // Only redirect if logged in normally
+            if (data.session) {
                 window.location.href = 'dashboard.html';
             }
         }
