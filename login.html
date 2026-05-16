@@ -399,10 +399,12 @@
                 return;
             }
             
-            // Only redirect if logged in normally
-            if (data.session) {
-                window.location.href = 'dashboard.html';
-            }
+            // Only redirect if logged in normally and not recovering
+            setTimeout(() => {
+                if (data.session && !isRecoveryMode) {
+                    window.location.href = 'dashboard.html';
+                }
+            }, 500);
         }
         
         checkSession();
