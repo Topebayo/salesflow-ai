@@ -1840,13 +1840,10 @@
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="loader" style="display:block"></div></div>';
             try {
-                const { data, error } = await supabaseClient
-                    .from('products')
-                    .select('*')
-                    .eq('business_id', businessId)
-                    .order('created_at', { ascending: false });
-                if (error) throw error;
-                productsData = data || [];
+                // Fetch products securely via the backend API (bypassing Storage and Products table RLS)
+                const res = await fetch(`${API_BASE}/products?business_id=${businessId}`);
+                const data = await res.json();
+                productsData = data.products || [];
                 renderProducts();
             } catch (e) {
                 grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>Error loading products.</p></div>';
@@ -2060,19 +2057,36 @@
                 business_id: businessId,
                 name: name,
                 description: document.getElementById('productDesc').value.trim(),
-                price: document.getElementById('productPrice').value ? parseFloat(document.getElementById('productPrice').value) : null,
-                category: document.getElementById('productCategory').value.trim() || null,
-                image_url: document.getElementById('productImageUrl').value || null,
+                price: document.getElementById('productPrice').value ? String(document.getElementById('productPrice').value) : "",
+                category: document.getElementById('productCategory').value.trim() || "",
+                image_url: document.getElementById('productImageUrl').value || "",
                 is_available: document.getElementById('productAvailable').checked
             };
             try {
-                let error;
+                let res;
                 if (editId) {
-                    ({ error } = await supabaseClient.from('products').update(payload).eq('id', editId));
+                    res = await fetch(`${API_BASE}/products/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: payload.name,
+                            description: payload.description,
+                            price: payload.price,
+                            category: payload.category,
+                            image_url: payload.image_url,
+                            is_available: payload.is_available
+                        })
+                    });
                 } else {
-                    ({ error } = await supabaseClient.from('products').insert(payload));
+                    res = await fetch(`${API_BASE}/products`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
                 }
-                if (error) throw error;
+                const resData = await res.json();
+                if (resData.status !== 'success') throw new Error(resData.message || 'Failed to save product');
+                
                 closeProductModal();
                 loadProducts();
             } catch (e) {
@@ -2086,8 +2100,11 @@
         async function deleteProduct(id, name) {
             if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
             try {
-                const { error } = await supabaseClient.from('products').delete().eq('id', id);
-                if (error) throw error;
+                const res = await fetch(`${API_BASE}/products/${id}`, {
+                    method: 'DELETE'
+                });
+                const resData = await res.json();
+                if (resData.status !== 'success') throw new Error(resData.message || 'Failed to delete product');
                 loadProducts();
             } catch (e) {
                 alert('Error deleting product.');
@@ -2097,8 +2114,11 @@
 
         async function toggleAvailability(id, isAvailable) {
             try {
-                const { error } = await supabaseClient.from('products').update({ is_available: isAvailable }).eq('id', id);
-                if (error) throw error;
+                const res = await fetch(`${API_BASE}/products/${id}/toggle`, {
+                    method: 'PUT'
+                });
+                const resData = await res.json();
+                if (resData.status !== 'success') throw new Error(resData.message || 'Failed to toggle availability');
             } catch (e) {
                 alert('Error updating availability.');
                 loadProducts();
