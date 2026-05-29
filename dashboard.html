@@ -18,28 +18,64 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptaWZrZG1yeWJqdWVpaXBrcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjI0MDAsImV4cCI6MjA5NDA5ODQwMH0.Ft8iqBoeDzkpaxfnn7p4sxKpdq3uDy0GVW_O1LnQALk';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
+        let authPromise = null;
         let businessId = null;
 
         async function requireAuth() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            // Get the user's business ID
-            const { data: business } = await supabaseClient
-                .from('businesses')
-                .select('id, name')
-                .eq('owner_id', session.user.id)
-                .single();
-                
-            if (business) {
-                businessId = business.id;
-                // Update brand name in sidebar
-                const brandEl = document.querySelector('.brand');
-                if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-robot" style="color: #4facfe;"></i> ${business.name}`;
-            }
+            if (authPromise) return authPromise;
+            authPromise = (async () => {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) {
+                        window.location.href = 'login.html';
+                        return null;
+                    }
+                    
+                    // Get the user's business ID
+                    let { data: business, error: bizError } = await supabaseClient
+                        .from('businesses')
+                        .select('id, name')
+                        .eq('owner_id', session.user.id)
+                        .maybeSingle();
+                        
+                    if (!business) {
+                        console.log("No business profile found, auto-creating one...");
+                        const defaultName = (session.user.user_metadata && session.user.user_metadata.business_name) || 
+                                            (session.user.email ? session.user.email.split('@')[0] : "My Business");
+                        
+                        const { data: newBiz, error: createError } = await supabaseClient
+                            .from('businesses')
+                            .insert([
+                                { 
+                                    owner_id: session.user.id, 
+                                    name: defaultName,
+                                    bot_mode: 'retail'
+                                }
+                            ])
+                            .select('id, name')
+                            .maybeSingle();
+                            
+                        if (!createError && newBiz) {
+                            business = newBiz;
+                            console.log("Auto-created business profile:", business);
+                        } else {
+                            console.error("Failed to auto-create business profile:", createError);
+                        }
+                    }
+                    
+                    if (business) {
+                        businessId = business.id;
+                        // Update brand name in sidebar
+                        const brandEl = document.querySelector('.brand');
+                        if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-robot" style="color: #4facfe;"></i> ${business.name}`;
+                    }
+                    return business;
+                } catch (e) {
+                    console.error("requireAuth error:", e);
+                    return null;
+                }
+            })();
+            return authPromise;
         }
         
         // Block rendering until auth finishes
