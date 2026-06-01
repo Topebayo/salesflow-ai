@@ -1572,7 +1572,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
                             <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Agent Name</label>
-                            <input id="promptAgentName" type="text" placeholder="e.g. Temitope, Sarah, BotAssist" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                            <input id="promptAgentName" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                         </div>
                         <div>
                             <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Tone / Personality</label>
@@ -1588,37 +1588,31 @@
                     <!-- Greeting -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Welcome Greeting <span style="color:#64748b; font-size:0.75rem;">(what the bot says when someone texts "hi")</span></label>
-                        <input id="promptGreeting" type="text" placeholder="e.g. Hello! This is Temitope from SalesFlow Properties. How can I help you?" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptGreeting" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Business Description -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">What does your business do? <span style="color:#64748b; font-size:0.75rem;">(1-2 sentences)</span></label>
-                        <textarea id="promptDescription" rows="2" placeholder="e.g. We sell premium drinks and spirits in Lagos with same-day delivery. We also do bulk orders for events." style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
-                    </div>
-
-                    <!-- Products / Services -->
-                    <div>
-                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Products / Services & Prices <span style="color:#64748b; font-size:0.75rem;">(list what you sell and prices)</span></label>
-                        <textarea id="promptProducts" rows="5" placeholder="Hennessy VS - 35k&#10;Baileys - 15k&#10;Amarula - 12k&#10;Jack Daniels - 25k&#10;&#10;Or for real estate:&#10;2 Bed Lekki Phase 1 - 3.5m/year&#10;3 Bed Ajah - 1.8m/year" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                        <textarea id="promptDescription" rows="2" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
                     </div>
 
                     <!-- Payment Info -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Payment Details <span style="color:#64748b; font-size:0.75rem;">(how customers should pay)</span></label>
-                        <input id="promptPayment" type="text" placeholder="e.g. OPay - 8137048851 (Temitope Bayode)" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptPayment" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Business Hours -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Business Hours <span style="color:#64748b; font-size:0.75rem;">(optional)</span></label>
-                        <input id="promptHours" type="text" placeholder="e.g. 9am - 10pm daily, closed Sundays" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptHours" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Custom Rules -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Custom Rules <span style="color:#64748b; font-size:0.75rem;">(special instructions for the AI)</span></label>
-                        <textarea id="promptRules" rows="3" placeholder="e.g. Always offer free delivery for orders above 50k&#10;Never give discounts below 10%&#10;If asked about warranty, say we offer 30-day returns" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                        <textarea id="promptRules" rows="3" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
                     </div>
 
                     <!-- Save Button -->
@@ -2052,7 +2046,6 @@
                     document.getElementById('promptTone').value = business.tone || 'friendly';
                     document.getElementById('promptGreeting').value = business.greeting || '';
                     document.getElementById('promptDescription').value = business.business_description || '';
-                    document.getElementById('promptProducts').value = business.products_services || '';
                     document.getElementById('promptPayment').value = business.payment_info || '';
                     document.getElementById('promptHours').value = business.business_hours || '';
                     document.getElementById('promptRules').value = business.custom_rules || '';
@@ -2068,7 +2061,6 @@
                     tone: document.getElementById('promptTone').value,
                     greeting: document.getElementById('promptGreeting').value.trim(),
                     business_description: document.getElementById('promptDescription').value.trim(),
-                    products_services: document.getElementById('promptProducts').value.trim(),
                     payment_info: document.getElementById('promptPayment').value.trim(),
                     business_hours: document.getElementById('promptHours').value.trim(),
                     custom_rules: document.getElementById('promptRules').value.trim()
