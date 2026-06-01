@@ -918,6 +918,111 @@
             }
         }
 
+        /* ==================== LIGHT THEME OVERRIDES ==================== */
+        body.light-theme {
+            --bg-deep: #f0f2f5;
+            --bg-panel: rgba(255, 255, 255, 0.75);
+            --bg-panel-hover: rgba(240, 243, 248, 0.85);
+            --border-glow: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(99, 102, 241, 0.3);
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.06);
+            --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            background-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.06), transparent 45%),
+                              radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.04), transparent 40%);
+        }
+        body.light-theme .sidebar {
+            background: rgba(255, 255, 255, 0.85);
+            border-right-color: rgba(0, 0, 0, 0.08);
+        }
+        body.light-theme .brand {
+            background: linear-gradient(135deg, #1e293b 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body.light-theme .nav-item { color: #475569; }
+        body.light-theme .nav-item:hover { color: #0f172a; background: rgba(0, 0, 0, 0.03); }
+        body.light-theme .nav-item.active { color: var(--primary); background: var(--primary-glow); }
+        body.light-theme .header h1 { color: #0f172a; }
+        body.light-theme .stat-value { color: #0f172a; }
+        body.light-theme .stat-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(0, 0, 0, 0.06); }
+        body.light-theme .panel { background: rgba(255, 255, 255, 0.7); border-color: rgba(0, 0, 0, 0.06); }
+        body.light-theme th { color: #475569; border-bottom-color: rgba(0, 0, 0, 0.08); }
+        body.light-theme td { color: #1e293b; border-bottom-color: rgba(0, 0, 0, 0.04); }
+        body.light-theme tr:hover td { background: rgba(99, 102, 241, 0.03); color: #0f172a; }
+        body.light-theme .modal-content {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.1);
+            background-image: radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.05), transparent 45%);
+        }
+        body.light-theme .modal-content h2 { color: #0f172a; }
+        body.light-theme .modal-field input,
+        body.light-theme .modal-field textarea,
+        body.light-theme .modal-field select {
+            background: rgba(241, 245, 249, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #0f172a;
+        }
+        body.light-theme .product-card { background: rgba(255, 255, 255, 0.7); }
+        body.light-theme .product-card-name { color: #0f172a; }
+        body.light-theme .wa-status-card,
+        body.light-theme .wa-form-card,
+        body.light-theme .wa-guide-card { background: rgba(255, 255, 255, 0.7); }
+        body.light-theme .wa-form-card h3,
+        body.light-theme .wa-guide-card h3,
+        body.light-theme .wa-status-text { color: #0f172a; }
+        body.light-theme .wa-field input {
+            background: rgba(241, 245, 249, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #0f172a;
+        }
+        body.light-theme .wa-webhook-url-box {
+            background: rgba(241, 245, 249, 0.8);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+        body.light-theme .menu-toggle {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1e293b;
+        }
+        body.light-theme .status-badge {
+            background: rgba(16, 185, 129, 0.08);
+        }
+        body.light-theme ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.12);
+        }
+        body.light-theme ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+        /* Light theme chat window overrides */
+        body.light-theme .chat-list-card {
+            background: rgba(241, 245, 249, 0.6) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme .chat-list-card:hover {
+            background: rgba(99, 102, 241, 0.06) !important;
+        }
+
+        /* ==================== CHAT LOGS RESPONSIVE CONTAINER ==================== */
+        .chat-logs-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            height: calc(100vh - 180px);
+            min-height: 500px;
+            max-height: 700px;
+        }
+
+        /* ==================== TABLE SCROLL WRAPPER ==================== */
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
         /* ==================== MOBILE RESPONSIVENESS ==================== */
         @media (max-width: 768px) {
             .products-grid {
@@ -935,6 +1040,20 @@
                 padding-left: 1.5rem;
                 padding-right: 1.5rem;
             }
+            /* Chat grid stacks vertically on tablet/mobile */
+            .chat-logs-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                max-height: none;
+                min-height: unset;
+            }
+            .chat-logs-container > .panel:first-child {
+                max-height: 280px;
+            }
+            .chat-logs-container > .panel:last-child {
+                min-height: 350px;
+                max-height: 500px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -950,6 +1069,13 @@
             }
             .stat-value {
                 font-size: 2rem;
+            }
+            .modal-content {
+                padding: 1.4rem;
+                width: 96%;
+            }
+            .chat-logs-container > .panel:first-child {
+                max-height: 220px;
             }
         }
 
@@ -1039,7 +1165,10 @@
                 🔗 WhatsApp
             </a>
             <div style="flex: 1;"></div>
-            <a href="#" class="nav-item" style="color: #ef4444; margin-top: auto;" onclick="logout()">
+            <a href="#" class="nav-item" id="themeToggleBtn" onclick="toggleTheme(); return false;" style="margin-top: auto;">
+                <i class="fa-solid fa-sun"></i> Light Mode
+            </a>
+            <a href="#" class="nav-item" style="color: #ef4444;" onclick="logout()">
                 <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
         </nav>
@@ -1107,21 +1236,23 @@
                 </button>
             </h2>
             <div class="panel">
-                <table id="leadsTable">
-                    <thead>
-                        <tr>
-                            <th>Phone Number</th>
-                            <th>Name</th>
-                            <th>Total Messages</th>
-                            <th>First Contact</th>
-                            <th>Last Active</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leadsBody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
+                <div class="table-scroll-wrapper">
+                    <table id="leadsTable">
+                        <thead>
+                            <tr>
+                                <th>Phone Number</th>
+                                <th>Name</th>
+                                <th>Total Messages</th>
+                                <th>First Contact</th>
+                                <th>Last Active</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadsBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
@@ -1138,7 +1269,7 @@
                     class="fa-solid fa-rotate-right"></i> Refresh</button>
         </header>
 
-        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; height: calc(100vh - 180px); min-height: 500px; max-height: 700px;">
+        <div class="chat-logs-container">
             <!-- Left Column: Chats List -->
             <div class="panel" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; height: 100%; box-sizing: border-box; overflow: hidden; margin-bottom: 0;">
                 <h3 style="color: #fff; margin: 0; font-family: Outfit; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
@@ -1598,6 +1729,33 @@
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
+        // ==================== LIGHT / DARK THEME TOGGLE ====================
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeButton();
+        }
+
+        function updateThemeButton() {
+            const btn = document.getElementById('themeToggleBtn');
+            if (!btn) return;
+            const isLight = document.body.classList.contains('light-theme');
+            btn.innerHTML = isLight
+                ? '<i class="fa-solid fa-moon"></i> Dark Mode'
+                : '<i class="fa-solid fa-sun"></i> Light Mode';
+        }
+
+        // Apply saved theme on load
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                document.body.classList.add('light-theme');
+            }
+            // Update button text after DOM is ready
+            document.addEventListener('DOMContentLoaded', updateThemeButton);
+        })();
+
         const API_BASE = 'https://salesflow-ai-bot.onrender.com';
 
         function showSection(sectionId, navEl) {
@@ -2029,15 +2187,35 @@
             container.innerHTML = '<div class="loader" style="display:block"></div>';
 
             try {
-                // Fetch contacts along with their conversations
-                const { data, error } = await supabaseClient
+                // Query 1: Fetch contacts separately (no relation join)
+                const { data: contactsArr, error: contactsErr } = await supabaseClient
                     .from('contacts')
-                    .select('phone_number, name, message_count, human_handoff, conversations(role, content, timestamp)')
+                    .select('phone_number, name, message_count, human_handoff')
                     .eq('business_id', businessId)
                     .order('last_seen', { ascending: false });
 
-                if (error) throw error;
-                chatsData = data || [];
+                if (contactsErr) throw contactsErr;
+
+                // Query 2: Fetch conversations separately
+                const { data: convosArr, error: convosErr } = await supabaseClient
+                    .from('conversations')
+                    .select('phone_number, role, content, timestamp')
+                    .eq('business_id', businessId)
+                    .order('timestamp', { ascending: true });
+
+                if (convosErr) throw convosErr;
+
+                // Zip conversations onto their matching contacts by phone_number
+                const convoMap = {};
+                (convosArr || []).forEach(c => {
+                    if (!convoMap[c.phone_number]) convoMap[c.phone_number] = [];
+                    convoMap[c.phone_number].push(c);
+                });
+
+                chatsData = (contactsArr || []).map(contact => ({
+                    ...contact,
+                    conversations: convoMap[contact.phone_number] || []
+                }));
 
                 if (chatsData.length === 0) {
                     container.innerHTML = '<div class="empty-state"><i class="fa-brands fa-whatsapp" style="font-size:2rem;margin-bottom:0.5rem"></i><p>No conversations yet</p></div>';
