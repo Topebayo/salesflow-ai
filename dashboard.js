@@ -80,6 +80,9 @@ async function fetchData() {
         loader.style.display = "none";
         content.style.display = "block";
         content.style.opacity = "1";
+        
+        // Render daily leads & message analytics chart
+        renderAnalyticsChart();
 
     } catch (error) {
         console.error("Dashboard error:", error);
@@ -91,5 +94,87 @@ async function fetchData() {
         loader.style.display = "none";
         content.style.display = "block";
         content.style.opacity = "1";
+    }
+}
+
+let analyticsChartInstance = null;
+
+async function renderAnalyticsChart() {
+    try {
+        const res = await fetch(`${API_BASE}/stats/daily?business_id=${businessId}`);
+        const data = await res.json();
+        
+        const canvas = document.getElementById('analyticsChart');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        
+        if (analyticsChartInstance) {
+            analyticsChartInstance.destroy();
+        }
+        
+        analyticsChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.dates || [],
+                datasets: [
+                    {
+                        label: 'New Leads Captured',
+                        data: data.leads || [],
+                        borderColor: '#4facfe',
+                        backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#4facfe',
+                        pointHoverRadius: 6,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Messages Exchanged',
+                        data: data.messages || [],
+                        borderColor: '#a855f7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.05)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointBackgroundColor: '#a855f7',
+                        pointHoverRadius: 5,
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#94a3b8',
+                            font: { family: 'Inter', size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#cbd5e1',
+                        borderColor: 'rgba(255,255,255,0.08)',
+                        borderWidth: 1,
+                        padding: 10
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: { color: '#94a3b8', font: { family: 'Inter' } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: { color: '#94a3b8', font: { family: 'Inter' }, precision: 0 }
+                    }
+                }
+            }
+        });
+    } catch (e) {
+        console.error("Failed to render analytics chart:", e);
     }
 }
