@@ -1207,6 +1207,25 @@
         body.light-theme #handoffs .panel span[style*="color:#94a3b8"],
         body.light-theme #handoffs .panel span[style*="color: #94a3b8"] { color: #374151 !important; }
 
+        /* ---- Settings Form overrides in light theme ---- */
+        body.light-theme #settings input,
+        body.light-theme #settings textarea,
+        body.light-theme #settings select {
+            background: #ffffff !important;
+            border-color: rgba(0, 0, 0, 0.15) !important;
+            color: #0a0f1a !important;
+        }
+        body.light-theme #settings h3[style*="color: #fff"],
+        body.light-theme #settings h3[style*="color:#fff"] {
+            color: #0a0f1a !important;
+        }
+        body.light-theme #settings h3 {
+            color: #0a0f1a !important;
+        }
+        body.light-theme #settings label[onclick] {
+            border-color: rgba(0, 0, 0, 0.12) !important;
+        }
+
         /* ==================== CHAT LOGS RESPONSIVE CONTAINER ==================== */
         .chat-logs-container {
             display: grid;
@@ -1601,6 +1620,12 @@
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Payment Details <span style="color:#64748b; font-size:0.75rem;">(how customers should pay)</span></label>
                         <input id="promptPayment" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                    </div>
+
+                    <!-- Inspection Fee (Real Estate only) -->
+                    <div id="inspectionFeeGroup" style="display: none;">
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Inspection Fee (₦) <span style="color:#64748b; font-size:0.75rem;">(fee required before property inspections)</span></label>
+                        <input id="promptInspectionFee" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Business Hours -->
@@ -2015,16 +2040,19 @@
             currentMode = mode;
             const retail = document.getElementById('modeRetail');
             const re = document.getElementById('modeRealEstate');
+            const inspectionFeeGroup = document.getElementById('inspectionFeeGroup');
             if (mode === 'retail') {
                 retail.style.border = '2px solid #4facfe';
                 retail.style.background = 'rgba(79,172,254,0.15)';
                 re.style.border = '2px solid rgba(255,255,255,0.1)';
                 re.style.background = 'rgba(255,255,255,0.03)';
+                if (inspectionFeeGroup) inspectionFeeGroup.style.display = 'none';
             } else {
                 re.style.border = '2px solid #a855f7';
                 re.style.background = 'rgba(168,85,247,0.15)';
                 retail.style.border = '2px solid rgba(255,255,255,0.1)';
                 retail.style.background = 'rgba(255,255,255,0.03)';
+                if (inspectionFeeGroup) inspectionFeeGroup.style.display = 'block';
             }
         }
 
@@ -2032,7 +2060,7 @@
             try {
                 const { data: business } = await supabaseClient
                     .from('businesses')
-                    .select('bot_mode, name, agent_name, greeting, business_description, products_services, payment_info, business_hours, custom_rules, tone')
+                    .select('bot_mode, name, agent_name, greeting, business_description, products_services, payment_info, business_hours, custom_rules, tone, inspection_fee')
                     .eq('id', businessId)
                     .single();
                 currentMode = business?.bot_mode || 'retail';
@@ -2049,6 +2077,7 @@
                     document.getElementById('promptPayment').value = business.payment_info || '';
                     document.getElementById('promptHours').value = business.business_hours || '';
                     document.getElementById('promptRules').value = business.custom_rules || '';
+                    document.getElementById('promptInspectionFee').value = business.inspection_fee || '0';
                 }
             } catch(e) { console.error('loadSettings error:', e); }
         }
@@ -2063,7 +2092,8 @@
                     business_description: document.getElementById('promptDescription').value.trim(),
                     payment_info: document.getElementById('promptPayment').value.trim(),
                     business_hours: document.getElementById('promptHours').value.trim(),
-                    custom_rules: document.getElementById('promptRules').value.trim()
+                    custom_rules: document.getElementById('promptRules').value.trim(),
+                    inspection_fee: document.getElementById('promptInspectionFee').value.trim()
                 };
 
                 const { error } = await supabaseClient
