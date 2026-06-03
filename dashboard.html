@@ -2288,10 +2288,17 @@
 
         async function updateOrderStatus(orderId, status) {
             try {
-                await fetch(API_BASE + '/orders/' + orderId + '/status?status=' + status, { method: 'PUT' });
+                const res = await fetch(API_BASE + '/orders/' + orderId + '/status?status=' + status, { method: 'PUT' });
+                if (!res.ok) {
+                    throw new Error('Server returned HTTP ' + res.status);
+                }
                 loadOrders();
-            } catch(e) { alert('Error updating order'); }
+            } catch(e) {
+                console.error('Error updating order:', e);
+                alert('Error updating order: ' + e.message);
+            }
         }
+
 
         function openReceiptModal(order) {
             const bizName = document.getElementById('settingsBusinessName').textContent || 'SalesFlow Business';
