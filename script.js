@@ -71,18 +71,8 @@ const demoInput = document.getElementById('demoInput');
 const demoSend = document.getElementById('demoSend');
 const demoMessages = document.getElementById('demoMessages');
 
-const botResponses = [
-    "Great question! 🎯 Our AI Sales Agent service starts at ₦75,000/month for the Starter plan, which includes up to 500 conversations. Would you like to know what's included?",
-    "Absolutely! ✨ We train our AI specifically on YOUR business — your products, pricing, FAQs, and even your brand's tone of voice. It's like having a sales rep who knows everything about your business!",
-    "We're currently in high demand! 🚀 Setup typically takes just 24 hours. We'll need your product info, pricing, and any FAQs. Want me to send you our quick onboarding form?",
-    "That's a common concern! 💡 Our AI handles about 85% of conversations fully automatically. For complex queries, it can seamlessly hand off to your human team. The best of both worlds!",
-    "Perfect timing! We're running a special this month — get 30% off your first 3 months when you sign up today. 🎉 Shall I set you up with a free demo first?",
-    "Our clients typically see a 3x increase in response rates and 40% more conversions within the first month. 📊 The AI responds instantly, 24/7 — no lead goes cold!",
-    "Yes! We support multiple WhatsApp Business numbers on our Enterprise plan. 💼 This is perfect for businesses with different product lines or regional offices.",
-    "I'd love to help you get started! 🤝 Just fill out the contact form on this page, or you can reach us directly at hello@salesflowai.com. We'll have you up and running within 24 hours!"
-];
-
-let responseIndex = 0;
+const API_BASE = 'https://salesflow-ai-bot.onrender.com';
+let chatHistory = [];
 
 function addMessage(text, isBot) {
     const msg = document.createElement('div');
@@ -92,29 +82,54 @@ function addMessage(text, isBot) {
     demoMessages.scrollTop = demoMessages.scrollHeight;
 }
 
-function handleDemoSend() {
+async function handleDemoSend() {
     const text = demoInput.value.trim();
     if (!text) return;
 
     addMessage(text, false);
     demoInput.value = '';
 
+    // Save user message to history
+    chatHistory.push({ role: "user", content: text });
+    if (chatHistory.length > 10) chatHistory.shift();
+
     // Show typing indicator
     const typing = document.createElement('div');
     typing.className = 'demo-msg bot';
-    typing.innerHTML = '<p style="opacity: 0.5">Temitope\'s AI is typing...</p>';
+    typing.innerHTML = '<p style="opacity: 0.5">SalesFlow AI is typing...</p>';
     typing.id = 'typing';
     demoMessages.appendChild(typing);
     demoMessages.scrollTop = demoMessages.scrollHeight;
 
-    // Respond after delay
-    setTimeout(() => {
+    try {
+        const response = await fetch(`${API_BASE}/demo/chat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: text,
+                history: chatHistory.slice(0, -1) // Send preceding history
+            })
+        });
+
         const typingEl = document.getElementById('typing');
         if (typingEl) typingEl.remove();
 
-        addMessage(botResponses[responseIndex % botResponses.length], true);
-        responseIndex++;
-    }, 1000 + Math.random() * 1000);
+        if (response.ok) {
+            const data = await response.json();
+            const reply = data.reply;
+            addMessage(reply, true);
+            chatHistory.push({ role: "assistant", content: reply });
+        } else {
+            addMessage("Thanks for your query! We build custom AI sales bots for WhatsApp. Fill out the contact form below and we'll get in touch with you within 24 hours!", true);
+        }
+    } catch (error) {
+        console.error("Demo chat error:", error);
+        const typingEl = document.getElementById('typing');
+        if (typingEl) typingEl.remove();
+        addMessage("Thanks for your query! We build custom AI sales bots for WhatsApp. Fill out the contact form below and we'll get in touch with you within 24 hours!", true);
+    }
 }
 
 demoSend.addEventListener('click', handleDemoSend);
