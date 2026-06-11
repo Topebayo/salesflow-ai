@@ -153,7 +153,7 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
     const message = document.getElementById('message').value;
 
     try {
-        await fetch("https://formsubmit.co/ajax/topabayo114@yahoo.com", {
+        await fetch("https://formsubmit.co/ajax/topebayo113@gmail.com", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
