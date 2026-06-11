@@ -68,7 +68,7 @@
                         businessId = business.id;
                         // Update brand name in sidebar
                         const brandEl = document.querySelector('.brand');
-                        if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-robot" style="color: #4facfe;"></i> ${business.name}`;
+                        if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-bolt" style="color: #4facfe;"></i> ${business.name}`;
                     }
                     return business;
                 } catch (e) {
@@ -1389,7 +1389,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="brand">
-            <i class="fa-solid fa-robot"></i>
+            <i class="fa-solid fa-bolt"></i>
             SalesFlow AI
         </div>
         <nav class="nav-items">
@@ -1415,10 +1415,10 @@
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
             <a href="#" class="nav-item" onclick="showSection('products', this)">
-                📦 Products
+                <i class="fa-solid fa-tags"></i> Products
             </a>
             <a href="#" class="nav-item" onclick="showSection('whatsapp', this)">
-                🔗 WhatsApp
+                <i class="fa-solid fa-link"></i> WhatsApp
             </a>
             <div style="flex: 1;"></div>
             <a href="#" class="nav-item" id="themeToggleBtn" onclick="toggleTheme(); return false;" style="margin-top: auto;">
@@ -1593,7 +1593,7 @@
 
             <!-- Agent Mode Selector Card -->
             <div class="panel" style="padding: 2rem; border: 1px solid rgba(79,172,254,0.2);">
-                <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-family: Outfit;"><i class="fa-solid fa-robot" style="color:#4facfe;margin-right:8px"></i>Agent Mode</h3>
+                <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-family: Outfit;"><i class="fa-solid fa-bolt" style="color:#4facfe;margin-right:8px"></i>Agent Mode</h3>
                 <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Switch the AI brain between different business personas. Changes take effect instantly on the next customer message.</p>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
@@ -1771,7 +1771,7 @@
             <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">
                 Write your promotional message below. You can send it to all contacts or select specific ones.
             </p>
-            <textarea id="broadcastMessage" placeholder="e.g. 🚀 Weekend Promo! Get 10% off all tequila this weekend only..." style="width: 100%; height: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; padding: 1rem; font-family: inherit; resize: vertical; margin-bottom: 1rem;"></textarea>
+            <textarea id="broadcastMessage" placeholder="e.g. Weekend Promo! Get 10% off all tequila this weekend only..." style="width: 100%; height: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; padding: 1rem; font-family: inherit; resize: vertical; margin-bottom: 1rem;"></textarea>
             
             <h4 style="color: #fff; margin: 1rem 0 0.5rem 0; font-family: Outfit;">Select Recipients</h4>
             <div id="broadcastRecipients" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem; max-height: 200px; overflow-y: auto; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
@@ -1862,7 +1862,7 @@
                 <!-- Header -->
                 <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
                     <div style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px;">
-                        <i class="fa-solid fa-robot" style="color: #4facfe;"></i> <span id="receiptBizName">SalesFlow Business</span>
+                        <i class="fa-solid fa-bolt" style="color: #4facfe;"></i> <span id="receiptBizName">SalesFlow Business</span>
                     </div>
                     <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 4px;">WhatsApp Sales Invoice</div>
                     <div style="color: #64748b; font-size: 0.75rem; font-family: monospace;" id="receiptDate">Date: Jan 01, 2026</div>
@@ -1924,7 +1924,7 @@
 
         <!-- Connection Status Card -->
         <div class="wa-status-card" id="waStatusCard">
-            <div class="wa-status-icon" id="waStatusIcon">❌</div>
+            <div class="wa-status-icon" id="waStatusIcon" style="color: #ef4444;"><i class="fa-solid fa-circle-xmark"></i></div>
             <div class="wa-status-text" id="waStatusText" style="color: #ef4444;">Not Connected</div>
             <div style="color: #64748b; font-size: 0.85rem;" id="waStatusTime">Last verified: Never</div>
             <div class="wa-webhook-url-box">
@@ -2376,7 +2376,7 @@
                                 <span style="color:#ef4444;font-weight:600"><i class="fa-solid fa-exclamation-circle"></i> ${h.name || 'Unknown'}</span>
                                 <span style="color:#64748b;font-size:0.8rem;margin-left:8px">${h.phone_number}</span>
                             </div>
-                            <button onclick="resumeBot('${h.phone_number}')" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-size:0.85rem"><i class="fa-solid fa-robot"></i> Resume Bot</button>
+                            <button onclick="resumeBot('${h.phone_number}')" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-size:0.85rem"><i class="fa-solid fa-bolt"></i> Resume Bot</button>
                         </div>
                         <div style="color:#94a3b8;font-size:0.8rem;margin-top:0.5rem">Last active: ${new Date(h.last_seen).toLocaleString()}</div>
                     `;
@@ -2608,7 +2608,7 @@
                 const align = isBot ? 'flex-end' : 'flex-start';
                 const bg = isBot ? 'linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.08))' : 'rgba(255,255,255,0.03)';
                 const border = isBot ? '1px solid rgba(79, 172, 254, 0.2)' : '1px solid rgba(255,255,255,0.06)';
-                const label = isBot ? '<i class="fa-solid fa-robot" style="color:#4facfe; margin-right:4px;"></i> AI Agent' : '<i class="fa-solid fa-user" style="color:#94a3b8; margin-right:4px;"></i> Customer';
+                const label = isBot ? '<i class="fa-solid fa-bolt" style="color:#4facfe; margin-right:4px;"></i> AI Agent' : '<i class="fa-solid fa-user" style="color:#94a3b8; margin-right:4px;"></i> Customer';
                 
                 const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
 
@@ -2764,9 +2764,9 @@
                 const imgHtml = coverUrl
                     ? `<div style="position: relative; overflow: hidden; height: 220px;">
                          ${badgeHtml}
-                         <img class="product-card-img" src="${coverUrl}" alt="${p.name}" onerror="this.outerHTML='<div class=product-card-img-placeholder>📦</div>'">
+                         <img class="product-card-img" src="${coverUrl}" alt="${p.name}" onerror="this.outerHTML='<div class=product-card-img-placeholder><i class=\'fa-solid fa-box-open\' style=\'opacity:0.2\'></i></div>'">
                        </div>`
-                    : '<div class="product-card-img-placeholder">📦</div>';
+                    : '<div class="product-card-img-placeholder"><i class="fa-solid fa-box-open" style="opacity:0.2"></i></div>';
                 
                 const priceStr = p.price != null ? '₦' + Number(p.price).toLocaleString() : '';
                 const catHtml = p.category ? `<div class="product-card-category">${p.category}</div>` : '';
@@ -3082,7 +3082,8 @@
 
                     // Update status card
                     const isConnected = data.webhook_connected === true;
-                    document.getElementById('waStatusIcon').textContent = isConnected ? '✅' : '❌';
+                    document.getElementById('waStatusIcon').innerHTML = isConnected ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    document.getElementById('waStatusIcon').style.color = isConnected ? '#10b981' : '#ef4444';
                     const statusTextEl = document.getElementById('waStatusText');
                     statusTextEl.textContent = isConnected ? 'Connected' : 'Not Connected';
                     statusTextEl.style.color = isConnected ? '#10b981' : '#ef4444';

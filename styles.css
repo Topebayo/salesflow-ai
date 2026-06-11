@@ -1443,3 +1443,44 @@ img {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
 }
+
+/* Inline SVG Icon Helper Styles */
+.feature-icon svg,
+.logo-icon svg,
+.contact-icon svg,
+.brain-icon svg,
+.demo-avatar svg,
+.chat-avatar svg {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1em;
+    height: 1em;
+    stroke: currentColor;
+    fill: none;
+}
+
+.feature-icon svg {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.logo-icon svg,
+.chat-avatar svg {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.brain-icon svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.demo-avatar svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.contact-icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
