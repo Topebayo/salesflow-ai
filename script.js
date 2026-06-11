@@ -138,21 +138,50 @@ demoInput.addEventListener('keypress', (e) => {
 });
 
 // Contact form
-document.getElementById('contactForm').addEventListener('submit', (e) => {
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const btn = e.target.querySelector('button[type="submit"]');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<span>✓ Thank you! We\'ll be in touch within 24 hours.</span>';
-    btn.style.background = 'linear-gradient(135deg, #25D366, #1DA851)';
+    btn.innerHTML = '<span>Sending...</span>';
     btn.disabled = true;
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const business = document.getElementById('business').value;
+    const message = document.getElementById('message').value;
+
+    try {
+        await fetch("https://formsubmit.co/ajax/topabayo114@yahoo.com", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                Name: name,
+                Email: email,
+                "WhatsApp Number": phone,
+                "Business Type": business,
+                Message: message
+            })
+        });
+
+        btn.innerHTML = '<span>✓ Thank you! We\'ll be in touch within 24 hours.</span>';
+        btn.style.background = 'linear-gradient(135deg, #25D366, #1DA851)';
+        e.target.reset();
+    } catch (error) {
+        console.error("Form submission error:", error);
+        btn.innerHTML = '<span>Failed to send. Please try again.</span>';
+        btn.style.background = '#ef4444';
+    }
 
     setTimeout(() => {
         btn.innerHTML = originalText;
         btn.style.background = '';
         btn.disabled = false;
-        e.target.reset();
-    }, 4000);
+    }, 5000);
 });
 
 // Smooth scroll for anchor links
