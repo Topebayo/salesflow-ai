@@ -1374,6 +1374,223 @@
                 display: none !important;
             }
         }
+        /* ==================== SKELETON LOADERS ==================== */
+        @keyframes skeleton-shimmer {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 800px 100%;
+            animation: skeleton-shimmer 1.5s linear infinite;
+            border-radius: 8px;
+        }
+
+        .skeleton-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .skeleton-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+        }
+
+        .skeleton-value {
+            width: 80px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .skeleton-label {
+            width: 140px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .skeleton-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .skeleton-cell {
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        body.light-theme .skeleton {
+            background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%);
+            background-size: 800px 100%;
+            animation: skeleton-shimmer 1.5s linear infinite;
+        }
+
+        /* ==================== CHAT SEARCH INPUT ==================== */
+        .chat-search-input {
+            width: 100%;
+            padding: 0.65rem 1rem 0.65rem 2.4rem;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .chat-search-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 12px var(--primary-glow);
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .chat-search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .chat-search-wrap {
+            position: relative;
+        }
+
+        .chat-search-wrap i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        body.light-theme .chat-search-input {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #0a0f1a;
+        }
+
+        body.light-theme .chat-search-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+            background: #fff;
+        }
+
+        /* ==================== BROADCAST RECIPIENT TOKENS ==================== */
+        .recipient-tokens-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 0.5rem;
+        }
+
+        .recipient-token {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+        .recipient-token:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(99, 102, 241, 0.06);
+        }
+
+        .recipient-token.selected {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .recipient-token input[type="checkbox"] {
+            display: none;
+        }
+
+        .recipient-token-select-all {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.25);
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .recipient-token-select-all.selected {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+            color: var(--success);
+        }
+
+        body.light-theme .recipient-token {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #374151;
+        }
+
+        body.light-theme .recipient-token:hover {
+            border-color: rgba(79, 70, 229, 0.3);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        body.light-theme .recipient-token.selected {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: rgba(79, 70, 229, 0.35);
+            color: #4f46e5;
+        }
+
+        /* ==================== PRODUCT CARD READ MORE ==================== */
+        .product-card-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.55;
+            margin-bottom: 0.8rem;
+        }
+
+        .product-card-desc.truncated {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .read-more-btn:hover {
+            color: var(--accent-light);
+            text-decoration: underline;
+        }
+
+        body.light-theme .product-card-desc { color: #374151; }
+        body.light-theme .read-more-btn { color: #4f46e5; }
+        body.light-theme .read-more-btn:hover { color: #3730a3; }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1531,7 +1748,11 @@
                 <h3 style="color: #fff; margin: 0; font-family: Outfit; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
                     <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> Active Chats
                 </h3>
-                <div id="chatListContainer" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; padding-right: 4px;">
+                <div class="chat-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="chatSearchInput" class="chat-search-input" placeholder="Search by name or number..." autocomplete="off">
+                </div>
+                <div id="chatListContainer" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 4px;">
                     <!-- Populated by JS -->
                 </div>
             </div>
@@ -1627,7 +1848,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
                             <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Agent Name</label>
-                            <input id="promptAgentName" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                            <input id="promptAgentName" type="text" placeholder="e.g. Alex's AI" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                         </div>
                         <div>
                             <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Tone / Personality</label>
@@ -1643,37 +1864,37 @@
                     <!-- Greeting -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Welcome Greeting <span style="color:#64748b; font-size:0.75rem;">(what the bot says when someone texts "hi")</span></label>
-                        <input id="promptGreeting" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptGreeting" type="text" placeholder="e.g. Hello! Welcome to our store, how can I help you?" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Business Description -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">What does your business do? <span style="color:#64748b; font-size:0.75rem;">(1-2 sentences)</span></label>
-                        <textarea id="promptDescription" rows="2" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                        <textarea id="promptDescription" rows="2" placeholder="e.g. We sell premium real estate listings across Lagos and Abuja..." style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
                     </div>
 
                     <!-- Payment Info -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Payment Details <span style="color:#64748b; font-size:0.75rem;">(how customers should pay)</span></label>
-                        <input id="promptPayment" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptPayment" type="text" placeholder="e.g. Bank Transfer — GTBank 0123456789 (Business Name)" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Inspection Fee (Real Estate only) -->
                     <div id="inspectionFeeGroup" style="display: none;">
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Inspection Fee (₦) <span style="color:#64748b; font-size:0.75rem;">(fee required before property inspections)</span></label>
-                        <input id="promptInspectionFee" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptInspectionFee" type="text" placeholder="e.g. 5000" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Business Hours -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Business Hours <span style="color:#64748b; font-size:0.75rem;">(optional)</span></label>
-                        <input id="promptHours" type="text" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                        <input id="promptHours" type="text" placeholder="e.g. Mon–Fri: 9 AM – 6 PM, Sat: 10 AM – 2 PM" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
                     <!-- Custom Rules -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Custom Rules <span style="color:#64748b; font-size:0.75rem;">(special instructions for the AI)</span></label>
-                        <textarea id="promptRules" rows="3" placeholder="" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
+                        <textarea id="promptRules" rows="3" placeholder="e.g. Always negotiate politely, never give discounts above 10%..." style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
                     </div>
 
                     <!-- Save Button -->
@@ -2411,21 +2632,39 @@
                     return;
                 }
                 
-                let html = '<label style="display:flex; align-items:center; gap:8px; color:#fff; cursor:pointer; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:0.5rem;"><input type="checkbox" id="selectAllRecipients" checked onchange="toggleAllRecipients(this)"> <strong>Select All</strong></label>';
+                let html = '<div class="recipient-tokens-wrap">';
+                html += '<span class="recipient-token recipient-token-select-all selected" onclick="toggleAllTokens(this)"><i class="fa-solid fa-check-double"></i> Select All</span>';
                 
                 contacts.forEach(c => {
                     const name = c.name ? c.name : 'Unknown';
-                    html += `<label style="display:flex; align-items:center; gap:8px; color:#94a3b8; cursor:pointer;"><input type="checkbox" class="recipient-checkbox" value="${c.phone_number}" checked> ${name} (${c.phone_number})</label>`;
+                    html += `<span class="recipient-token selected" data-phone="${c.phone_number}" onclick="toggleToken(this)"><input type="checkbox" class="recipient-checkbox" value="${c.phone_number}" checked>${name}</span>`;
                 });
+                html += '</div>';
                 container.innerHTML = html;
             } catch(e) {
                 container.innerHTML = '<div style="color:#ef4444; font-size:0.9rem;">Error loading contacts.</div>';
             }
         }
 
-        function toggleAllRecipients(source) {
-            const checkboxes = document.querySelectorAll('.recipient-checkbox');
-            checkboxes.forEach(cb => cb.checked = source.checked);
+        function toggleToken(el) {
+            const cb = el.querySelector('input[type=\"checkbox\"]');
+            cb.checked = !cb.checked;
+            el.classList.toggle('selected', cb.checked);
+            // Update Select All state
+            const allTokens = document.querySelectorAll('.recipient-token:not(.recipient-token-select-all)');
+            const allSelected = Array.from(allTokens).every(t => t.classList.contains('selected'));
+            const selectAllBtn = document.querySelector('.recipient-token-select-all');
+            if (selectAllBtn) selectAllBtn.classList.toggle('selected', allSelected);
+        }
+
+        function toggleAllTokens(el) {
+            const isSelected = !el.classList.contains('selected');
+            el.classList.toggle('selected', isSelected);
+            document.querySelectorAll('.recipient-token:not(.recipient-token-select-all)').forEach(token => {
+                token.classList.toggle('selected', isSelected);
+                const cb = token.querySelector('input[type=\"checkbox\"]');
+                if (cb) cb.checked = isSelected;
+            });
         }
 
         async function sendBroadcast() {
@@ -2771,16 +3010,24 @@
                 const priceStr = p.price != null ? '₦' + Number(p.price).toLocaleString() : '';
                 const catHtml = p.category ? `<div class="product-card-category">${p.category}</div>` : '';
                 const isAvail = p.is_available !== false;
+                const descText = p.description || '';
+                const needsTruncation = descText.length > 80;
+                const descId = 'desc-' + p.id;
+                const descHtml = descText
+                    ? `<div class="product-card-desc ${needsTruncation ? 'truncated' : ''}" id="${descId}">${descText}</div>${needsTruncation ? `<button class="read-more-btn" onclick="toggleReadMore('${descId}', this)">Read more</button>` : ''}`
+                    : '';
+
                 card.innerHTML = `
                     ${imgHtml}
                     <div class="product-card-body">
                         <div class="product-card-name">${p.name}</div>
                         ${priceStr ? '<div class="product-card-price">' + priceStr + '</div>' : ''}
                         ${catHtml}
+                        ${descHtml}
                         <div class="product-card-actions">
                             <div style="display:flex;gap:0.5rem">
                                 <button class="product-btn product-btn-edit" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                <button class="product-btn product-btn-delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash"></i></button>
+                                <button class="product-btn product-btn-delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')" ><i class="fa-solid fa-trash"></i></button>
                             </div>
                             <label class="avail-toggle" title="${isAvail ? 'Available' : 'Sold Out'}">
                                 <input type="checkbox" ${isAvail ? 'checked' : ''} onchange="toggleAvailability('${p.id}', this.checked)">
@@ -3140,6 +3387,29 @@
             }
             setTimeout(() => { statusEl.style.display = 'none'; }, 4000);
         }
+        // ==================== READ MORE / LESS TOGGLE ====================
+        function toggleReadMore(descId, btn) {
+            const el = document.getElementById(descId);
+            if (!el) return;
+            const isTruncated = el.classList.contains('truncated');
+            el.classList.toggle('truncated', !isTruncated);
+            btn.textContent = isTruncated ? 'Read less' : 'Read more';
+        }
+
+        // ==================== CHAT SEARCH FILTER ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('chatSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', () => {
+                    const term = searchInput.value.toLowerCase().trim();
+                    const cards = document.querySelectorAll('#chatListContainer .chat-list-card');
+                    cards.forEach(card => {
+                        const text = card.textContent.toLowerCase();
+                        card.style.display = text.includes(term) ? '' : 'none';
+                    });
+                });
+            }
+        });
     </script>
     <script src="dashboard.js"></script>
 </body>

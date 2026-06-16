@@ -13,9 +13,35 @@ async function fetchData() {
     const loader = document.getElementById("loader");
     const content = document.getElementById("dashboardContent");
     const leadsBody = document.getElementById("leadsBody");
+    const statsGrid = document.querySelector(".stats-grid");
 
-    loader.style.display = "block";
-    content.style.opacity = "0.5";
+    // Show skeleton loaders instead of dimming content
+    loader.style.display = "none";
+    content.style.display = "block";
+    content.style.opacity = "1";
+
+    // Skeleton cards for stats
+    if (statsGrid) {
+        statsGrid.innerHTML = `
+            <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
+        `;
+    }
+
+    // Skeleton rows for leads table
+    if (leadsBody) {
+        leadsBody.innerHTML = Array.from({ length: 5 }, () => `
+            <tr class="skeleton-row">
+                <td><div class="skeleton skeleton-cell" style="width:120px"></div></td>
+                <td><div class="skeleton skeleton-cell" style="width:90px"></div></td>
+                <td><div class="skeleton skeleton-cell" style="width:40px"></div></td>
+                <td><div class="skeleton skeleton-cell" style="width:100px"></div></td>
+                <td><div class="skeleton skeleton-cell" style="width:100px"></div></td>
+                <td><div class="skeleton skeleton-cell" style="width:60px"></div></td>
+            </tr>
+        `).join('');
+    }
 
     try {
         // Fetch contacts for THIS business only
@@ -41,10 +67,26 @@ async function fetchData() {
             });
         }
 
-        // Update Overview Cards
-        document.getElementById("valLeads").innerText = totalLeads;
-        document.getElementById("valActiveChats").innerText = activeChats;
-        document.getElementById("valTotalMsgs").innerText = totalMsgs;
+        // Restore real stat cards (replacing skeletons)
+        if (statsGrid) {
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-value" id="valLeads">${totalLeads}</div>
+                    <div class="stat-label">Total Leads Captured</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-purple"><i class="fa-solid fa-message"></i></div>
+                    <div class="stat-value" id="valActiveChats">${activeChats}</div>
+                    <div class="stat-label">Active Conversations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green"><i class="fa-regular fa-paper-plane"></i></div>
+                    <div class="stat-value" id="valTotalMsgs">${totalMsgs}</div>
+                    <div class="stat-label">Total Messages Sent/Received</div>
+                </div>
+            `;
+        }
 
         // Update Table
         leadsBody.innerHTML = "";
@@ -88,9 +130,25 @@ async function fetchData() {
         console.error("Dashboard error:", error);
         // Show empty state instead of error popup for new businesses
         leadsBody.innerHTML = `<tr><td colspan="6" class="empty-state">No leads captured yet. Your AI is waiting for messages!</td></tr>`;
-        document.getElementById("valLeads").innerText = 0;
-        document.getElementById("valActiveChats").innerText = 0;
-        document.getElementById("valTotalMsgs").innerText = 0;
+        if (statsGrid) {
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-value" id="valLeads">0</div>
+                    <div class="stat-label">Total Leads Captured</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-purple"><i class="fa-solid fa-message"></i></div>
+                    <div class="stat-value" id="valActiveChats">0</div>
+                    <div class="stat-label">Active Conversations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green"><i class="fa-regular fa-paper-plane"></i></div>
+                    <div class="stat-value" id="valTotalMsgs">0</div>
+                    <div class="stat-label">Total Messages Sent/Received</div>
+                </div>
+            `;
+        }
         loader.style.display = "none";
         content.style.display = "block";
         content.style.opacity = "1";
