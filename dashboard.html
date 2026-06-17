@@ -2736,7 +2736,8 @@
                     .from('contacts')
                     .select('phone_number, name, message_count, human_handoff')
                     .eq('business_id', businessId)
-                    .order('last_seen', { ascending: false });
+                    .order('last_seen', { ascending: false })
+                    .limit(100);
 
                 if (contactsErr) throw contactsErr;
 
@@ -2745,7 +2746,8 @@
                     .from('conversations')
                     .select('phone_number, role, content, timestamp')
                     .eq('business_id', businessId)
-                    .order('timestamp', { ascending: true });
+                    .order('timestamp', { ascending: false })
+                    .limit(200);
 
                 if (convosErr) throw convosErr;
 

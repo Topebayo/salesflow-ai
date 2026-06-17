@@ -49,7 +49,8 @@ async function fetchData() {
             .from('contacts')
             .select('*')
             .eq('business_id', businessId)
-            .order('last_seen', { ascending: false });
+            .order('last_seen', { ascending: false })
+            .limit(100);
 
         if (error) throw error;
 
