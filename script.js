@@ -71,7 +71,7 @@ const demoInput = document.getElementById('demoInput');
 const demoSend = document.getElementById('demoSend');
 const demoMessages = document.getElementById('demoMessages');
 
-const API_BASE = 'https://salesflow-ai-bot.onrender.com';
+const API_BASE = 'https://api.salesaiflow.online';
 let chatHistory = [];
 
 function addMessage(text, isBot) {
