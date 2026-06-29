@@ -222,3 +222,19 @@ document.querySelectorAll('.pricing-grid .pricing-card').forEach((card, i) => {
 });
 
 console.log('⚡ SalesFlow AI - Landing Page Loaded');
+
+// ==================== LIGHT / DARK THEME TOGGLE ====================
+function toggleTheme() {
+    document.documentElement.classList.toggle('light-theme');
+    document.body.classList.toggle('light-theme');
+    const isLight = document.documentElement.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+// Sync body class with html class on load
+(function() {
+    if (document.documentElement.classList.contains('light-theme')) {
+        document.body.classList.add('light-theme');
+    }
+})();
+

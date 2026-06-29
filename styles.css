@@ -4,33 +4,39 @@
 
 /* CSS Variables / Design Tokens */
 :root {
-    /* Colors */
-    --primary: #6C3AE0;
-    --primary-light: #8B5CF6;
-    --primary-dark: #5521C5;
-    --accent: #25D366;
-    --accent-light: #34EB76;
-    --accent-dark: #1DA851;
+    /* Colors - Human/Matured Theme (Evergreen & Warm Sand/Gold) */
+    --primary: #1b4332;       /* Deep warm forest green */
+    --primary-light: #2d6a4f; /* Shined evergreen */
+    --primary-dark: #081c15;  /* Pitch pine green */
+    --accent: #d4a373;        /* Matured warm sand / champagne gold */
+    --accent-light: #e9c46a;  /* Bright sand gold */
+    --accent-dark: #b5838d;   /* Warm blush copper */
     
-    /* Background */
-    --bg-primary: #0A0A0F;
-    --bg-secondary: #111118;
-    --bg-tertiary: #1A1A24;
-    --bg-card: rgba(26, 26, 36, 0.6);
-    --bg-card-hover: rgba(36, 36, 50, 0.8);
+    /* RGB values for transparent overlays */
+    --primary-rgb: 27, 67, 50;
+    --primary-light-rgb: 45, 106, 79;
+    --accent-rgb: 212, 163, 115;
+    
+    /* Background (Matured warm charcoal, not neon blue-black) */
+    --bg-primary: #121316;
+    --bg-secondary: #1a1c20;
+    --bg-tertiary: #24272c;
+    --bg-card: rgba(26, 28, 32, 0.6);
+    --bg-card-hover: rgba(36, 39, 45, 0.8);
+    --bg-navbar: rgba(18, 19, 22, 0.75);
     
     /* Text */
-    --text-primary: #F5F5F7;
-    --text-secondary: #A0A0B0;
-    --text-muted: #6B6B80;
+    --text-primary: #f4f3f0;  /* Soft warm off-white */
+    --text-secondary: #a7a9be;
+    --text-muted: #727585;
     
     /* Borders */
-    --border: rgba(255, 255, 255, 0.06);
-    --border-hover: rgba(255, 255, 255, 0.12);
+    --border: rgba(255, 255, 255, 0.05);
+    --border-hover: rgba(255, 255, 255, 0.1);
     
     /* Effects */
-    --glow-primary: rgba(108, 58, 224, 0.3);
-    --glow-accent: rgba(37, 211, 102, 0.3);
+    --glow-primary: rgba(27, 67, 50, 0.2);
+    --glow-accent: rgba(212, 163, 115, 0.2);
     
     /* Typography */
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -49,6 +55,26 @@
     /* Transitions */
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme Variables */
+.light-theme {
+    --bg-primary: #faf9f6;    /* Warm alabaster/off-white */
+    --bg-secondary: #f4f3ee;  /* Very soft grey-cream */
+    --bg-tertiary: #e8e6df;   /* Neutral sandstone */
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --bg-card-hover: #ffffff;
+    --bg-navbar: rgba(250, 249, 246, 0.8);
+    
+    --text-primary: #1b1e22;  /* Deep slate charcoal (no pure black) */
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+    
+    --border: rgba(0, 0, 0, 0.06);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    
+    --glow-primary: rgba(27, 67, 50, 0.08);
+    --glow-accent: rgba(212, 163, 115, 0.08);
 }
 
 /* Reset & Base */
@@ -104,14 +130,14 @@ img {
     transition: var(--transition);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    background: rgba(10, 10, 15, 0.7);
+    background: var(--bg-navbar);
     border-bottom: 1px solid transparent;
 }
 
 .navbar.scrolled {
     padding: 10px 0;
     border-bottom-color: var(--border);
-    background: rgba(10, 10, 15, 0.9);
+    background: var(--bg-navbar);
 }
 
 .nav-container {
@@ -293,8 +319,8 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(108, 58, 224, 0.15);
-    border: 1px solid rgba(108, 58, 224, 0.3);
+    background: rgba(var(--primary-rgb), 0.15);
+    border: 1px solid rgba(var(--primary-rgb), 0.3);
     padding: 8px 16px;
     border-radius: var(--radius-xl);
     font-size: 0.85rem;
@@ -412,7 +438,7 @@ img {
 }
 
 .btn-outline:hover {
-    background: rgba(108, 58, 224, 0.1);
+    background: rgba(var(--primary-rgb), 0.1);
     border-color: var(--primary);
     transform: translateY(-2px);
 }
@@ -573,8 +599,8 @@ img {
 }
 
 .message.outgoing {
-    background: linear-gradient(135deg, rgba(108, 58, 224, 0.3), rgba(37, 211, 102, 0.15));
-    border: 1px solid rgba(108, 58, 224, 0.2);
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3), rgba(var(--accent-rgb), 0.15));
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
     align-self: flex-end;
     border-bottom-right-radius: 4px;
 }
@@ -646,8 +672,8 @@ img {
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--primary-light);
-    background: rgba(108, 58, 224, 0.1);
-    border: 1px solid rgba(108, 58, 224, 0.2);
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
     padding: 6px 16px;
     border-radius: var(--radius-xl);
     margin-bottom: 16px;
@@ -812,7 +838,7 @@ img {
 
 .form-line {
     height: 6px;
-    background: rgba(108, 58, 224, 0.3);
+    background: rgba(var(--primary-rgb), 0.3);
     border-radius: 3px;
     animation: shimmer 2s ease-in-out infinite;
 }
@@ -867,7 +893,7 @@ img {
 
 .chart-bar {
     width: 14px;
-    background: rgba(108, 58, 224, 0.4);
+    background: rgba(var(--primary-rgb), 0.4);
     border-radius: 3px 3px 0 0;
     animation: grow-bar 1.5s ease-out forwards;
     transform-origin: bottom;
@@ -969,8 +995,8 @@ img {
 }
 
 .demo-msg.bot {
-    background: linear-gradient(135deg, rgba(108, 58, 224, 0.2), rgba(37, 211, 102, 0.1));
-    border: 1px solid rgba(108, 58, 224, 0.15);
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), rgba(var(--accent-rgb), 0.1));
+    border: 1px solid rgba(var(--primary-rgb), 0.15);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
 }
@@ -1062,7 +1088,7 @@ img {
 
 .pricing-card.popular {
     border-color: var(--primary);
-    background: linear-gradient(180deg, rgba(108, 58, 224, 0.1), var(--bg-card));
+    background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.1), var(--bg-card));
     box-shadow: 0 0 60px var(--glow-primary);
     transform: scale(1.05);
 }
@@ -1484,3 +1510,51 @@ img {
     width: 1.1rem;
     height: 1.1rem;
 }
+
+/* =============================================================================
+   THEME TOGGLE BUTTON
+   ============================================================================= */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    border: 1px solid var(--border);
+    margin-right: 12px;
+}
+
+.theme-toggle:hover {
+    background: var(--bg-secondary);
+    color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+.theme-toggle svg {
+    display: block;
+    stroke: currentColor;
+    fill: none;
+}
+
+/* Toggle visibility of sun/moon icons based on active theme */
+body .theme-toggle .moon-icon {
+    display: none;
+}
+
+body .theme-toggle .sun-icon {
+    display: block;
+}
+
+.light-theme .theme-toggle .sun-icon {
+    display: none;
+}
+
+.light-theme .theme-toggle .moon-icon {
+    display: block;
+}
+
