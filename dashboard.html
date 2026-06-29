@@ -2158,105 +2158,132 @@
         <header class="header">
             <div>
                 <h1>WhatsApp Integration</h1>
-                <p style="color: #94a3b8; margin-top: 5px;">Connect your WhatsApp Business API</p>
+                <p style="color: var(--text-secondary); margin-top: 5px;">Connect your WhatsApp Business line</p>
             </div>
         </header>
 
-        <!-- Connection Status Card -->
-        <div class="wa-status-card" id="waStatusCard">
-            <div class="wa-status-icon" id="waStatusIcon" style="color: #ef4444;"><i class="fa-solid fa-circle-xmark"></i></div>
-            <div class="wa-status-text" id="waStatusText" style="color: #ef4444;">Not Connected</div>
-            <div style="color: #64748b; font-size: 0.85rem;" id="waStatusTime">Last verified: Never</div>
-            <div class="wa-webhook-url-box">
-                <code id="waWebhookUrl">Loading...</code>
-                <button class="wa-copy-btn" onclick="copyToClipboard(document.getElementById('waWebhookUrl').textContent, this)"><i class="fa-solid fa-copy"></i> Copy</button>
+        <!-- Integration Method Selector -->
+        <div class="wa-form-card" style="margin-bottom: 2rem;">
+            <h3><i class="fa-solid fa-plug" style="color:var(--accent);margin-right:8px"></i>Connection Method</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                <button id="methodQrBtn" onclick="selectIntegrationMethod('evolution')" class="wa-method-btn" style="background: rgba(var(--primary-rgb), 0.15); border: 2px solid var(--primary-light); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition);">
+                    <i class="fa-solid fa-qrcode" style="font-size: 2rem; color: var(--primary-light); display: block; margin-bottom: 0.8rem;"></i>
+                    <strong style="color: #fff; display: block; margin-bottom: 0.3rem;">Quick QR Scan</strong>
+                    <span style="color: var(--text-secondary); font-size: 0.8rem;">Scan a code, go live in 10 seconds. No Facebook needed.</span>
+                </button>
+                <button id="methodMetaBtn" onclick="selectIntegrationMethod('meta')" class="wa-method-btn" style="background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition);">
+                    <i class="fa-brands fa-meta" style="font-size: 2rem; color: var(--text-secondary); display: block; margin-bottom: 0.8rem;"></i>
+                    <strong style="color: #fff; display: block; margin-bottom: 0.3rem;">Official Meta API</strong>
+                    <span style="color: var(--text-secondary); font-size: 0.8rem;">Facebook developer setup required. Best for verified businesses.</span>
+                </button>
             </div>
         </div>
 
-        <!-- Credentials Form -->
-        <div class="wa-form-card">
-            <h3><i class="fa-solid fa-key" style="color:var(--primary-light);margin-right:8px"></i>API Credentials</h3>
-            <div class="wa-field">
-                <label>Meta Access Token</label>
-                <div class="wa-field-input-wrap">
-                    <input type="password" id="waAccessToken" placeholder="Paste your Meta access token">
-                    <button class="wa-toggle-vis" onclick="togglePasswordVisibility('waAccessToken', this)"><i class="fa-solid fa-eye"></i></button>
-                </div>
+        <!-- ============ QR SCAN METHOD ============ -->
+        <div id="evolutionSection">
+            <div class="wa-status-card" id="evoStatusCard">
+                <div class="wa-status-icon" id="evoStatusIcon" style="color: #64748b;"><i class="fa-solid fa-qrcode"></i></div>
+                <div class="wa-status-text" id="evoStatusText" style="color: #64748b;">Not Connected</div>
+                <div style="color: #64748b; font-size: 0.85rem;" id="evoStatusSub">Click the button below to generate your QR code</div>
             </div>
-            <div class="wa-field">
-                <label>Phone Number ID</label>
-                <div class="wa-field-input-wrap">
-                    <input type="text" id="waPhoneNumberId" placeholder="e.g. 112233445566778899">
+
+            <div class="wa-form-card" id="evoQrContainer" style="text-align: center; display: none;">
+                <h3 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-mobile-screen" style="color:var(--accent);margin-right:8px"></i>Scan with WhatsApp</h3>
+                <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">Open WhatsApp &rarr; Settings &rarr; Linked Devices &rarr; Link a Device</p>
+                <div id="evoQrImageWrap" style="display: inline-block; background: #fff; padding: 16px; border-radius: 16px; margin-bottom: 1rem;">
+                    <img id="evoQrImage" src="" alt="QR Code" style="width: 260px; height: 260px; display: block;">
                 </div>
+                <p style="color: var(--text-secondary); font-size: 0.78rem;" id="evoQrTimer">QR code refreshes automatically...</p>
             </div>
-            <div class="wa-field">
-                <label>Verify Token</label>
-                <div class="wa-field-input-wrap">
-                    <input type="text" id="waVerifyToken" placeholder="Auto-generated" readonly style="color: var(--accent); font-weight: 600;">
-                    <button class="wa-copy-btn" onclick="copyToClipboard(document.getElementById('waVerifyToken').value, this)"><i class="fa-solid fa-copy"></i> Copy</button>
-                    <button class="wa-toggle-vis" onclick="regenerateVerifyToken()"><i class="fa-solid fa-rotate"></i></button>
-                </div>
+
+            <div class="wa-form-card" id="evoConnectedCard" style="text-align: center; display: none;">
+                <div style="font-size: 3.5rem; color: #10b981; margin-bottom: 1rem;"><i class="fa-solid fa-circle-check"></i></div>
+                <h3 style="color: #10b981; margin-bottom: 0.5rem;">WhatsApp Connected!</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Your AI bot is now live and responding to messages.</p>
+                <button onclick="disconnectEvolution()" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.6rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                    <i class="fa-solid fa-link-slash"></i> Disconnect
+                </button>
             </div>
-            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                <button onclick="saveWhatsAppCredentials()" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 12px var(--primary-glow);"><i class="fa-solid fa-floppy-disk"></i> Save Credentials</button>
-                <div id="waCredStatus" style="font-size: 0.9rem; display: none;"></div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;" id="evoActionBtns">
+                <button id="evoConnectBtn" onclick="connectEvolution()" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border: none; padding: 0.85rem 2.5rem; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 12px var(--primary-glow); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-qrcode"></i> Generate QR Code
+                </button>
             </div>
         </div>
 
-        <!-- Setup Guide -->
-        <div class="wa-guide-card" style="padding: 2.5rem; margin-top: 2rem;">
-            <h3 style="margin-bottom: 2rem;"><i class="fa-solid fa-route" style="color:var(--accent);margin-right:10px"></i>Step-by-Step Setup Guide</h3>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 2rem;">
-                
-                <!-- Phase 1 -->
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
-                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 1: Meta Portal Setup</div>
-                    <ol class="wa-steps" style="counter-reset: wa-step 0;">
-                        <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Go to <strong style="color:var(--accent); cursor:pointer;" onclick="window.open('https://developers.facebook.com', '_blank')">developers.facebook.com</strong> and create a Meta Business App.</span>
-                        </li>
-                        <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Add the <strong style="color:#fff">WhatsApp</strong> product to your Meta App integration.</span>
-                        </li>
-                        <li style="border-bottom: none; padding: 1rem 0 0 0;">
-                            <span style="font-size: 0.92rem;">Navigate to <strong style="color:#fff">WhatsApp → API Setup</strong> to locate your **Access Token** and **Phone Number ID**.</span>
-                        </li>
-                    </ol>
+        <!-- ============ META API METHOD ============ -->
+        <div id="metaSection" style="display: none;">
+            <div class="wa-status-card" id="waStatusCard">
+                <div class="wa-status-icon" id="waStatusIcon" style="color: #ef4444;"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div class="wa-status-text" id="waStatusText" style="color: #ef4444;">Not Connected</div>
+                <div style="color: #64748b; font-size: 0.85rem;" id="waStatusTime">Last verified: Never</div>
+                <div class="wa-webhook-url-box">
+                    <code id="waWebhookUrl">Loading...</code>
+                    <button class="wa-copy-btn" onclick="copyToClipboard(document.getElementById('waWebhookUrl').textContent, this)"><i class="fa-solid fa-copy"></i> Copy</button>
                 </div>
+            </div>
 
-                <!-- Phase 2 -->
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
-                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, var(--accent-dark), var(--accent)); color: #121316; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 2: Save Credentials</div>
-                    <ol class="wa-steps" style="counter-reset: wa-step 3;">
-                        <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Paste the retrieved Access Token and Phone Number ID into the form above, then click <strong style="color:var(--accent)">Save Credentials</strong>.</span>
-                        </li>
-                        <li style="border-bottom: none; padding: 1rem 0 0 0;">
-                            <span style="font-size: 0.92rem;">Copy the unique <strong style="color:var(--accent)">Webhook URL</strong> automatically generated at the top of this page.</span>
-                        </li>
-                    </ol>
+            <div class="wa-form-card">
+                <h3><i class="fa-solid fa-key" style="color:var(--primary-light);margin-right:8px"></i>API Credentials</h3>
+                <div class="wa-field">
+                    <label>Meta Access Token</label>
+                    <div class="wa-field-input-wrap">
+                        <input type="password" id="waAccessToken" placeholder="Paste your Meta access token">
+                        <button class="wa-toggle-vis" onclick="togglePasswordVisibility('waAccessToken', this)"><i class="fa-solid fa-eye"></i></button>
+                    </div>
                 </div>
-
-                <!-- Phase 3 -->
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
-                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, #2d6a4f, #52b788); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 3: Webhook Verification</div>
-                    <ol class="wa-steps" style="counter-reset: wa-step 5;">
-                        <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">On the Meta Developer portal, go to <strong style="color:#fff">WhatsApp → Configuration → Edit Webhook</strong>.</span>
-                        </li>
-                        <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Paste your Webhook URL and Verify Token, then click <strong style="color:var(--accent)">Verify and Save</strong>.</span>
-                        </li>
-                        <li style="border-bottom: none; padding: 1rem 0 0 0;">
-                            <span style="font-size: 0.92rem;">Under Webhook Fields, subscribe to the <strong style="color:#fff">'messages'</strong> field to receive incoming chat notifications.</span>
-                        </li>
-                    </ol>
+                <div class="wa-field">
+                    <label>Phone Number ID</label>
+                    <div class="wa-field-input-wrap">
+                        <input type="text" id="waPhoneNumberId" placeholder="e.g. 112233445566778899">
+                    </div>
                 </div>
+                <div class="wa-field">
+                    <label>Verify Token</label>
+                    <div class="wa-field-input-wrap">
+                        <input type="text" id="waVerifyToken" placeholder="Auto-generated" readonly style="color: var(--accent); font-weight: 600;">
+                        <button class="wa-copy-btn" onclick="copyToClipboard(document.getElementById('waVerifyToken').value, this)"><i class="fa-solid fa-copy"></i> Copy</button>
+                        <button class="wa-toggle-vis" onclick="regenerateVerifyToken()"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                    <button onclick="saveWhatsAppCredentials()" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 12px var(--primary-glow);"><i class="fa-solid fa-floppy-disk"></i> Save Credentials</button>
+                    <div id="waCredStatus" style="font-size: 0.9rem; display: none;"></div>
+                </div>
+            </div>
 
+            <div class="wa-guide-card" style="padding: 2.5rem; margin-top: 2rem;">
+                <h3 style="margin-bottom: 2rem;"><i class="fa-solid fa-route" style="color:var(--accent);margin-right:10px"></i>Step-by-Step Setup Guide</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 2rem;">
+                    <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
+                        <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 1: Meta Portal Setup</div>
+                        <ol class="wa-steps" style="counter-reset: wa-step 0;">
+                            <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;"><span style="font-size: 0.92rem;">Go to <strong style="color:var(--accent); cursor:pointer;" onclick="window.open('https://developers.facebook.com', '_blank')">developers.facebook.com</strong> and create a Meta Business App.</span></li>
+                            <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;"><span style="font-size: 0.92rem;">Add the <strong style="color:#fff">WhatsApp</strong> product to your Meta App.</span></li>
+                            <li style="border-bottom: none; padding: 1rem 0 0 0;"><span style="font-size: 0.92rem;">Navigate to <strong style="color:#fff">WhatsApp &rarr; API Setup</strong> to find your Access Token and Phone Number ID.</span></li>
+                        </ol>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
+                        <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, var(--accent-dark), var(--accent)); color: #121316; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 2: Save Credentials</div>
+                        <ol class="wa-steps" style="counter-reset: wa-step 3;">
+                            <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;"><span style="font-size: 0.92rem;">Paste credentials into the form above, then click <strong style="color:var(--accent)">Save Credentials</strong>.</span></li>
+                            <li style="border-bottom: none; padding: 1rem 0 0 0;"><span style="font-size: 0.92rem;">Copy the unique <strong style="color:var(--accent)">Webhook URL</strong> at the top of this page.</span></li>
+                        </ol>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
+                        <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, #2d6a4f, #52b788); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 3: Webhook Verification</div>
+                        <ol class="wa-steps" style="counter-reset: wa-step 5;">
+                            <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;"><span style="font-size: 0.92rem;">On the Meta portal, go to <strong style="color:#fff">WhatsApp &rarr; Configuration &rarr; Edit Webhook</strong>.</span></li>
+                            <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;"><span style="font-size: 0.92rem;">Paste your Webhook URL and Verify Token, then click <strong style="color:var(--accent)">Verify and Save</strong>.</span></li>
+                            <li style="border-bottom: none; padding: 1rem 0 0 0;"><span style="font-size: 0.92rem;">Subscribe to the <strong style="color:#fff">'messages'</strong> webhook field.</span></li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+
 
     <script>
         function toggleSidebar() {
@@ -3330,39 +3357,186 @@
             });
         }
 
+        let evoPollingInterval = null;
+
+        function selectIntegrationMethod(method) {
+            const qrBtn = document.getElementById('methodQrBtn');
+            const metaBtn = document.getElementById('methodMetaBtn');
+            const evoSection = document.getElementById('evolutionSection');
+            const metaSection = document.getElementById('metaSection');
+
+            if (method === 'evolution') {
+                qrBtn.style.background = 'rgba(var(--primary-rgb), 0.15)';
+                qrBtn.style.borderColor = 'var(--primary-light)';
+                qrBtn.querySelector('i').style.color = 'var(--primary-light)';
+                metaBtn.style.background = 'rgba(255,255,255,0.02)';
+                metaBtn.style.borderColor = 'rgba(255,255,255,0.06)';
+                metaBtn.querySelector('i').style.color = 'var(--text-secondary)';
+                evoSection.style.display = 'block';
+                metaSection.style.display = 'none';
+            } else {
+                metaBtn.style.background = 'rgba(var(--primary-rgb), 0.15)';
+                metaBtn.style.borderColor = 'var(--primary-light)';
+                metaBtn.querySelector('i').style.color = 'var(--primary-light)';
+                qrBtn.style.background = 'rgba(255,255,255,0.02)';
+                qrBtn.style.borderColor = 'rgba(255,255,255,0.06)';
+                qrBtn.querySelector('i').style.color = 'var(--text-secondary)';
+                evoSection.style.display = 'none';
+                metaSection.style.display = 'block';
+            }
+        }
+
+        async function connectEvolution() {
+            const btn = document.getElementById('evoConnectBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating instance...';
+
+            try {
+                const resp = await fetch(`${API_BASE}/evolution/create-instance/${businessId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ server_url: API_BASE })
+                });
+                const data = await resp.json();
+
+                if (data.status === 'success') {
+                    document.getElementById('evoQrContainer').style.display = 'block';
+                    document.getElementById('evoActionBtns').style.display = 'none';
+
+                    if (data.qr_code) {
+                        const qrImg = document.getElementById('evoQrImage');
+                        qrImg.src = data.qr_code.startsWith('data:') ? data.qr_code : 'data:image/png;base64,' + data.qr_code;
+                    }
+
+                    document.getElementById('evoStatusIcon').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    document.getElementById('evoStatusIcon').style.color = 'var(--accent)';
+                    document.getElementById('evoStatusText').textContent = 'Waiting for scan...';
+                    document.getElementById('evoStatusText').style.color = 'var(--accent)';
+                    document.getElementById('evoStatusSub').textContent = 'Scan the QR code with WhatsApp to connect';
+
+                    startEvolutionPolling();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to create instance'));
+                }
+            } catch (e) {
+                console.error('connectEvolution error:', e);
+                alert('Connection error. Please try again.');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Generate QR Code';
+        }
+
+        function startEvolutionPolling() {
+            if (evoPollingInterval) clearInterval(evoPollingInterval);
+            evoPollingInterval = setInterval(async () => {
+                try {
+                    const resp = await fetch(`${API_BASE}/evolution/qrcode/${businessId}`);
+                    const data = await resp.json();
+                    if (data.status === 'connected') {
+                        clearInterval(evoPollingInterval);
+                        evoPollingInterval = null;
+                        showEvolutionConnected();
+                    } else if (data.status === 'waiting' && data.qr_code) {
+                        const qrImg = document.getElementById('evoQrImage');
+                        qrImg.src = data.qr_code.startsWith('data:') ? data.qr_code : 'data:image/png;base64,' + data.qr_code;
+                    }
+                } catch (e) {
+                    console.error('Evolution polling error:', e);
+                }
+            }, 5000);
+        }
+
+        function showEvolutionConnected() {
+            document.getElementById('evoQrContainer').style.display = 'none';
+            document.getElementById('evoActionBtns').style.display = 'none';
+            document.getElementById('evoConnectedCard').style.display = 'block';
+            document.getElementById('evoStatusIcon').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            document.getElementById('evoStatusIcon').style.color = '#10b981';
+            document.getElementById('evoStatusText').textContent = 'Connected';
+            document.getElementById('evoStatusText').style.color = '#10b981';
+            document.getElementById('evoStatusSub').textContent = 'Your AI bot is live and responding';
+            document.getElementById('evoStatusCard').style.borderColor = 'rgba(16,185,129,0.3)';
+        }
+
+        async function disconnectEvolution() {
+            if (!confirm('Are you sure you want to disconnect WhatsApp? Your bot will stop responding.')) return;
+            try {
+                const resp = await fetch(`${API_BASE}/evolution/disconnect/${businessId}`, { method: 'DELETE' });
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    document.getElementById('evoConnectedCard').style.display = 'none';
+                    document.getElementById('evoActionBtns').style.display = 'flex';
+                    document.getElementById('evoStatusIcon').innerHTML = '<i class="fa-solid fa-qrcode"></i>';
+                    document.getElementById('evoStatusIcon').style.color = '#64748b';
+                    document.getElementById('evoStatusText').textContent = 'Not Connected';
+                    document.getElementById('evoStatusText').style.color = '#64748b';
+                    document.getElementById('evoStatusSub').textContent = 'Click the button below to generate your QR code';
+                    document.getElementById('evoStatusCard').style.borderColor = '';
+                }
+            } catch (e) {
+                console.error('disconnectEvolution error:', e);
+                alert('Error disconnecting. Please try again.');
+            }
+        }
+
         async function loadWhatsAppSection() {
-            // Set webhook URL
             const webhookUrlEl = document.getElementById('waWebhookUrl');
-            webhookUrlEl.textContent = `${API_BASE}/webhook/${businessId}`;
+            if (webhookUrlEl) webhookUrlEl.textContent = `${API_BASE}/webhook/${businessId}`;
 
             try {
                 const { data } = await supabaseClient
                     .from('businesses')
-                    .select('meta_access_token, meta_phone_number_id, meta_verify_token, webhook_connected, webhook_verified_at')
+                    .select('meta_access_token, meta_phone_number_id, meta_verify_token, webhook_connected, webhook_verified_at, whatsapp_provider, evolution_instance_name')
                     .eq('id', businessId)
                     .single();
 
                 if (data) {
-                    // Populate fields
+                    const provider = data.whatsapp_provider || 'evolution';
+                    selectIntegrationMethod(provider);
+
                     document.getElementById('waAccessToken').value = data.meta_access_token || '';
                     document.getElementById('waPhoneNumberId').value = data.meta_phone_number_id || '';
                     document.getElementById('waVerifyToken').value = data.meta_verify_token || generateVerifyToken();
 
-                    // Update status card
-                    const isConnected = data.webhook_connected === true;
-                    document.getElementById('waStatusIcon').innerHTML = isConnected ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                    document.getElementById('waStatusIcon').style.color = isConnected ? '#10b981' : '#ef4444';
+                    const isMetaConnected = data.webhook_connected === true && provider === 'meta';
+                    document.getElementById('waStatusIcon').innerHTML = isMetaConnected ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    document.getElementById('waStatusIcon').style.color = isMetaConnected ? '#10b981' : '#ef4444';
                     const statusTextEl = document.getElementById('waStatusText');
-                    statusTextEl.textContent = isConnected ? 'Connected' : 'Not Connected';
-                    statusTextEl.style.color = isConnected ? '#10b981' : '#ef4444';
-
+                    statusTextEl.textContent = isMetaConnected ? 'Connected' : 'Not Connected';
+                    statusTextEl.style.color = isMetaConnected ? '#10b981' : '#ef4444';
                     const statusCard = document.getElementById('waStatusCard');
-                    statusCard.style.borderColor = isConnected ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.2)';
-
+                    if (statusCard) statusCard.style.borderColor = isMetaConnected ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.2)';
                     const verifiedAt = data.webhook_verified_at;
                     document.getElementById('waStatusTime').textContent = verifiedAt
                         ? 'Last verified: ' + new Date(verifiedAt).toLocaleString()
                         : 'Last verified: Never';
+
+                    if (provider === 'evolution' && data.evolution_instance_name) {
+                        if (data.webhook_connected) {
+                            showEvolutionConnected();
+                        } else {
+                            try {
+                                const evoResp = await fetch(`${API_BASE}/evolution/qrcode/${businessId}`);
+                                const evoData = await evoResp.json();
+                                if (evoData.status === 'connected') {
+                                    showEvolutionConnected();
+                                } else if (evoData.status === 'waiting' && evoData.qr_code) {
+                                    document.getElementById('evoQrContainer').style.display = 'block';
+                                    document.getElementById('evoActionBtns').style.display = 'none';
+                                    const qrImg = document.getElementById('evoQrImage');
+                                    qrImg.src = evoData.qr_code.startsWith('data:') ? evoData.qr_code : 'data:image/png;base64,' + evoData.qr_code;
+                                    document.getElementById('evoStatusIcon').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                                    document.getElementById('evoStatusIcon').style.color = 'var(--accent)';
+                                    document.getElementById('evoStatusText').textContent = 'Waiting for scan...';
+                                    document.getElementById('evoStatusText').style.color = 'var(--accent)';
+                                    startEvolutionPolling();
+                                }
+                            } catch (evoErr) {
+                                console.error('Evolution status check error:', evoErr);
+                            }
+                        }
+                    }
                 } else {
                     document.getElementById('waVerifyToken').value = generateVerifyToken();
                 }
@@ -3390,7 +3564,8 @@
                 const { error } = await supabaseClient.from('businesses').update({
                     meta_access_token: accessToken,
                     meta_phone_number_id: phoneNumberId,
-                    meta_verify_token: verifyToken
+                    meta_verify_token: verifyToken,
+                    whatsapp_provider: 'meta'
                 }).eq('id', businessId);
 
                 statusEl.style.display = 'block';
