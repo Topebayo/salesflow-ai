@@ -715,22 +715,28 @@
             font-family: monospace;
         }
 
-        .wa-copy-btn {
-            background: var(--accent-glow);
-            color: var(--accent-light);
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+        .wa-copy-btn, .wa-toggle-vis {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 1.2rem;
+            height: 45px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 500;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             transition: var(--transition);
+            box-sizing: border-box;
         }
 
-        .wa-copy-btn:hover {
-            background: rgba(59, 130, 246, 0.25);
+        .wa-copy-btn:hover, .wa-toggle-vis:hover {
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
+            border-color: var(--primary-light);
         }
 
         .wa-form-card {
@@ -771,7 +777,8 @@
 
         .wa-field input {
             flex: 1;
-            padding: 0.8rem 1.1rem;
+            padding: 0 1.1rem;
+            height: 45px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 10px;
@@ -786,22 +793,6 @@
             outline: none;
             border-color: var(--primary-light);
             box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        .wa-toggle-vis {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-secondary);
-            padding: 0.6rem 0.9rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .wa-toggle-vis:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.08);
         }
 
         .wa-guide-card {
@@ -1070,10 +1061,18 @@
         body.light-theme .wa-guide-card h3,
         body.light-theme .wa-status-text { color: #0a0f1a; }
         body.light-theme .wa-field label { color: #1e293b; }
-        body.light-theme .wa-field input {
+        body.light-theme .wa-field input,
+        body.light-theme .wa-copy-btn,
+        body.light-theme .wa-toggle-vis {
             background: #f8f9fb;
             border-color: rgba(0, 0, 0, 0.12);
             color: #0a0f1a;
+        }
+        body.light-theme .wa-copy-btn:hover,
+        body.light-theme .wa-toggle-vis:hover {
+            background: #e2e8f0;
+            color: #000;
+            border-color: var(--primary-light);
         }
         body.light-theme .wa-webhook-url-box {
             background: #f8f9fb;
@@ -2156,7 +2155,7 @@
 
         <!-- Credentials Form -->
         <div class="wa-form-card">
-            <h3><i class="fa-solid fa-key" style="color:#4facfe;margin-right:8px"></i>API Credentials</h3>
+            <h3><i class="fa-solid fa-key" style="color:var(--primary-light);margin-right:8px"></i>API Credentials</h3>
             <div class="wa-field">
                 <label>Meta Access Token</label>
                 <div class="wa-field-input-wrap">
@@ -2173,29 +2172,29 @@
             <div class="wa-field">
                 <label>Verify Token</label>
                 <div class="wa-field-input-wrap">
-                    <input type="text" id="waVerifyToken" placeholder="Auto-generated" readonly style="color: #4facfe;">
+                    <input type="text" id="waVerifyToken" placeholder="Auto-generated" readonly style="color: var(--accent); font-weight: 600;">
                     <button class="wa-copy-btn" onclick="copyToClipboard(document.getElementById('waVerifyToken').value, this)"><i class="fa-solid fa-copy"></i> Copy</button>
                     <button class="wa-toggle-vis" onclick="regenerateVerifyToken()"><i class="fa-solid fa-rotate"></i></button>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                <button onclick="saveWhatsAppCredentials()" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;"><i class="fa-solid fa-floppy-disk"></i> Save Credentials</button>
+                <button onclick="saveWhatsAppCredentials()" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 12px var(--primary-glow);"><i class="fa-solid fa-floppy-disk"></i> Save Credentials</button>
                 <div id="waCredStatus" style="font-size: 0.9rem; display: none;"></div>
             </div>
         </div>
 
         <!-- Setup Guide -->
         <div class="wa-guide-card" style="padding: 2.5rem; margin-top: 2rem;">
-            <h3 style="margin-bottom: 2rem;"><i class="fa-solid fa-route" style="color:#00f2fe;margin-right:10px"></i>Step-by-Step Setup Guide</h3>
+            <h3 style="margin-bottom: 2rem;"><i class="fa-solid fa-route" style="color:var(--accent);margin-right:10px"></i>Step-by-Step Setup Guide</h3>
             
-            <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 2rem;">
                 
                 <!-- Phase 1 -->
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; position: relative;">
-                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 1: Meta Portal Setup</div>
+                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 1: Meta Portal Setup</div>
                     <ol class="wa-steps" style="counter-reset: wa-step 0;">
                         <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Go to <strong style="color:#4facfe; cursor:pointer;" onclick="window.open('https://developers.facebook.com', '_blank')">developers.facebook.com</strong> and create a Meta Business App.</span>
+                            <span style="font-size: 0.92rem;">Go to <strong style="color:var(--accent); cursor:pointer;" onclick="window.open('https://developers.facebook.com', '_blank')">developers.facebook.com</strong> and create a Meta Business App.</span>
                         </li>
                         <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
                             <span style="font-size: 0.92rem;">Add the <strong style="color:#fff">WhatsApp</strong> product to your Meta App integration.</span>
@@ -2207,27 +2206,27 @@
                 </div>
 
                 <!-- Phase 2 -->
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; position: relative;">
-                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 2: Save Credentials</div>
+                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, var(--accent-dark), var(--accent)); color: #121316; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 2: Save Credentials</div>
                     <ol class="wa-steps" style="counter-reset: wa-step 3;">
                         <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Paste the retrieved Access Token and Phone Number ID into the form above, then click <strong style="color:#4facfe">Save Credentials</strong>.</span>
+                            <span style="font-size: 0.92rem;">Paste the retrieved Access Token and Phone Number ID into the form above, then click <strong style="color:var(--accent)">Save Credentials</strong>.</span>
                         </li>
                         <li style="border-bottom: none; padding: 1rem 0 0 0;">
-                            <span style="font-size: 0.92rem;">Copy the unique <strong style="color:#4facfe">Webhook URL</strong> automatically generated at the top of this page.</span>
+                            <span style="font-size: 0.92rem;">Copy the unique <strong style="color:var(--accent)">Webhook URL</strong> automatically generated at the top of this page.</span>
                         </li>
                     </ol>
                 </div>
 
                 <!-- Phase 3 -->
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; position: relative;">
-                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 3: Webhook Verification</div>
+                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 1.8rem 1.5rem 1.5rem 1.5rem; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 16px; background: linear-gradient(135deg, #2d6a4f, #52b788); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phase 3: Webhook Verification</div>
                     <ol class="wa-steps" style="counter-reset: wa-step 5;">
                         <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
                             <span style="font-size: 0.92rem;">On the Meta Developer portal, go to <strong style="color:#fff">WhatsApp → Configuration → Edit Webhook</strong>.</span>
                         </li>
                         <li style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 1rem 0;">
-                            <span style="font-size: 0.92rem;">Paste your Webhook URL and Verify Token, then click <strong style="color:#10b981">Verify and Save</strong>.</span>
+                            <span style="font-size: 0.92rem;">Paste your Webhook URL and Verify Token, then click <strong style="color:var(--accent)">Verify and Save</strong>.</span>
                         </li>
                         <li style="border-bottom: none; padding: 1rem 0 0 0;">
                             <span style="font-size: 0.92rem;">Under Webhook Fields, subscribe to the <strong style="color:#fff">'messages'</strong> field to receive incoming chat notifications.</span>
