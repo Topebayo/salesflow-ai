@@ -2387,6 +2387,7 @@
                     <div style="padding: 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.15); flex-shrink: 0;">
                         <div style="display: flex; gap: 10px; align-items: center; position: relative;">
                             <textarea id="manualMsgInput" rows="1" placeholder="Type a message to reply via WhatsApp..." style="flex: 1; padding: 0.85rem 1.2rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #fff; font-family: inherit; font-size: 0.92rem; outline: none; resize: none; box-sizing: border-box; transition: var(--transition);" onkeydown="handleChatInputKeydown(event)"></textarea>
+                            <button id="triggerAiReplyBtn" onclick="triggerAiReply()" title="Auto-generate AI Reply" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; border: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: var(--transition); flex-shrink: 0;"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
                             <button id="sendManualMsgBtn" onclick="sendManualMessage()" style="background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: var(--transition); flex-shrink: 0;"><i class="fa-solid fa-paper-plane"></i></button>
                         </div>
                         <div id="manualMsgStatus" style="font-size: 0.8rem; margin-top: 0.5rem; display: none;"></div>
@@ -3584,6 +3585,42 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+            }
+        }
+
+        async function triggerAiReply() {
+            if (!activeChatPhone) return;
+
+            const btn = document.getElementById('triggerAiReplyBtn');
+            const status = document.getElementById('manualMsgStatus');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            status.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API_BASE}/chats/${activeChatPhone}/trigger-ai`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        business_id: businessId
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.status === 'success') {
+                    // Reload UI
+                    await loadChats();
+                } else {
+                    throw new Error(data.detail || data.message || 'AI Trigger failed');
+                }
+            } catch(e) {
+                status.style.display = 'block';
+                status.style.color = '#ef4444';
+                status.textContent = 'AI Trigger failed: ' + (e.message || e);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
             }
         }
 
