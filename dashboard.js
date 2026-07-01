@@ -1,7 +1,71 @@
-// Wait for auth to finish, then fetch dashboard data
+// ==================== WELCOME BANNER ====================
+function updateWelcomeBanner() {
+    const hour = new Date().getHours();
+    let greeting = 'Good evening';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 17) greeting = 'Good afternoon';
+
+    const greetingEl = document.getElementById('welcomeGreeting');
+    if (greetingEl) {
+        const brandEl = document.querySelector('.brand');
+        const bizName = brandEl ? brandEl.textContent.trim() : '';
+        greetingEl.innerHTML = `${greeting}${bizName ? ', ' + bizName : ''} <span class="wave-emoji">👋</span>`;
+    }
+
+    const timeEl = document.getElementById('welcomeTime');
+    if (timeEl) {
+        const now = new Date();
+        const timeStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        timeEl.querySelector('span').textContent = timeStr;
+    }
+}
+
+// ==================== ANIMATED COUNT-UP ====================
+function animateCountUp(element, target, suffix = '') {
+    if (!element) return;
+    const duration = 800;
+    const start = 0;
+    const startTime = performance.now();
+
+    function step(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(start + (target - start) * eased);
+        element.textContent = current.toLocaleString() + suffix;
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            element.classList.add('counting');
+            setTimeout(() => element.classList.remove('counting'), 300);
+        }
+    }
+    requestAnimationFrame(step);
+}
+
+// ==================== SECTION FADE-IN ====================
+const originalShowSection = window.showSection;
+if (typeof originalShowSection === 'function') {
+    window.showSection = function(sectionId, el) {
+        originalShowSection(sectionId, el);
+        // Apply fade-in to the newly visible section
+        const sections = document.querySelectorAll('.section, .main-content:first-of-type');
+        sections.forEach(s => {
+            if (s.style.display !== 'none' && s.offsetParent !== null) {
+                s.classList.remove('section-fade-in');
+                void s.offsetWidth; // Trigger reflow
+                s.classList.add('section-fade-in');
+            }
+        });
+    };
+}
+
+// ==================== DASHBOARD INIT ====================
 async function initDashboard() {
     await requireAuth();
     if (businessId) {
+        updateWelcomeBanner();
         fetchData();
     }
 }
@@ -13,16 +77,17 @@ async function fetchData() {
     const loader = document.getElementById("loader");
     const content = document.getElementById("dashboardContent");
     const leadsBody = document.getElementById("leadsBody");
-    const statsGrid = document.querySelector(".stats-grid");
+    const statsGrid = document.querySelector(".stats-grid-4");
 
     // Show skeleton loaders instead of dimming content
     loader.style.display = "none";
     content.style.display = "block";
     content.style.opacity = "1";
 
-    // Skeleton cards for stats
+    // Skeleton cards for stats (4 cards now)
     if (statsGrid) {
         statsGrid.innerHTML = `
+            <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
             <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
             <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
             <div class="skeleton-card"><div class="skeleton skeleton-icon"></div><div class="skeleton skeleton-value"></div><div class="skeleton skeleton-label"></div></div>
@@ -54,10 +119,27 @@ async function fetchData() {
 
         if (error) throw error;
 
+        // Fetch orders count for conversion rate
+        let totalOrders = 0;
+        let pendingOrders = 0;
+        try {
+            const { data: ordersData } = await supabaseClient
+                .from('orders')
+                .select('id, status')
+                .eq('business_id', businessId);
+            if (ordersData) {
+                totalOrders = ordersData.length;
+                pendingOrders = ordersData.filter(o => (o.status || '').toLowerCase() === 'pending').length;
+            }
+        } catch(e) { /* orders table may not exist yet */ }
+
         // Calculate stats
         const totalLeads = contactsData ? contactsData.length : 0;
         let totalMsgs = 0;
         let activeChats = 0;
+        let todayLeads = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
         if (contactsData) {
             contactsData.forEach(c => {
@@ -65,29 +147,62 @@ async function fetchData() {
                 const lastSeen = new Date(c.last_seen);
                 const hoursSince = (new Date() - lastSeen) / (1000 * 60 * 60);
                 if (hoursSince < 24) activeChats++;
+                if (new Date(c.first_seen) >= today) todayLeads++;
             });
         }
+
+        // Conversion rate: orders / leads * 100
+        const conversionRate = totalLeads > 0 ? Math.round((totalOrders / totalLeads) * 100) : 0;
 
         // Restore real stat cards (replacing skeletons)
         if (statsGrid) {
             statsGrid.innerHTML = `
                 <div class="stat-card">
                     <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
-                    <div class="stat-value" id="valLeads">${totalLeads}</div>
-                    <div class="stat-label">Total Leads Captured</div>
+                    <div class="stat-value" id="valLeads">0</div>
+                    <div class="stat-label">Total Leads</div>
+                    <div class="stat-trend ${todayLeads > 0 ? 'up' : 'neutral'}" id="trendLeads">
+                        <i class="fa-solid fa-${todayLeads > 0 ? 'arrow-up' : 'minus'}"></i> ${todayLeads > 0 ? '+' + todayLeads + ' today' : 'No new today'}
+                    </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-purple"><i class="fa-solid fa-message"></i></div>
-                    <div class="stat-value" id="valActiveChats">${activeChats}</div>
-                    <div class="stat-label">Active Conversations</div>
+                    <div class="stat-value" id="valActiveChats">0</div>
+                    <div class="stat-label">Active Chats</div>
+                    <div class="stat-trend ${activeChats > 0 ? 'up' : 'neutral'}" id="trendChats">
+                        <i class="fa-solid fa-${activeChats > 0 ? 'arrow-up' : 'minus'}"></i> ${activeChats > 0 ? activeChats + ' in last 24h' : 'No activity'}
+                    </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-green"><i class="fa-regular fa-paper-plane"></i></div>
-                    <div class="stat-value" id="valTotalMsgs">${totalMsgs}</div>
-                    <div class="stat-label">Total Messages Sent/Received</div>
+                    <div class="stat-value" id="valTotalMsgs">0</div>
+                    <div class="stat-label">Total Messages</div>
+                    <div class="stat-trend neutral" id="trendMsgs">
+                        <i class="fa-solid fa-minus"></i> All time
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-amber"><i class="fa-solid fa-chart-simple"></i></div>
+                    <div class="stat-value" id="valConversion">0%</div>
+                    <div class="stat-label">Conversion Rate</div>
+                    <div class="stat-trend ${conversionRate > 0 ? 'up' : 'neutral'}" id="trendConversion">
+                        <i class="fa-solid fa-${conversionRate > 0 ? 'arrow-up' : 'minus'}"></i> ${totalOrders} orders from ${totalLeads} leads
+                    </div>
                 </div>
             `;
         }
+
+        // Animate count-up for each stat
+        animateCountUp(document.getElementById('valLeads'), totalLeads);
+        animateCountUp(document.getElementById('valActiveChats'), activeChats);
+        animateCountUp(document.getElementById('valTotalMsgs'), totalMsgs);
+        animateCountUp(document.getElementById('valConversion'), conversionRate, '%');
+
+        // Update welcome banner summary
+        const welcomeLeads = document.getElementById('welcomeLeads');
+        const welcomeOrders = document.getElementById('welcomeOrders');
+        if (welcomeLeads) welcomeLeads.textContent = todayLeads;
+        if (welcomeOrders) welcomeOrders.textContent = pendingOrders;
 
         // Update Table
         leadsBody.innerHTML = "";
@@ -136,17 +251,26 @@ async function fetchData() {
                 <div class="stat-card">
                     <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
                     <div class="stat-value" id="valLeads">0</div>
-                    <div class="stat-label">Total Leads Captured</div>
+                    <div class="stat-label">Total Leads</div>
+                    <div class="stat-trend neutral"><i class="fa-solid fa-minus"></i> --</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-purple"><i class="fa-solid fa-message"></i></div>
                     <div class="stat-value" id="valActiveChats">0</div>
-                    <div class="stat-label">Active Conversations</div>
+                    <div class="stat-label">Active Chats</div>
+                    <div class="stat-trend neutral"><i class="fa-solid fa-minus"></i> --</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-green"><i class="fa-regular fa-paper-plane"></i></div>
                     <div class="stat-value" id="valTotalMsgs">0</div>
-                    <div class="stat-label">Total Messages Sent/Received</div>
+                    <div class="stat-label">Total Messages</div>
+                    <div class="stat-trend neutral"><i class="fa-solid fa-minus"></i> --</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-amber"><i class="fa-solid fa-chart-simple"></i></div>
+                    <div class="stat-value" id="valConversion">0%</div>
+                    <div class="stat-label">Conversion Rate</div>
+                    <div class="stat-trend neutral"><i class="fa-solid fa-minus"></i> --</div>
                 </div>
             `;
         }
