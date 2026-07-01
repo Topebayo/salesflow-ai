@@ -4,39 +4,39 @@
 
 /* CSS Variables / Design Tokens */
 :root {
-    /* Colors - Human/Matured Theme (Evergreen & Warm Sand/Gold) */
-    --primary: #1b4332;       /* Deep warm forest green */
-    --primary-light: #2d6a4f; /* Shined evergreen */
-    --primary-dark: #081c15;  /* Pitch pine green */
-    --accent: #d4a373;        /* Matured warm sand / champagne gold */
-    --accent-light: #e9c46a;  /* Bright sand gold */
-    --accent-dark: #b5838d;   /* Warm blush copper */
+    /* Colors - Vibrant Green & Deep Charcoal Dark Mode */
+    --primary: #10b981;       /* Vibrant green */
+    --primary-light: #22c55e; /* Bright green */
+    --primary-dark: #059669;  /* Deep pine green */
+    --accent: #121212;        /* Deep black/charcoal */
+    --accent-light: #27272a;  /* Charcoal */
+    --accent-dark: #09090b;   /* Jet black */
     
     /* RGB values for transparent overlays */
-    --primary-rgb: 27, 67, 50;
-    --primary-light-rgb: 45, 106, 79;
-    --accent-rgb: 212, 163, 115;
+    --primary-rgb: 16, 185, 129;
+    --primary-light-rgb: 34, 197, 94;
+    --accent-rgb: 18, 18, 18;
     
-    /* Background (Matured warm charcoal, not neon blue-black) */
-    --bg-primary: #121316;
-    --bg-secondary: #1a1c20;
-    --bg-tertiary: #24272c;
-    --bg-card: rgba(26, 28, 32, 0.6);
-    --bg-card-hover: rgba(36, 39, 45, 0.8);
-    --bg-navbar: rgba(18, 19, 22, 0.75);
+    /* Background */
+    --bg-primary: #09090b;
+    --bg-secondary: #121212;
+    --bg-tertiary: #1c1917;
+    --bg-card: rgba(18, 18, 18, 0.6);
+    --bg-card-hover: rgba(39, 39, 42, 0.8);
+    --bg-navbar: rgba(9, 9, 11, 0.75);
     
     /* Text */
     --text-primary: #f4f3f0;  /* Soft warm off-white */
-    --text-secondary: #a7a9be;
-    --text-muted: #727585;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
     
     /* Borders */
     --border: rgba(255, 255, 255, 0.05);
     --border-hover: rgba(255, 255, 255, 0.1);
     
     /* Effects */
-    --glow-primary: rgba(27, 67, 50, 0.2);
-    --glow-accent: rgba(212, 163, 115, 0.2);
+    --glow-primary: rgba(16, 185, 129, 0.2);
+    --glow-accent: rgba(18, 18, 18, 0.2);
     
     /* Typography */
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -59,22 +59,22 @@
 
 /* Light Theme Variables */
 .light-theme {
-    --bg-primary: #faf9f6;    /* Warm alabaster/off-white */
-    --bg-secondary: #f4f3ee;  /* Very soft grey-cream */
-    --bg-tertiary: #e8e6df;   /* Neutral sandstone */
-    --bg-card: rgba(255, 255, 255, 0.95);
-    --bg-card-hover: #ffffff;
-    --bg-navbar: rgba(250, 249, 246, 0.8);
+    --bg-primary: #fafafa;    /* Super clean off-white */
+    --bg-secondary: #ffffff;  /* Pure white */
+    --bg-tertiary: #f4f4f5;   /* Light gray/zinc */
+    --bg-card: #ffffff;
+    --bg-card-hover: #fafafa;
+    --bg-navbar: rgba(250, 250, 250, 0.85);
     
-    --text-primary: #1b1e22;  /* Deep slate charcoal (no pure black) */
-    --text-secondary: #495057;
-    --text-muted: #6c757d;
+    --text-primary: #121212;  /* High-contrast black */
+    --text-secondary: #4b5563; /* Medium gray */
+    --text-muted: #9ca3af;     /* Light gray */
     
     --border: rgba(0, 0, 0, 0.06);
     --border-hover: rgba(0, 0, 0, 0.12);
     
-    --glow-primary: rgba(27, 67, 50, 0.08);
-    --glow-accent: rgba(212, 163, 115, 0.08);
+    --glow-primary: rgba(16, 185, 129, 0.08);
+    --glow-accent: rgba(18, 18, 18, 0.08);
 }
 
 /* Reset & Base */
@@ -1557,4 +1557,33 @@ body .theme-toggle .sun-icon {
 .light-theme .theme-toggle .moon-icon {
     display: block;
 }
+
+/* =============================================================================
+   LIGHT THEME POPULAR PRICING CARD & ACCENT OVERRIDES
+   ============================================================================= */
+.light-theme .gradient-orb {
+    opacity: 0.12 !important;
+    filter: blur(120px) !important;
+}
+
+.light-theme .pricing-card.popular {
+    background: #121212 !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18) !important;
+}
+
+.light-theme .pricing-card.popular h3,
+.light-theme .pricing-card.popular .pricing-desc,
+.light-theme .pricing-card.popular .price-currency,
+.light-theme .pricing-card.popular .price-value,
+.light-theme .pricing-card.popular .price-period,
+.light-theme .pricing-card.popular .pricing-features li {
+    color: #ffffff !important;
+}
+
+.light-theme .pricing-card.popular .check {
+    color: var(--primary) !important;
+}
+
 
