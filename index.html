@@ -22,6 +22,27 @@
             }
         })();
     </script>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://jmifkdmrybjueiipkqru.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptaWZrZG1yeWJqdWVpaXBrcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjI0MDAsImV4cCI6MjA5NDA5ODQwMH0.Ft8iqBoeDzkpaxfnn7p4sxKpdq3uDy0GVW_O1LnQALk';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        async function checkNavbarAuth() {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                const authLink = document.getElementById('navAuthLink');
+                if (authLink && session) {
+                    authLink.innerText = 'Dashboard';
+                    authLink.href = 'dashboard.html';
+                }
+            } catch (e) {
+                console.error("checkNavbarAuth error:", e);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', checkNavbarAuth);
+    </script>
 </head>
 
 <body>
@@ -37,6 +58,7 @@
                 <li><a href="#how-it-works">How It Works</a></li>
                 <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#demo">Demo</a></li>
+                <li><a href="login.html" id="navAuthLink">Login</a></li>
                 <li><a href="#contact" class="nav-cta">Get Started</a></li>
             </ul>
             <button id="themeToggleBtn" onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle Theme">
@@ -466,6 +488,7 @@
                         <a href="#features">Features</a>
                         <a href="#pricing">Pricing</a>
                         <a href="#demo">Demo</a>
+                        <a href="login.html">Merchant Login</a>
                     </div>
                     <div class="footer-col">
                         <h4>Company</h4>
