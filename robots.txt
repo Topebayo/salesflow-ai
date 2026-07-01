@@ -1,0 +1,13 @@
+# Robots.txt for SalesFlow AI
+# Allow crawlers to index the landing page and public login page, but block dashboard/private pages
+
+User-agent: *
+Allow: /$
+Allow: /index.html$
+Allow: /login.html$
+Allow: /styles.css$
+Allow: /script.js$
+Disallow: /dashboard.html     # Prevent indexing of the merchant dashboard
+Disallow: /_vercel/           # Prevent indexing of Vercel analytics/insights
+
+Sitemap: https://www.salesaiflow.online/sitemap.xml
