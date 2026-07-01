@@ -68,7 +68,7 @@
                         businessId = business.id;
                         // Update brand name in sidebar
                         const brandEl = document.querySelector('.brand');
-                        if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-bolt" style="color: #4facfe;"></i> ${business.name}`;
+                        if (brandEl) brandEl.innerHTML = `<i class="fa-solid fa-bolt" style="color: var(--accent);"></i> ${business.name}`;
                     }
                     return business;
                 } catch (e) {
@@ -92,13 +92,13 @@
            SALESFLOW AI - PREMIUM AGENT DASHBOARD DESIGN SYSTEM
            ============================================================================= */
         :root {
-            /* Tailored Neon Color Palette */
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --primary-glow: rgba(99, 102, 241, 0.15);
-            --accent: #3b82f6;
-            --accent-light: #60a5fa;
-            --accent-glow: rgba(59, 130, 246, 0.15);
+            /* Tailored Brand Color Palette (Forest Green & Warm Sand/Gold) */
+            --primary: #1b4332;
+            --primary-light: #2d6a4f;
+            --primary-glow: rgba(27, 67, 50, 0.15);
+            --accent: #d4a373;
+            --accent-light: #e9c46a;
+            --accent-glow: rgba(212, 163, 115, 0.15);
             
             --success: #10b981;
             --success-glow: rgba(16, 185, 129, 0.12);
@@ -107,26 +107,26 @@
             --danger-glow: rgba(239, 68, 68, 0.12);
             
             /* Glassmorphic Background System */
-            --bg-deep: #080a10;
-            --bg-panel: rgba(15, 23, 42, 0.45);
-            --bg-panel-hover: rgba(30, 41, 59, 0.65);
+            --bg-deep: #121316;
+            --bg-panel: rgba(26, 28, 32, 0.5);
+            --bg-panel-hover: rgba(36, 39, 45, 0.75);
             --border-glow: rgba(255, 255, 255, 0.04);
-            --border-hover: rgba(99, 102, 241, 0.25);
+            --border-hover: rgba(212, 163, 115, 0.25);
             
             /* Text Hierarchy */
-            --text-main: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-main: #f4f3f0;
+            --text-secondary: #a7a9be;
+            --text-muted: #727585;
             
             /* Transitions & Effects */
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.08);
+            --shadow-glow: 0 0 30px rgba(27, 67, 50, 0.08);
             --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
             --radius-md: 12px;
             --radius-lg: 20px;
         }
-
+ 
         /* Reset & Base Elements */
         body {
             background-color: var(--bg-deep);
@@ -136,8 +136,8 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.07), transparent 45%),
-                              radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.05), transparent 40%);
+            background-image: radial-gradient(circle at 0% 0%, rgba(27, 67, 50, 0.07), transparent 45%),
+                              radial-gradient(circle at 100% 100%, rgba(212, 163, 115, 0.05), transparent 40%);
         }
 
         /* Modern Custom Scrollbar */
@@ -1811,9 +1811,9 @@
         }
 
         .refresh-btn {
-            background: rgba(79, 172, 254, 0.12);
-            border: 1px solid rgba(79, 172, 254, 0.25);
-            color: #4facfe;
+            background: var(--accent-glow);
+            border: 1px solid rgba(212, 163, 115, 0.25);
+            color: var(--accent);
             padding: 0.5rem 1.1rem;
             border-radius: 10px;
             cursor: pointer;
@@ -1826,15 +1826,15 @@
         }
 
         .refresh-btn:hover {
-            background: rgba(79, 172, 254, 0.2);
+            background: rgba(212, 163, 115, 0.2);
             color: #fff;
-            border-color: rgba(79, 172, 254, 0.4);
+            border-color: rgba(212, 163, 115, 0.4);
             transform: translateY(-1px);
         }
 
         /* Primary Action Button */
         .action-btn-primary {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
             color: #fff;
             border: none;
             padding: 0.55rem 1.4rem;
@@ -2265,7 +2265,7 @@
             <!-- Interactive Lead Analytics Chart -->
             <div class="panel" style="padding: 1.5rem 2rem; position: relative;">
                 <h3 class="panel-title">
-                    <i class="fa-solid fa-chart-line" style="color: #4facfe;"></i> Lead &amp; Message Analytics (Last 7 Days)
+                    <i class="fa-solid fa-chart-line" style="color: var(--accent);"></i> Lead &amp; Message Analytics (Last 7 Days)
                 </h3>
                 <div style="height: 320px; width: 100%; position: relative;">
                     <canvas id="analyticsChart"></canvas>
@@ -2364,7 +2364,7 @@
                     <div style="padding: 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.15); flex-shrink: 0;">
                         <div style="display: flex; gap: 10px; align-items: center; position: relative;">
                             <textarea id="manualMsgInput" rows="1" placeholder="Type a message to reply via WhatsApp..." style="flex: 1; padding: 0.85rem 1.2rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #fff; font-family: inherit; font-size: 0.92rem; outline: none; resize: none; box-sizing: border-box; transition: var(--transition);" onkeydown="handleChatInputKeydown(event)"></textarea>
-                            <button id="sendManualMsgBtn" onclick="sendManualMessage()" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: var(--transition); flex-shrink: 0;"><i class="fa-solid fa-paper-plane"></i></button>
+                            <button id="sendManualMsgBtn" onclick="sendManualMessage()" style="background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: var(--transition); flex-shrink: 0;"><i class="fa-solid fa-paper-plane"></i></button>
                         </div>
                         <div id="manualMsgStatus" style="font-size: 0.8rem; margin-top: 0.5rem; display: none;"></div>
                     </div>
@@ -2389,11 +2389,11 @@
 
             <!-- Agent Mode Selector Card -->
             <div class="panel" style="padding: 2rem; border: 1px solid rgba(79,172,254,0.2);">
-                <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-family: Outfit;"><i class="fa-solid fa-bolt" style="color:#4facfe;margin-right:8px"></i>Agent Mode</h3>
+                <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-family: Outfit;"><i class="fa-solid fa-bolt" style="color:var(--accent);margin-right:8px"></i>Agent Mode</h3>
                 <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Switch the AI brain between different business personas. Changes take effect instantly on the next customer message.</p>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                    <label id="modeRetail" onclick="selectMode('retail')" style="cursor:pointer; background: rgba(79,172,254,0.15); border: 2px solid #4facfe; border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 8px; transition: all 0.3s;">
+                    <label id="modeRetail" onclick="selectMode('retail')" style="cursor:pointer; background: var(--primary-glow); border: 2px solid var(--primary-light); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 8px; transition: all 0.3s;">
                         <div style="font-size: 1.8rem;">&#127870;</div>
                         <div style="color: #fff; font-weight: 600; font-family: Outfit;">Retail / E-Commerce</div>
                         <div style="color: #94a3b8; font-size: 0.82rem;">General sales agent for product-based businesses (drinks, fashion, electronics, etc.)</div>
@@ -2406,7 +2406,7 @@
                 </div>
 
                 <div style="display:flex; align-items:center; gap: 1rem;">
-                    <button onclick="saveSettings()" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
+                    <button onclick="saveSettings()" style="background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
                         <i class="fa-solid fa-floppy-disk"></i> Save Mode
                     </button>
                     <div id="settingsStatus" style="font-size: 0.9rem; display: none;"></div>
@@ -2584,7 +2584,7 @@
                 <div class="loader" style="display:block"></div>
             </div>
             
-            <button id="sendBroadcastBtn" onclick="sendBroadcast()" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+            <button id="sendBroadcastBtn" onclick="sendBroadcast()" style="background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-paper-plane"></i> Send Broadcast
             </button>
             <div id="broadcastStatus" style="margin-top: 1rem; font-size: 0.9rem; display: none;"></div>
@@ -2654,7 +2654,7 @@
                 <span style="color: #cbd5e1; font-size: 0.9rem;" id="productAvailLabel">Available</span>
             </div>
             <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                <button onclick="saveProduct()" style="flex:1; background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;"><i class="fa-solid fa-floppy-disk"></i> Save Product</button>
+                <button onclick="saveProduct()" style="flex:1; background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;"><i class="fa-solid fa-floppy-disk"></i> Save Product</button>
                 <button onclick="closeProductModal()" style="background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 0.95rem;">Cancel</button>
             </div>
             <div id="productSaveStatus" style="margin-top: 1rem; font-size: 0.9rem; display: none;"></div>
@@ -2670,7 +2670,7 @@
                 <!-- Header -->
                 <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
                     <div style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px;">
-                        <i class="fa-solid fa-bolt" style="color: #4facfe;"></i> <span id="receiptBizName">SalesFlow Business</span>
+                        <i class="fa-solid fa-bolt" style="color: var(--accent);"></i> <span id="receiptBizName">SalesFlow Business</span>
                     </div>
                     <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 4px;">WhatsApp Sales Invoice</div>
                     <div style="color: #64748b; font-size: 0.75rem; font-family: monospace;" id="receiptDate">Date: Jan 01, 2026</div>
@@ -2678,7 +2678,7 @@
 
                 <!-- Customer Details -->
                 <div style="margin-bottom: 1.5rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 1rem; border-radius: 10px;">
-                    <h4 style="margin: 0 0 0.5rem 0; font-family: Outfit; font-size: 0.9rem; color: #4facfe; letter-spacing: 0.05em;">CUSTOMER INFO</h4>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: Outfit; font-size: 0.9rem; color: var(--accent); letter-spacing: 0.05em;">CUSTOMER INFO</h4>
                     <div style="font-size: 0.88rem; margin-bottom: 6px; display: flex; justify-content: space-between;">
                         <span style="color: #94a3b8;">Name:</span>
                         <strong style="color: #fff;" id="receiptCustName">Unknown</strong>
@@ -2715,7 +2715,7 @@
 
             <!-- Action buttons (Hidden during print) -->
             <div style="display: flex; gap: 10px; margin-top: 2rem;" class="no-print">
-                <button onclick="printReceipt()" style="flex: 1; background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.95rem;"><i class="fa-solid fa-print"></i> Print Receipt</button>
+                <button onclick="printReceipt()" style="flex: 1; background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.95rem;"><i class="fa-solid fa-print"></i> Print Receipt</button>
                 <button onclick="closeReceiptModal()" style="background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem 1.25rem; border-radius: 8px; cursor: pointer; font-size: 0.95rem;">Close</button>
             </div>
         </div>
@@ -2955,14 +2955,14 @@
             const re = document.getElementById('modeRealEstate');
             const inspectionFeeGroup = document.getElementById('inspectionFeeGroup');
             if (mode === 'retail') {
-                retail.style.border = '2px solid #4facfe';
-                retail.style.background = 'rgba(79,172,254,0.15)';
+                retail.style.border = '2px solid var(--primary-light)';
+                retail.style.background = 'var(--primary-glow)';
                 re.style.border = '2px solid rgba(255,255,255,0.1)';
                 re.style.background = 'rgba(255,255,255,0.03)';
                 if (inspectionFeeGroup) inspectionFeeGroup.style.display = 'none';
             } else {
-                re.style.border = '2px solid #a855f7';
-                re.style.background = 'rgba(168,85,247,0.15)';
+                re.style.border = '2px solid var(--accent)';
+                re.style.background = 'var(--accent-glow)';
                 retail.style.border = '2px solid rgba(255,255,255,0.1)';
                 retail.style.background = 'rgba(255,255,255,0.03)';
                 if (inspectionFeeGroup) inspectionFeeGroup.style.display = 'block';
@@ -3084,7 +3084,7 @@
                 }
 
                 orderList.innerHTML = '';
-                const statusColors = { pending: '#f59e0b', paid: '#10b981', dispatched: '#4facfe', delivered: '#a855f7', cancelled: '#ef4444' };
+                const statusColors = { pending: '#f59e0b', paid: '#10b981', dispatched: 'var(--primary-light)', delivered: 'var(--accent)', cancelled: '#ef4444' };
 
                 ordersData.forEach(order => {
                     const card = document.createElement('div');
@@ -3175,7 +3175,7 @@
                 list.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; padding:0.2rem 0;"><span style="color:#cbd5e1;">${itemsText}</span></div>`;
             }
             
-            const statusColors = { pending: '#f59e0b', paid: '#10b981', dispatched: '#4facfe', delivered: '#a855f7', cancelled: '#ef4444' };
+            const statusColors = { pending: '#f59e0b', paid: '#10b981', dispatched: 'var(--primary-light)', delivered: 'var(--accent)', cancelled: '#ef4444' };
             const color = statusColors[order.status] || '#94a3b8';
             const statusBadge = document.getElementById('receiptStatusBadge');
             statusBadge.textContent = order.status.toUpperCase();
@@ -3473,9 +3473,9 @@
             sortedConvos.forEach(m => {
                 const isBot = m.role === 'model' || m.role === 'assistant';
                 const align = isBot ? 'flex-end' : 'flex-start';
-                const bg = isBot ? 'linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.08))' : 'rgba(255,255,255,0.03)';
-                const border = isBot ? '1px solid rgba(79, 172, 254, 0.2)' : '1px solid rgba(255,255,255,0.06)';
-                const label = isBot ? '<i class="fa-solid fa-bolt" style="color:#4facfe; margin-right:4px;"></i> AI Agent' : '<i class="fa-solid fa-user" style="color:#94a3b8; margin-right:4px;"></i> Customer';
+                const bg = isBot ? 'linear-gradient(135deg, rgba(27, 67, 50, 0.15), rgba(45, 106, 79, 0.08))' : 'rgba(255,255,255,0.03)';
+                const border = isBot ? '1px solid rgba(45, 106, 79, 0.2)' : '1px solid rgba(255,255,255,0.06)';
+                const label = isBot ? '<i class="fa-solid fa-bolt" style="color:var(--accent); margin-right:4px;"></i> AI Agent' : '<i class="fa-solid fa-user" style="color:var(--text-secondary); margin-right:4px;"></i> Customer';
                 
                 const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
 
