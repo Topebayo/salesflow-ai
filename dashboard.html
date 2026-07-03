@@ -2492,6 +2492,12 @@
                         <input id="promptInspectionFee" type="text" placeholder="e.g. 5000" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
                     </div>
 
+                    <!-- Admin WhatsApp Number -->
+                    <div>
+                        <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Admin WhatsApp Number <span style="color:#64748b; font-size:0.75rem;">(only this number can execute /handoff & /handon slash commands)</span></label>
+                        <input id="promptAdminPhone" type="text" placeholder="e.g. 2348012345678" style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; box-sizing: border-box;">
+                    </div>
+
                     <!-- Business Hours -->
                     <div>
                         <label style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 6px;">Business Hours <span style="color:#64748b; font-size:0.75rem;">(optional)</span></label>
@@ -3001,7 +3007,7 @@
             try {
                 const { data: business } = await supabaseClient
                     .from('businesses')
-                    .select('bot_mode, name, agent_name, greeting, business_description, products_services, payment_info, business_hours, custom_rules, tone, inspection_fee')
+                    .select('bot_mode, name, agent_name, greeting, business_description, products_services, payment_info, business_hours, custom_rules, tone, inspection_fee, admin_phone')
                     .eq('id', businessId)
                     .single();
                 currentMode = business?.bot_mode || 'retail';
@@ -3019,6 +3025,7 @@
                     document.getElementById('promptHours').value = business.business_hours || '';
                     document.getElementById('promptRules').value = business.custom_rules || '';
                     document.getElementById('promptInspectionFee').value = business.inspection_fee || '0';
+                    document.getElementById('promptAdminPhone').value = business.admin_phone || '';
                 }
             } catch(e) { console.error('loadSettings error:', e); }
         }
@@ -3034,7 +3041,8 @@
                     payment_info: document.getElementById('promptPayment').value.trim(),
                     business_hours: document.getElementById('promptHours').value.trim(),
                     custom_rules: document.getElementById('promptRules').value.trim(),
-                    inspection_fee: document.getElementById('promptInspectionFee').value.trim()
+                    inspection_fee: document.getElementById('promptInspectionFee').value.trim(),
+                    admin_phone: document.getElementById('promptAdminPhone').value.trim()
                 };
 
                 const { error } = await supabaseClient
