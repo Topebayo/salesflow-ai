@@ -241,6 +241,7 @@
             // Hide email input, only show password input for the new password
             document.getElementById('email').parentElement.style.display = 'none';
             document.getElementById('passwordGroup').style.display = 'block';
+            document.getElementById('passwordGroup').querySelector('label').innerText = "New Password";
             document.getElementById('password').placeholder = "Enter new password";
             document.getElementById('forgotPasswordLinkContainer').style.display = 'none';
             
@@ -250,7 +251,6 @@
             document.getElementById('backToLoginContainer').style.display = 'none';
             
             document.getElementById('errorMessage').style.display = 'none';
-            alert("Please enter your new password below.");
         }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
