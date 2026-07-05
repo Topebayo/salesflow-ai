@@ -2163,6 +2163,28 @@
             }
         }
 
+        /* Agent Mode Selector Cards */
+        .mode-card {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .mode-card:hover {
+            border-color: var(--primary-light);
+            background: rgba(16, 185, 129, 0.06);
+            transform: translateY(-2px);
+        }
+        .mode-card.selected {
+            background: var(--primary-glow) !important;
+            border-color: var(--primary-light) !important;
+        }
+
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -2425,12 +2447,12 @@
                 <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Switch the AI brain between different business personas. Changes take effect instantly on the next customer message.</p>
 
                 <div class="responsive-grid-2" style="margin-bottom: 1.5rem;">
-                    <label id="modeRetail" onclick="selectMode('retail')" style="cursor:pointer; background: var(--primary-glow); border: 2px solid var(--primary-light); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 8px; transition: all 0.3s;">
+                    <label id="modeRetail" onclick="selectMode('retail')" class="mode-card">
                         <div style="font-size: 1.8rem;">&#127870;</div>
                         <div style="color: #fff; font-weight: 600; font-family: Outfit;">Retail / E-Commerce</div>
                         <div style="color: #94a3b8; font-size: 0.82rem;">General sales agent for product-based businesses (drinks, fashion, electronics, etc.)</div>
                     </label>
-                    <label id="modeRealEstate" onclick="selectMode('real_estate')" style="cursor:pointer; background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 8px; transition: all 0.3s;">
+                    <label id="modeRealEstate" onclick="selectMode('real_estate')" class="mode-card">
                         <div style="font-size: 1.8rem;">&#127968;</div>
                         <div style="color: #fff; font-weight: 600; font-family: Outfit;">Real Estate Agent</div>
                         <div style="color: #94a3b8; font-size: 0.82rem;">Qualifies property leads, answers listing questions, and books viewings.</div>
@@ -2988,17 +3010,14 @@
             const retail = document.getElementById('modeRetail');
             const re = document.getElementById('modeRealEstate');
             const inspectionFeeGroup = document.getElementById('inspectionFeeGroup');
+            
             if (mode === 'retail') {
-                retail.style.border = '2px solid var(--primary-light)';
-                retail.style.background = 'var(--primary-glow)';
-                re.style.border = '2px solid rgba(255,255,255,0.1)';
-                re.style.background = 'rgba(255,255,255,0.03)';
+                retail.classList.add('selected');
+                re.classList.remove('selected');
                 if (inspectionFeeGroup) inspectionFeeGroup.style.display = 'none';
             } else {
-                re.style.border = '2px solid var(--accent)';
-                re.style.background = 'var(--accent-glow)';
-                retail.style.border = '2px solid rgba(255,255,255,0.1)';
-                retail.style.background = 'rgba(255,255,255,0.03)';
+                re.classList.add('selected');
+                retail.classList.remove('selected');
                 if (inspectionFeeGroup) inspectionFeeGroup.style.display = 'block';
             }
         }
