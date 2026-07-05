@@ -204,7 +204,35 @@ async function fetchData() {
         if (welcomeLeads) welcomeLeads.textContent = todayLeads;
         if (welcomeOrders) welcomeOrders.textContent = pendingOrders;
 
-        // Update Table
+        // Update Table Headers dynamically based on bot mode
+        const leadsHead = document.querySelector("#leadsTable thead");
+        if (leadsHead) {
+            if (currentMode === 'real_estate') {
+                leadsHead.innerHTML = `
+                    <tr>
+                        <th>Phone Number</th>
+                        <th>Name</th>
+                        <th>Budget Range</th>
+                        <th>Preferred Location</th>
+                        <th>Last Active</th>
+                        <th>Status</th>
+                    </tr>
+                `;
+            } else {
+                leadsHead.innerHTML = `
+                    <tr>
+                        <th>Phone Number</th>
+                        <th>Name</th>
+                        <th>Total Messages</th>
+                        <th>First Contact</th>
+                        <th>Last Active</th>
+                        <th>Status</th>
+                    </tr>
+                `;
+            }
+        }
+
+        // Update Table Body
         leadsBody.innerHTML = "";
 
         if (contactsData && contactsData.length > 0) {
@@ -218,17 +246,46 @@ async function fetchData() {
                 const firstContact = new Date(contact.first_seen).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 const lastActive = new Date(contact.last_seen).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-                let statusBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Active</span>`;
-                if (msgs < 3) statusBadge = `<span class="badge" style="background: rgba(79, 172, 254, 0.1); color: #4facfe;">New Lead</span>`;
+                if (currentMode === 'real_estate') {
+                    const budgetMin = contact.budget_min || "";
+                    const budgetMax = contact.budget_max || "";
+                    let budgetStr = "<span style='color:#64748b;font-style:italic;'>Unspecified</span>";
+                    if (budgetMin && budgetMax) {
+                        budgetStr = `${budgetMin} - ${budgetMax}`;
+                    } else if (budgetMin || budgetMax) {
+                        budgetStr = budgetMin || budgetMax;
+                    }
+                    const location = contact.preferred_location || "<span style='color:#64748b;font-style:italic;'>Unspecified</span>";
+                    const searchStatus = contact.search_status || "searching";
+                    
+                    let statusBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Searching</span>`;
+                    if (searchStatus === 'viewing') {
+                        statusBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Viewing</span>`;
+                    } else if (searchStatus === 'closed') {
+                        statusBadge = `<span class="badge" style="background: rgba(79, 172, 254, 0.1); color: #4facfe;">Closed</span>`;
+                    }
 
-                tr.innerHTML = `
-                    <td style="font-family: monospace; color:#94a3b8;">${phone}</td>
-                    <td style="font-weight: 500;">${name}</td>
-                    <td>${msgs}</td>
-                    <td style="font-size: 0.85rem; color:#94a3b8;">${firstContact}</td>
-                    <td style="font-size: 0.85rem; color:#94a3b8;">${lastActive}</td>
-                    <td>${statusBadge}</td>
-                `;
+                    tr.innerHTML = `
+                        <td style="font-family: monospace; color:#94a3b8;">${phone}</td>
+                        <td style="font-weight: 500;">${name}</td>
+                        <td style="font-weight: 600; color: var(--primary-light);">${budgetStr}</td>
+                        <td>${location}</td>
+                        <td style="font-size: 0.85rem; color:#94a3b8;">${lastActive}</td>
+                        <td>${statusBadge}</td>
+                    `;
+                } else {
+                    let statusBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Active</span>`;
+                    if (msgs < 3) statusBadge = `<span class="badge" style="background: rgba(79, 172, 254, 0.1); color: #4facfe;">New Lead</span>`;
+
+                    tr.innerHTML = `
+                        <td style="font-family: monospace; color:#94a3b8;">${phone}</td>
+                        <td style="font-weight: 500;">${name}</td>
+                        <td>${msgs}</td>
+                        <td style="font-size: 0.85rem; color:#94a3b8;">${firstContact}</td>
+                        <td style="font-size: 0.85rem; color:#94a3b8;">${lastActive}</td>
+                        <td>${statusBadge}</td>
+                    `;
+                }
                 leadsBody.appendChild(tr);
             });
         } else {

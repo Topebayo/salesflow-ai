@@ -2690,6 +2690,43 @@
                     <input type="text" id="productCategory" placeholder="e.g. Electronics">
                 </div>
             </div>
+            
+            <!-- Real Estate Extra Fields (Only visible in Real Estate Mode) -->
+            <div id="realEstateFields" style="display: none; margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 1rem;">
+                <div class="responsive-grid-2">
+                    <div class="modal-field">
+                        <label>Property Type</label>
+                        <select id="propertyType">
+                            <option value="">Select Type</option>
+                            <option value="Duplex">Duplex</option>
+                            <option value="Apartment">Apartment</option>
+                            <option value="Bungalow">Bungalow</option>
+                            <option value="Mansion">Mansion</option>
+                            <option value="Self-Contain">Self-Contain</option>
+                            <option value="Land">Land</option>
+                        </select>
+                    </div>
+                    <div class="modal-field">
+                        <label>Location</label>
+                        <input type="text" id="propertyLocation" placeholder="e.g. Lekki Phase 1, Lagos">
+                    </div>
+                </div>
+                <div class="responsive-grid-2">
+                    <div class="modal-field">
+                        <label>Bedrooms</label>
+                        <input type="number" id="propertyBedrooms" placeholder="e.g. 4" min="0">
+                    </div>
+                    <div class="modal-field">
+                        <label>Bathrooms</label>
+                        <input type="number" id="propertyBathrooms" placeholder="e.g. 4" min="0">
+                    </div>
+                </div>
+                <div class="modal-field">
+                    <label>Virtual Tour / Video URL</label>
+                    <input type="url" id="propertyVirtualTour" placeholder="e.g. YouTube tour or 3D scan link">
+                </div>
+            </div>
+
             <div class="modal-field">
                 <label>Product Images / Property Photos (Up to 5)</label>
                 <div id="multiImageContainer" class="multi-image-grid" style="margin-bottom: 10px;"></div>
@@ -3736,11 +3773,26 @@
                     ? `<div class="product-card-desc ${needsTruncation ? 'truncated' : ''}" id="${descId}">${descText}</div>${needsTruncation ? `<button class="read-more-btn" onclick="toggleReadMore('${descId}', this)">Read more</button>` : ''}`
                     : '';
 
+                let specsHtml = '';
+                if (currentMode === 'real_estate') {
+                    const specs = [];
+                    if (p.property_type) specs.push(`<span class="spec-badge" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;"><i class="fa-solid fa-building" style="margin-right:3px;"></i>${p.property_type}</span>`);
+                    if (p.bedrooms) specs.push(`<span class="spec-badge" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;"><i class="fa-solid fa-bed" style="margin-right:3px;"></i>${p.bedrooms} Beds</span>`);
+                    if (p.bathrooms) specs.push(`<span class="spec-badge" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;"><i class="fa-solid fa-bath" style="margin-right:3px;"></i>${p.bathrooms} Baths</span>`);
+                    if (p.location) specs.push(`<span class="spec-badge" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.location}"><i class="fa-solid fa-location-dot" style="margin-right:3px;"></i>${p.location}</span>`);
+                    if (p.virtual_tour_url) specs.push(`<a href="${p.virtual_tour_url}" target="_blank" class="spec-badge" style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); color:var(--primary-light); padding:2px 6px; border-radius:4px; text-decoration:none;"><i class="fa-solid fa-video" style="margin-right:3px;"></i>Tour</a>`);
+                    
+                    if (specs.length > 0) {
+                        specsHtml = `<div class="property-specs" style="display:flex; flex-wrap:wrap; gap:6px; margin: 0.5rem 0; font-size:0.72rem; color:#94a3b8;">${specs.join('')}</div>`;
+                    }
+                }
+
                 card.innerHTML = `
                     ${imgHtml}
                     <div class="product-card-body">
                         <div class="product-card-name">${p.name}</div>
                         ${priceStr ? '<div class="product-card-price">' + priceStr + '</div>' : ''}
+                        ${specsHtml}
                         ${catHtml}
                         ${descHtml}
                         <div class="product-card-actions">
@@ -3813,6 +3865,23 @@
             document.getElementById('productImageFile').value = '';
             document.getElementById('productUploadStatus').style.display = 'none';
             document.getElementById('productSaveStatus').style.display = 'none';
+            
+            // Clear Real Estate Fields
+            document.getElementById('propertyType').value = '';
+            document.getElementById('propertyLocation').value = '';
+            document.getElementById('propertyBedrooms').value = '';
+            document.getElementById('propertyBathrooms').value = '';
+            document.getElementById('propertyVirtualTour').value = '';
+            
+            // Toggle visibility based on bot mode
+            if (currentMode === 'real_estate') {
+                document.getElementById('realEstateFields').style.display = 'block';
+                document.getElementById('productModalTitle').textContent = editId ? 'Edit Property Listing' : 'Add Property Listing';
+            } else {
+                document.getElementById('realEstateFields').style.display = 'none';
+                document.getElementById('productModalTitle').textContent = editId ? 'Edit Product' : 'Add Product';
+            }
+            
             productUploadedUrls = [];
 
             if (editId) {
@@ -3825,6 +3894,13 @@
                     document.getElementById('productImageUrl').value = p.image_url || '';
                     document.getElementById('productAvailable').checked = p.is_available !== false;
                     document.getElementById('productAvailLabel').textContent = p.is_available !== false ? 'Available' : 'Sold Out';
+                    
+                    // Populate Real Estate Fields if present
+                    document.getElementById('propertyType').value = p.property_type || '';
+                    document.getElementById('propertyLocation').value = p.location || '';
+                    document.getElementById('propertyBedrooms').value = p.bedrooms || '';
+                    document.getElementById('propertyBathrooms').value = p.bathrooms || '';
+                    document.getElementById('propertyVirtualTour').value = p.virtual_tour_url || '';
                     
                     const rawUrl = p.image_url || '';
                     if (rawUrl.startsWith('[') && rawUrl.endsWith(']')) {
@@ -3963,7 +4039,12 @@
                 price: document.getElementById('productPrice').value ? String(document.getElementById('productPrice').value) : "",
                 category: document.getElementById('productCategory').value.trim() || "",
                 image_url: document.getElementById('productImageUrl').value || "",
-                is_available: document.getElementById('productAvailable').checked
+                is_available: document.getElementById('productAvailable').checked,
+                bedrooms: parseInt(document.getElementById('propertyBedrooms').value) || 0,
+                bathrooms: parseInt(document.getElementById('propertyBathrooms').value) || 0,
+                property_type: document.getElementById('propertyType').value || "",
+                location: document.getElementById('propertyLocation').value.trim() || "",
+                virtual_tour_url: document.getElementById('propertyVirtualTour').value.trim() || ""
             };
             try {
                 let res;
@@ -3971,14 +4052,7 @@
                     res = await fetch(`${API_BASE}/products/${editId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            name: payload.name,
-                            description: payload.description,
-                            price: payload.price,
-                            category: payload.category,
-                            image_url: payload.image_url,
-                            is_available: payload.is_available
-                        })
+                        body: JSON.stringify(payload)
                     });
                 } else {
                     res = await fetch(`${API_BASE}/products`, {
