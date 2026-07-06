@@ -7,6 +7,7 @@ Allow: /index.html$
 Allow: /login.html$
 Allow: /styles.css$
 Allow: /script.js$
+Allow: /favicon.svg
 Disallow: /dashboard.html     # Prevent indexing of the merchant dashboard
 Disallow: /_vercel/           # Prevent indexing of Vercel analytics/insights
 
