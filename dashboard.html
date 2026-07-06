@@ -83,9 +83,14 @@
         // Block rendering until auth finishes
         requireAuth();
         
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
+        async function logout(e) {
+            if (e) e.preventDefault();
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (err) {
+                console.error("Sign out error:", err);
+            }
+            window.location.href = '/';
         }
     </script>
     <style>
@@ -2235,7 +2240,7 @@
             <a href="#" class="nav-item" id="themeToggleBtn" onclick="toggleTheme(); return false;" style="margin-top: auto;">
                 <i class="fa-solid fa-sun"></i> Light Mode
             </a>
-            <a href="#" class="nav-item" style="color: #ef4444;" onclick="logout()">
+            <a href="#" class="nav-item" style="color: #ef4444;" onclick="logout(event)">
                 <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
         </nav>
