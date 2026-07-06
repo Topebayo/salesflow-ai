@@ -1383,7 +1383,19 @@ img {
     .section-title { font-size: 2.2rem; }
 }
 
+.about-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
 @media (max-width: 768px) {
+    .about-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
     .nav-links {
         position: fixed;
         top: 0;
