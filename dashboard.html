@@ -2230,6 +2230,9 @@
             <a href="#" class="nav-item" onclick="showSection('settings', this)">
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
+            <a href="#" class="nav-item" onclick="showSection('settings', this); setTimeout(() => { const el = document.querySelector('.panel:last-child'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 100);">
+                <i class="fa-solid fa-credit-card" style="color: #10b981;"></i> Billing & Plans
+            </a>
             <a href="#" class="nav-item" onclick="showSection('products', this)">
                 <i class="fa-solid fa-tags"></i> Products
             </a>
@@ -2256,9 +2259,12 @@
                     <p class="section-subtitle">Monitor your AI sales agent's real-time performance</p>
                 </div>
             </div>
-            <div class="status-badge" id="apiStatus">
-                <div class="status-dot"></div>
-                Agent Active
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button onclick="openPaystackCheckout('professional', 15000000)" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: Outfit; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(16,185,129,0.3); display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-bolt"></i> Upgrade Plan</button>
+                <div class="status-badge" id="apiStatus">
+                    <div class="status-dot"></div>
+                    Agent Active
+                </div>
             </div>
         </header>
 
@@ -2590,6 +2596,16 @@
                         <div style="color: #10b981; font-size: 1.1rem; margin-top: 4px;">● Active</div>
                     </div>
                 </div>
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <div style="color: #fff; font-size: 1rem; font-weight: 600;">Subscription Tier Upgrade</div>
+                        <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 2px;">Instantly increase your monthly WhatsApp message quota.</div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="openPaystackCheckout('starter', 7500000)" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-family: Outfit; font-weight: 600; font-size: 0.85rem;">Upgrade to Starter (₦75k)</button>
+                        <button onclick="openPaystackCheckout('professional', 15000000)" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-family: Outfit; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">⚡ Upgrade to Pro (₦150k)</button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -2604,7 +2620,10 @@
                     <p class="section-subtitle">Track and manage all customer orders</p>
                 </div>
             </div>
-            <button class="refresh-btn" onclick="loadOrders()"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="refresh-btn" onclick="exportOrdersCSV()" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981;"><i class="fa-solid fa-file-csv"></i> Export Orders</button>
+                <button class="refresh-btn" onclick="loadOrders()"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+            </div>
         </header>
 
         <!-- Revenue Stats -->
@@ -2838,9 +2857,11 @@
             </div>
 
             <!-- Action buttons (Hidden during print) -->
-            <div style="display: flex; gap: 10px; margin-top: 2rem;" class="no-print">
-                <button onclick="printReceipt()" style="flex: 1; background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.95rem;"><i class="fa-solid fa-print"></i> Print Receipt</button>
-                <button onclick="closeReceiptModal()" style="background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem 1.25rem; border-radius: 8px; cursor: pointer; font-size: 0.95rem;">Close</button>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 2rem;" class="no-print">
+                <button onclick="shareReceiptToWhatsApp()" style="background: #25D366; color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.9rem;"><i class="fa-brands fa-whatsapp"></i> Share WhatsApp</button>
+                <button onclick="copyReceiptSummary()" style="background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.15); padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.9rem;"><i class="fa-solid fa-copy"></i> Copy Summary</button>
+                <button onclick="printReceipt()" style="background: linear-gradient(135deg, var(--primary-light), var(--accent)); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.9rem;"><i class="fa-solid fa-print"></i> Save / Print PDF</button>
+                <button onclick="closeReceiptModal()" style="background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">Close</button>
             </div>
         </div>
     </div>
@@ -3282,6 +3303,7 @@
                     .order('created_at', { ascending: false });
                     
                 if (error) throw error;
+                window.allOrdersData = ordersData || [];
 
                 // Update revenue stats
 
@@ -3409,6 +3431,45 @@
 
         function printReceipt() {
             window.print();
+        }
+
+        function shareReceiptToWhatsApp() {
+            const biz = document.getElementById('receiptBizName').textContent || 'SalesFlow Business';
+            const custName = document.getElementById('receiptCustName').textContent || 'Customer';
+            const phone = document.getElementById('receiptCustPhone').textContent || '';
+            const amount = document.getElementById('receiptTotalAmount').textContent || '₦0';
+            const status = document.getElementById('receiptStatusBadge').textContent || 'PAID';
+            const text = `*OFFICIAL DIGITAL RECEIPT*\nFrom: ${biz}\nCustomer: ${custName}\nTotal Amount: ${amount}\nStatus: ${status}\n\nThank you for your business! Powered securely by SalesFlow AI.`;
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function copyReceiptSummary() {
+            const biz = document.getElementById('receiptBizName').textContent || 'SalesFlow Business';
+            const custName = document.getElementById('receiptCustName').textContent || 'Customer';
+            const amount = document.getElementById('receiptTotalAmount').textContent || '₦0';
+            const status = document.getElementById('receiptStatusBadge').textContent || 'PAID';
+            const text = `Receipt from ${biz}: ${custName} paid ${amount} (${status}). Verified via SalesFlow AI.`;
+            navigator.clipboard.writeText(text);
+            alert('✅ Receipt summary copied to clipboard!');
+        }
+
+        function exportOrdersCSV() {
+            if (!window.allOrdersData || window.allOrdersData.length === 0) {
+                alert('No orders to export!');
+                return;
+            }
+            let csv = 'Order ID,Customer Name,Phone Number,Total Amount,Status,Created At\n';
+            window.allOrdersData.forEach(order => {
+                csv += `"${order.id || ''}","${(order.customer_name || 'Unknown').replace(/"/g, '""')}","${order.phone_number || ''}",${order.total_amount || 0},"${order.status || ''}","${order.created_at || ''}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `salesflow_orders_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
         }
 
         async function loadHandoffs() {
@@ -4537,6 +4598,55 @@
                 });
             }
         });
+    </script>
+    <!-- Paystack Inline Checkout Gateway -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        function openPaystackCheckout(planName, amountKobo) {
+            if (typeof PaystackPop === 'undefined') {
+                alert('Paystack gateway loading... Please check your internet connection.');
+                return;
+            }
+            const userEmail = localStorage.getItem('salesflow_user_email') || 'merchant@salesflowai.online';
+            const businessId = localStorage.getItem('salesflow_business_id') || window.businessId || '11111111-2222-3333-4444-555555555555';
+            
+            const handler = PaystackPop.setup({
+                key: 'pk_test_c55d0f24a2c55b5c9088d67d85039d5a645b1ebf',
+                email: userEmail,
+                amount: amountKobo,
+                currency: 'NGN',
+                ref: 'salesflow_sub_' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Plan Type", variable_name: "plan_type", value: planName },
+                        { display_name: "Business ID", variable_name: "business_id", value: businessId }
+                    ]
+                },
+                callback: function(response) {
+                    alert('🎉 Paystack Payment Successful!\nReference: ' + response.reference + '\n\nUpgrading your account tier to ' + planName.toUpperCase() + '...');
+                    const planBadge = document.querySelector('#settingsPlanType') || document.querySelector('.responsive-grid-2 div:nth-child(2) div:nth-child(2)');
+                    if (planBadge) planBadge.textContent = planName.toUpperCase();
+                    
+                    if (window.supabaseClient && businessId) {
+                        window.supabaseClient.from('businesses').update({
+                            plan_type: planName.toLowerCase(),
+                            monthly_message_limit: planName.toLowerCase() === 'professional' ? 2000 : 500,
+                            messages_used_this_month: 0,
+                            subscription_status: 'active'
+                        }).eq('id', businessId).then(() => {
+                            alert('✅ Account successfully upgraded to ' + planName.toUpperCase() + ' Plan!');
+                            location.reload();
+                        });
+                    } else {
+                        location.reload();
+                    }
+                },
+                onClose: function() {
+                    console.log('Paystack checkout window closed.');
+                }
+            });
+            handler.openIframe();
+        }
     </script>
     <script src="dashboard.js"></script>
 </body>

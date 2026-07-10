@@ -300,7 +300,7 @@
                     
                     if (error) throw error;
                     
-                    alert("Password reset link sent! Check your email.");
+                    alert("📧 Password reset link sent from SalesFlow AI (NexisFlow)!\n\nPlease check your email inbox (or spam folder) for the secure verification link.");
                     isSignUp = true; // Flips it so toggle goes back to login
                     toggleAuthMode(); 
                     return;
@@ -338,7 +338,7 @@
                         if (dbError) console.error("Error creating business profile:", dbError);
                     }
                     
-                    alert("Account created successfully! Check your email to verify if required, or simply login.");
+                    alert("🎉 Welcome to SalesFlow AI by NexisFlow!\n\nYour account has been created successfully. If email verification is enabled on your cloud cluster, please check your inbox (from SalesFlow AI / NexisFlow) and click the verification link to activate your 24/7 AI agent.");
                     isSignUp = true;
                     toggleAuthMode(); // Switch back to login
                     

@@ -33,10 +33,24 @@
         async function checkNavbarAuth() {
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
+                const loggedIn = session || localStorage.getItem('supabase.auth.token') || localStorage.getItem('salesflow_user_id');
                 const authLink = document.getElementById('navAuthLink');
-                if (authLink && session) {
-                    authLink.innerText = 'Dashboard';
-                    authLink.href = 'dashboard.html';
+                const ctaLink = document.getElementById('navCtaLink');
+                const heroBtn = document.getElementById('heroStartBtn');
+                
+                if (loggedIn) {
+                    if (authLink) {
+                        authLink.innerText = 'Account';
+                        authLink.href = 'dashboard.html';
+                    }
+                    if (ctaLink) {
+                        ctaLink.innerText = 'Dashboard →';
+                        ctaLink.href = 'dashboard.html';
+                    }
+                    if (heroBtn) {
+                        heroBtn.innerHTML = '<span>Go to Dashboard →</span>';
+                        heroBtn.href = 'dashboard.html';
+                    }
                 }
             } catch (e) {
                 console.error("checkNavbarAuth error:", e);
@@ -60,7 +74,7 @@
                 <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#demo">Demo</a></li>
                 <li><a href="login.html" id="navAuthLink">Login</a></li>
-                <li><a href="#contact" class="nav-cta">Get Started</a></li>
+                <li><a href="#contact" class="nav-cta" id="navCtaLink">Get Started</a></li>
             </ul>
             <button id="themeToggleBtn" onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle Theme">
                 <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -97,7 +111,7 @@
                     Built for Nigerian businesses ready to scale.
                 </p>
                 <div class="hero-actions">
-                    <a href="#contact" class="btn btn-primary">
+                    <a href="#contact" class="btn btn-primary" id="heroStartBtn">
                         <span>Start Free Trial</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
@@ -400,7 +414,7 @@
                         <li><span class="check">✓</span> Basic analytics</li>
                         <li><span class="check">✓</span> Email support</li>
                     </ul>
-                    <a href="#contact" class="btn btn-outline">Get Started</a>
+                    <a href="javascript:void(0)" onclick="openPaystackCheckout('starter', 7500000)" class="btn btn-outline">⚡ Pay & Start</a>
                 </div>
                 <div class="pricing-card popular">
                     <div class="popular-badge">Most Popular</div>
@@ -421,7 +435,7 @@
                         <li><span class="check">✓</span> Priority support</li>
                         <li><span class="check">✓</span> Lead export & CRM integration</li>
                     </ul>
-                    <a href="#contact" class="btn btn-primary">Get Started</a>
+                    <a href="javascript:void(0)" onclick="openPaystackCheckout('professional', 15000000)" class="btn btn-primary">⚡ Pay & Start</a>
                 </div>
                 <div class="pricing-card">
                     <div class="pricing-header">
@@ -532,7 +546,6 @@
                     <div class="footer-col">
                         <h4>Ecosystem & Connect</h4>
                         <a href="https://nexisflow.online" target="_blank">NexisFlow Studio ↗</a>
-                        <a href="https://minireceipts.store" target="_blank">MiniReceipts ↗</a>
                         <a href="#">Twitter / X</a>
                         <a href="#">LinkedIn</a>
                     </div>
@@ -594,6 +607,41 @@
             setTimeout(() => {
                 modal.style.display = 'none';
             }, 300);
+        }
+    </script>
+
+    <!-- Paystack Inline Checkout Gateway -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        function openPaystackCheckout(planName, amountKobo) {
+            if (typeof PaystackPop === 'undefined') {
+                alert('Paystack gateway loading... Please check your internet connection.');
+                return;
+            }
+            const userEmail = localStorage.getItem('salesflow_user_email') || 'merchant@salesflowai.online';
+            const businessId = localStorage.getItem('salesflow_business_id') || 'demo_merchant_001';
+            
+            const handler = PaystackPop.setup({
+                key: 'pk_test_c55d0f24a2c55b5c9088d67d85039d5a645b1ebf',
+                email: userEmail,
+                amount: amountKobo,
+                currency: 'NGN',
+                ref: 'salesflow_sub_' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Plan Type", variable_name: "plan_type", value: planName },
+                        { display_name: "Business ID", variable_name: "business_id", value: businessId }
+                    ]
+                },
+                callback: function(response) {
+                    alert('🎉 Paystack Payment Successful!\nReference: ' + response.reference + '\n\nUpgrading your account tier to ' + planName.toUpperCase() + '...');
+                    window.location.href = 'dashboard.html';
+                },
+                onClose: function() {
+                    console.log('Paystack checkout closed.');
+                }
+            });
+            handler.openIframe();
         }
     </script>
 
