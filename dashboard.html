@@ -3388,6 +3388,7 @@
 
 
         function openReceiptModal(order) {
+            window.currentReceiptOrder = order;
             const bizName = document.getElementById('settingsBusinessName').textContent || 'SalesFlow Business';
             document.getElementById('receiptBizName').textContent = bizName;
             
@@ -3433,15 +3434,50 @@
             window.print();
         }
 
-        function shareReceiptToWhatsApp() {
+        async function shareReceiptToWhatsApp() {
+            const order = window.currentReceiptOrder || {};
             const biz = document.getElementById('receiptBizName').textContent || 'SalesFlow Business';
-            const custName = document.getElementById('receiptCustName').textContent || 'Customer';
+            const custName = document.getElementById('receiptCustName').textContent || 'Valued Customer';
             const phone = document.getElementById('receiptCustPhone').textContent || '';
             const amount = document.getElementById('receiptTotalAmount').textContent || '₦0';
             const status = document.getElementById('receiptStatusBadge').textContent || 'PAID';
-            const text = `*OFFICIAL DIGITAL RECEIPT*\nFrom: ${biz}\nCustomer: ${custName}\nTotal Amount: ${amount}\nStatus: ${status}\n\nThank you for your business! Powered securely by SalesFlow AI.`;
+            const dateStr = document.getElementById('receiptDate').textContent.replace('Date: ', '') || 'Today';
+            
+            const itemsList = [];
+            const listEl = document.getElementById('receiptItemsList');
+            if (listEl) {
+                listEl.querySelectorAll('span').forEach(sp => {
+                    if (sp.textContent.trim()) itemsList.push(`• ${sp.textContent.trim()}`);
+                });
+            }
+            const itemsFormatted = itemsList.length > 0 ? itemsList.join('\n') : `• ${order.items || 'General Order'}`;
+            const orderRef = `#SF-${order.id || Math.floor(1000 + Math.random() * 9000)}`;
+
+            const visualReceipt = `╔══════════════════════════════╗\n   🧾 *OFFICIAL DIGITAL RECEIPT*  \n╚══════════════════════════════╝\n\n🏪 *Merchant:* ${biz}\n👤 *Customer:* ${custName}\n📅 *Date:* ${dateStr}\n🔢 *Order Ref:* ${orderRef}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📦 *ITEMIZED BREAKDOWN:*\n${itemsFormatted}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n💰 *TOTAL AMOUNT:* ${amount}\n✅ *STATUS:* ${status}\n\n🔒 _Securely generated & verified by SalesFlow AI Engine._`;
+
             const cleanPhone = phone.replace(/[^0-9]/g, '');
-            const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+            
+            if (order.id && window.currentBusinessId) {
+                const btn = document.querySelector('#receiptModal button[onclick="shareReceiptToWhatsApp()"]');
+                const origHtml = btn ? btn.innerHTML : '';
+                if (btn) btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Dispatching via AI Bot...`;
+                
+                try {
+                    const res = await fetch(`${API_BASE}/orders/${order.id}/send-whatsapp-receipt?business_id=${window.currentBusinessId}`, {
+                        method: 'POST'
+                    });
+                    if (res.ok) {
+                        alert(`✅ Official Visual Receipt #${order.id} dispatched directly to ${cleanPhone} via your connected WhatsApp AI Bot!`);
+                        if (btn) btn.innerHTML = origHtml;
+                        return;
+                    }
+                } catch(err) {
+                    console.log('Bot direct dispatch fallback to manual wa.me link:', err);
+                }
+                if (btn) btn.innerHTML = origHtml;
+            }
+
+            const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(visualReceipt)}`;
             window.open(url, '_blank');
         }
 
