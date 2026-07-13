@@ -2733,7 +2733,7 @@
             <div class="responsive-grid-2">
                 <div class="modal-field">
                     <label>Price</label>
-                    <input type="number" id="productPrice" placeholder="e.g. 15000" step="any">
+                    <input type="text" id="productPrice" placeholder="e.g. ₦15,000 or Contact for price">
                 </div>
                 <div class="modal-field">
                     <label>Category</label>
@@ -3944,6 +3944,21 @@
             }
         }
 
+        function formatNairaPrice(raw) {
+            if (raw == null || raw === '') return '';
+            let str = String(raw).trim();
+            if (!str || str === 'NaN' || str === '₦NaN') return '';
+            // If the price string contains words or letters like 'Contact for price', return as is without NaN
+            if (/[a-zA-Z]/.test(str.replace(/[Nn₦]/g, ''))) {
+                return str;
+            }
+            // Clean numbers
+            const numClean = str.replace(/[^0-9.]/g, '');
+            const num = parseFloat(numClean);
+            if (isNaN(num)) return str;
+            return '₦' + num.toLocaleString('en-US');
+        }
+
         function renderProducts() {
             const grid = document.getElementById('productsGrid');
             if (!productsData || productsData.length === 0) {
@@ -3985,7 +4000,7 @@
                        </div>`
                     : '<div class="product-card-img-placeholder"><i class="fa-solid fa-box-open" style="opacity:0.2"></i></div>';
                 
-                const priceStr = p.price != null ? '₦' + Number(p.price).toLocaleString() : '';
+                const priceStr = formatNairaPrice(p.price);
                 const catHtml = p.category ? `<div class="product-card-category">${p.category}</div>` : '';
                 const isAvail = p.is_available !== false;
                 const descText = p.description || '';
@@ -4258,7 +4273,7 @@
                 business_id: businessId,
                 name: name,
                 description: document.getElementById('productDesc').value.trim(),
-                price: document.getElementById('productPrice').value ? String(document.getElementById('productPrice').value) : "",
+                price: document.getElementById('productPrice').value ? formatNairaPrice(document.getElementById('productPrice').value) : "",
                 category: document.getElementById('productCategory').value.trim() || "",
                 image_url: document.getElementById('productImageUrl').value || "",
                 is_available: document.getElementById('productAvailable').checked,
