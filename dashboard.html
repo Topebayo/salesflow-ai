@@ -898,13 +898,13 @@
                 position: fixed;
                 top: 0;
                 bottom: 0;
-                left: -280px;
+                left: -320px;
                 width: 260px;
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             }
             .sidebar.open {
-                transform: translateX(280px);
+                transform: translateX(320px);
             }
             .menu-toggle {
                 display: flex;
@@ -2239,10 +2239,7 @@
             <a href="#" class="nav-item" onclick="showSection('whatsapp', this)">
                 <i class="fa-solid fa-link"></i> WhatsApp
             </a>
-            <div style="flex: 1;"></div>
-            <a href="#" class="nav-item" id="themeToggleBtn" onclick="toggleTheme(); return false;" style="margin-top: auto;">
-                <i class="fa-solid fa-sun"></i> Light Mode
-            </a>
+
             <a href="#" class="nav-item" style="color: #ef4444;" onclick="logout(event)">
                 <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
@@ -2568,7 +2565,7 @@
                     <textarea id="autoLearnedKnowledge" rows="6" placeholder="Sync your WhatsApp device and click 'Start Auto-Training' below to generate your knowledge base automatically. You can also edit these logs manually." style="width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: Inter; resize: vertical; box-sizing: border-box;"></textarea>
                 </div>
                 
-                <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                     <button id="btnAutoTrain" onclick="startAutoTraining()" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Start Auto-Training
                     </button>
@@ -3007,31 +3004,12 @@
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
-        // ==================== LIGHT / DARK THEME TOGGLE ====================
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-            const isLight = document.body.classList.contains('light-theme');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            updateThemeButton();
-        }
 
-        function updateThemeButton() {
-            const btn = document.getElementById('themeToggleBtn');
-            if (!btn) return;
-            const isLight = document.body.classList.contains('light-theme');
-            btn.innerHTML = isLight
-                ? '<i class="fa-solid fa-moon"></i> Dark Mode'
-                : '<i class="fa-solid fa-sun"></i> Light Mode';
-        }
 
-        // Apply saved theme on load
+        // Force light theme on load
         (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved !== 'dark') {
-                document.body.classList.add('light-theme');
-            }
-            // Update button text after DOM is ready
-            document.addEventListener('DOMContentLoaded', updateThemeButton);
+            document.body.classList.add('light-theme');
+            localStorage.setItem('theme', 'light');
         })();
 
         const API_BASE = 'https://api.salesaiflow.online';
