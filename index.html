@@ -1,28 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="facebook-domain-verification" content="uxu3ulx64y6d7zw7apaaeweoy090ak" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SalesFlow AI — Intelligent WhatsApp Sales Agents for Your Business | Sales Na Water</title>
-    <meta name="description"
-        content="SalesFlow AI. Automate your WhatsApp sales conversations with AI-powered agents that close deals 24/7. Sales na water! Built for Nigerian businesses that want to scale.">
+    <meta name="description" content="SalesFlow AI. Automate your WhatsApp sales conversations with AI-powered agents that close deals 24/7. Sales na water! Built for Nigerian businesses that want to scale.">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="/_vercel/insights/script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        lightgreen: '#e6f4ea',
+                        brandgreen: '#10b981',
+                        darkgreen: '#064e3b',
+                        coral: '#ff7f50',
+                        offwhite: '#f8f9fa'
+                    }
+                }
+            }
+        }
+    </script>
     <script>
         (function() {
-            if (localStorage.getItem('theme') !== 'dark') {
-                document.documentElement.classList.add('light-theme');
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark');
             }
         })();
     </script>
+    <style>
+        .theme-btn { cursor: pointer; background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 9999px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .dark .theme-btn { border-color: rgba(255,255,255,0.2); color: #fff; }
+        .theme-btn:hover { background: rgba(0,0,0,0.05); }
+        .dark .theme-btn:hover { background: rgba(255,255,255,0.1); }
+    </style>
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -48,7 +69,7 @@
                         ctaLink.href = 'dashboard.html';
                     }
                     if (heroBtn) {
-                        heroBtn.innerHTML = '<span>Go to Dashboard →</span>';
+                        heroBtn.innerText = 'Go to Dashboard →';
                         heroBtn.href = 'dashboard.html';
                     }
                 }
@@ -59,550 +80,337 @@
         document.addEventListener('DOMContentLoaded', checkNavbarAuth);
     </script>
 </head>
+<body class="bg-offwhite dark:bg-gray-950 text-gray-800 dark:text-gray-200 antialiased selection:bg-brandgreen selection:text-white transition-colors duration-300">
 
-<body>
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="#" class="logo">
-                <span class="logo-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light); display: block;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 2 22 9 22 2"></polygon><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5"></path></svg></span>
-                <span class="logo-text">SalesFlow<span class="logo-accent">AI</span></span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#demo">Demo</a></li>
-                <li><a href="login.html" id="navAuthLink">Login</a></li>
-                <li><a href="#contact" class="nav-cta" id="navCtaLink">Get Started</a></li>
-            </ul>
-            <button id="themeToggleBtn" onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle Theme">
-                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            </button>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </nav>
+    <!-- Split Screen Hero -->
+    <main class="relative min-h-screen flex flex-col lg:flex-row overflow-hidden">
+        
+        <!-- Left Side: Soft Off-White -->
+        <div class="w-full lg:w-1/2 bg-offwhite dark:bg-gray-950 flex flex-col justify-between px-6 py-10 sm:px-12 lg:px-24 xl:px-32 z-0">
+            
+            <!-- Navbar -->
+            <nav class="flex items-center justify-between mb-16">
+                <a href="#" class="flex items-center gap-2">
+                    <span class="font-display font-bold text-2xl tracking-tight text-gray-900 dark:text-white">SalesFlow<span class="text-brandgreen">AI</span></span>
+                </a>
+                <div class="flex items-center gap-6">
+                    <div class="hidden sm:flex items-center gap-8 font-medium text-sm text-gray-600 dark:text-gray-400">
+                        <a href="#features" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Features</a>
+                        <a href="#how-it-works" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">How It Works</a>
+                        <a href="#pricing" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Pricing</a>
+                        <a href="#demo" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Demo</a>
+                        <a href="login.html" id="navAuthLink" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Login</a>
+                    </div>
+                    <button onclick="toggleTheme()" class="theme-btn" aria-label="Toggle theme">
+                        <i class="fa-solid fa-sun dark:hidden"></i>
+                        <i class="fa-solid fa-moon hidden dark:inline"></i>
+                    </button>
+                    <a href="#contact" id="navCtaLink" class="hidden sm:inline-flex px-5 py-2.5 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium text-sm hover:opacity-90 transition-opacity">Get Started</a>
+                </div>
+            </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Sales Na Water<br>
-                    Your <span class="gradient-text">AI Sales Agent</span>
-                    That Never Sleeps
+            <!-- Hero Content -->
+            <div class="max-w-xl my-auto">
+                <h1 class="font-display text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-gray-900 dark:text-white mb-6">
+                    Sales Na Water. <br>
+                    <span class="text-brandgreen">Your AI Sales Agent</span> That Never Sleeps.
                 </h1>
-                <p class="hero-subtitle">
-                    Turn your WhatsApp into a 24/7 sales machine. Our AI agents engage leads,
-                    answer questions, handle objections, and close deals — all while you sleep.
-                    Built for Nigerian businesses ready to scale.
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-lg font-sans">
+                    Turn your WhatsApp into a 24/7 revenue machine. Our AI agents engage leads, answer questions, handle objections, and close deals automatically.
                 </p>
-                <div class="hero-actions">
-                    <a href="#contact" class="btn btn-primary" id="heroStartBtn">
-                        <span>Start Free Trial</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <a href="#contact" id="heroStartBtn" class="w-full sm:w-auto text-center px-8 py-4 rounded-xl bg-brandgreen text-white font-semibold text-lg shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 transition-all duration-300">
+                        Start Free Trial
                     </a>
-                    <a href="#demo" class="btn btn-secondary">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <polygon points="5,3 19,12 5,21" />
-                        </svg>
-                        <span>Watch Demo</span>
+                    <a href="#demo" class="w-full sm:w-auto text-center px-8 py-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        Watch Demo
                     </a>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number" data-count="500">0</span><span class="stat-suffix">+</span>
-                        <span class="stat-label">Conversations/Day</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat">
-                        <span class="stat-number" data-count="95">0</span><span class="stat-suffix">%</span>
-                        <span class="stat-label">Response Rate</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat">
-                        <span class="stat-number" data-count="3">0</span><span class="stat-suffix">x</span>
-                        <span class="stat-label">More Conversions</span>
-                    </div>
-                </div>
             </div>
-            <div class="hero-visual">
-                <div class="phone-mockup">
-                    <div class="phone-frame">
-                        <div class="phone-notch"></div>
-                        <div class="phone-screen">
-                            <div class="chat-header">
-                                <div class="chat-avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: white; display: block;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-                                <div class="chat-info">
-                                    <span class="chat-name">SalesFlow AI</span>
-                                    <span class="chat-status">Online</span>
-                                </div>
-                            </div>
-                            <div class="chat-messages" id="chatMessages">
-                                <div class="message incoming" style="animation-delay: 0.5s">
-                                    <p>Hi, I saw your product online. How much is it?</p>
-                                    <span class="msg-time">10:30 AM</span>
-                                </div>
-                                <div class="message outgoing" style="animation-delay: 1.5s">
-                                    <p>Hello! Welcome! I'm so glad you reached out. That's a great choice! Before I
-                                        share pricing, may I know what specifically caught your eye?</p>
-                                    <span class="msg-time">10:30 AM</span>
-                                </div>
-                                <div class="message incoming" style="animation-delay: 2.5s">
-                                    <p>The premium package looks interesting</p>
-                                    <span class="msg-time">10:31 AM</span>
-                                </div>
-                                <div class="message outgoing" style="animation-delay: 3.5s">
-                                    <p>Excellent taste! The Premium Package is our most popular — and for good reason.
-                                        Let me walk you through the amazing value you'll get...</p>
-                                    <span class="msg-time">10:31 AM</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Trusted By -->
-    <section class="trusted-by">
-        <div class="container">
-            <p class="trusted-label">Trusted by forward-thinking businesses across Nigeria</p>
-            <div class="trusted-logos">
-                <div class="logo-item">Lagos Realty</div>
-                <div class="logo-item">QuickMart NG</div>
-                <div class="logo-item">Royal Hotels</div>
-                <div class="logo-item">EduPrime Academy</div>
-                <div class="logo-item">AutoHub Nigeria</div>
+            <!-- Partner Logos -->
+            <div class="mt-20 pt-8 border-t border-gray-200 dark:border-gray-800">
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-6">Trusted Infrastructure Partners</p>
+                <div class="flex items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                    <i class="fa-brands fa-meta text-3xl"></i>
+                    <i class="fa-brands fa-google text-3xl"></i>
+                    <span class="font-bold text-2xl tracking-tight" style="font-family: 'Inter', sans-serif;">paystack</span>
+                    <i class="fa-brands fa-aws text-3xl"></i>
+                </div>
             </div>
+            
         </div>
-    </section>
+
+        <!-- Right Side: LIGHT GREEN Backdrop -->
+        <div class="w-full lg:w-1/2 bg-lightgreen dark:bg-darkgreen relative min-h-[500px] lg:min-h-screen flex items-center justify-center p-8 lg:p-12 xl:p-16">
+            <!-- Decorative geometric shapes -->
+            <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-brandgreen opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+            
+            <!-- Centered Photo Card -->
+            <div class="relative z-10 w-full max-w-xl rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-4 border-white/60 dark:border-white/10 group bg-white dark:bg-gray-900">
+                <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80" alt="WhatsApp Sales Agent" class="w-full h-full object-cover aspect-[4/3] group-hover:scale-105 transition-transform duration-700">
+                
+                <!-- Floating Glass Card on top of image -->
+                <div class="absolute bottom-6 left-6 right-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border border-white/40 dark:border-gray-700/40 p-5 rounded-2xl z-20 flex items-center justify-between shadow-lg">
+                    <div>
+                        <p class="text-gray-900 dark:text-white font-semibold font-display text-base">SalesFlow AI Engine</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs">Closing deals 24/7 on WhatsApp</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-brandgreen flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
 
     <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Features</span>
-                <h2 class="section-title">Everything You Need to <span class="gradient-text">Automate Sales</span></h2>
-                <p class="section-subtitle">Our AI agents are built to sell, not just chat. Every feature is designed to
-                    drive revenue.</p>
+    <section class="py-24 bg-white dark:bg-gray-900" id="features">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-lightgreen text-brandgreen font-semibold text-xs uppercase tracking-wider">Features</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-4 mb-4">Everything You Need to <span class="text-brandgreen">Automate Sales</span></h2>
+                <p class="text-gray-600 dark:text-gray-400 text-base">Our AI agents are built to sell, not just chat. Every feature is designed to drive revenue.</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M10 8h.01M14 8h.01M10 12h4"/></svg></div>
-                    <h3>AI-Powered Conversations</h3>
-                    <p>Powered by Google Gemini, our agents understand context, remember conversations, and respond
-                        naturally — just like your best salesperson.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h8M8 14h6"/></svg></div>
-                    <h3>WhatsApp Native</h3>
-                    <p>Works directly on WhatsApp — the platform your customers already use. No apps to download, no
-                        friction. They just message and get instant responses.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-                    <h3>Sales-Focused AI</h3>
-                    <p>Not a generic chatbot. Our AI is trained in consultative selling, objection handling, and closing
-                        techniques that actually convert leads into customers.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                    <h3>24/7 Availability</h3>
-                    <p>Never miss a lead again. Your AI agent responds instantly at 3 AM, on holidays, and during public
-                        holidays — when your competitors are sleeping.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-                    <h3>Analytics Dashboard</h3>
-                    <p>Track conversations, conversion rates, popular questions, and revenue generated. Know exactly how
-                        your AI agent is performing.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
-                    <h3>Custom Brand Voice</h3>
-                    <p>We train your AI agent to match your brand personality, use your terminology, and represent your
-                        business exactly the way you want.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">How It Works</span>
-                <h2 class="section-title">Get Your AI Agent Running in <span class="gradient-text">3 Simple Steps</span>
-                </h2>
-            </div>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>Tell Us About Your Business</h3>
-                        <p>Share your products, services, pricing, FAQs, and brand voice. We'll use this to train your
-                            custom AI sales agent.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:border-brandgreen transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-lightgreen text-brandgreen flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-brain"></i>
                     </div>
-                    <div class="step-visual">
-                        <div class="mini-form">
-                            <div class="form-line"></div>
-                            <div class="form-line short"></div>
-                            <div class="form-line"></div>
-                            <div class="form-line medium"></div>
-                        </div>
-                    </div>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-3">AI-Powered Conversations</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Powered by Llama 3 & Gemini, our agents understand context, remember past chats, and respond naturally.</p>
                 </div>
-                <div class="step-connector">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 5v14M5 12l7 7 7-7" />
-                    </svg>
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:border-brandgreen transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-lightgreen text-brandgreen flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-3">WhatsApp Native</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Works directly on WhatsApp — the platform your customers already use. Zero friction.</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>We Build & Train Your Agent</h3>
-                        <p>Our team configures the AI, trains it on your business data, and connects it to your WhatsApp
-                            Business number. Usually done within 24 hours.</p>
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:border-brandgreen transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-lightgreen text-brandgreen flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bullseye"></i>
                     </div>
-                    <div class="step-visual">
-                        <div class="training-anim">
-                            <div class="pulse-ring"></div>
-                            <div class="pulse-ring delay-1"></div>
-                            <div class="pulse-ring delay-2"></div>
-                            <span class="brain-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light);"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-                        </div>
-                    </div>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-3">Sales-Focused AI</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Trained in consultative selling, objection handling, and closing techniques that convert leads.</p>
                 </div>
-                <div class="step-connector">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 5v14M5 12l7 7 7-7" />
-                    </svg>
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:border-brandgreen transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-lightgreen text-brandgreen flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-3">24/7 Availability</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Responds instantly at 3 AM, on weekends, and public holidays — when competitors are offline.</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>Watch Sales Roll In</h3>
-                        <p>Your AI agent starts handling conversations immediately. Monitor performance from your
-                            dashboard and watch your conversion rates climb.</p>
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:border-brandgreen transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-lightgreen text-brandgreen flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-chart-pie"></i>
                     </div>
-                    <div class="step-visual">
-                        <div class="chart-anim">
-                            <div class="chart-bar" style="height: 30%"></div>
-                            <div class="chart-bar" style="height: 50%"></div>
-                            <div class="chart-bar" style="height: 45%"></div>
-                            <div class="chart-bar" style="height: 70%"></div>
-                            <div class="chart-bar highlight" style="height: 90%"></div>
-                        </div>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-3">Analytics Dashboard</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Track conversations, conversion rates, popular questions, and sales revenue generated.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:border-brandgreen transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-lightgreen text-brandgreen flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-sliders"></i>
                     </div>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-3">Custom Brand Voice</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">We train your AI agent to match your brand personality, tone, and specific catalog pricing.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section class="demo-section" id="demo">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Live Demo</span>
-                <h2 class="section-title">See <span class="gradient-text">Alex's AI</span> in Action</h2>
-                <p class="section-subtitle">Try a live conversation with our AI sales agent. Type a message below and
-                    see how she responds.</p>
+    <!-- How It Works Section -->
+    <section class="py-24 bg-offwhite dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-lightgreen text-brandgreen font-semibold text-xs uppercase tracking-wider">How It Works</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-4 mb-4">Get Started in <span class="text-brandgreen">3 Simple Steps</span></h2>
             </div>
-            <div class="demo-container">
-                <div class="demo-chat">
-                    <div class="demo-header">
-                        <div class="demo-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: white; display: block;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                        <div class="demo-info">
-                            <span class="demo-name">Alex's AI — AI Sales Agent</span>
-                            <span class="demo-status"><span class="status-dot"></span> Online & Ready</span>
-                        </div>
-                    </div>
-                    <div class="demo-messages" id="demoMessages">
-                        <div class="demo-msg bot">
-                            <p>Hello! I'm Alex's AI, your AI Sales Assistant. Ask me anything about our services — pricing, features, how it works. I'm here to help!</p>
-                        </div>
-                    </div>
-                    <div class="demo-input-area">
-                        <input type="text" id="demoInput" placeholder="Type a message..." autocomplete="off">
-                        <button id="demoSend" class="demo-send-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                            </svg>
-                        </button>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                    <span class="font-display font-black text-4xl text-brandgreen mb-4 block">01</span>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-2">Connect WhatsApp</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Scan a QR code to securely link your WhatsApp number in seconds.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section class="about" id="about" style="padding: 100px 0; background: var(--bg-secondary);">
-        <div class="container">
-            <div class="about-wrapper">
-                <div class="about-content">
-                    <span class="section-tag" style="background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 6px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 1rem;">About Us</span>
-                    <h2 class="section-title" style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem;">Empowering African Businesses to Sell <span class="gradient-text">24/7 on WhatsApp</span></h2>
-                    <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; margin-bottom: 1.5rem;">SalesFlow AI was born out of a simple observation: WhatsApp is the lifeline of commerce in Africa, yet business owners spend hours responding to repetitive questions, qualifying leads, and manually closing sales.</p>
-                    <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; margin-bottom: 2rem;">We build state-of-the-art conversational AI agents tailored for Nigerian merchants and real estate companies. Our bots don't just chat—they qualify, showcase listings/catalogs, and guide leads directly toward inspections and purchases. <em>Sales na water</em> with SalesFlow AI!</p>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div style="background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px;">
-                            <h4 style="color: var(--text-primary); margin-bottom: 8px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-bullseye" style="color: var(--primary);"></i>Our Mission</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">To automate customer interactions so business owners can focus on growth, scaling, and delivery.</p>
-                        </div>
-                        <div style="background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px;">
-                            <h4 style="color: var(--text-primary); margin-bottom: 8px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-lightbulb" style="color: var(--primary);"></i>Our Vision</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">To power the chat infrastructure for the next generation of conversational commerce across the continent.</p>
-                        </div>
-                    </div>
+                <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                    <span class="font-display font-black text-4xl text-brandgreen mb-4 block">02</span>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-2">Upload Catalog</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Add your products, FAQs, and payment details into the dashboard.</p>
                 </div>
-                <div class="about-visual" style="position: relative; display: flex; justify-content: center; align-items: center;">
-                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; backdrop-filter: blur(10px); width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
-                        <i class="fa-solid fa-comments-dollar" style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem; display: block;"></i>
-                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; margin-bottom: 10px; color: var(--text-primary);">Why SalesFlow AI?</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 0;">We marry local business context (including Nigerian slang, popular payment platforms like OPay, and real estate specifics) with advanced generative AI models.</p>
-                    </div>
+                <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                    <span class="font-display font-black text-4xl text-brandgreen mb-4 block">03</span>
+                    <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-2">Autopilot Sales</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Sit back as your AI agent chats, qualifies, and receives payments 24/7.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Pricing</span>
-                <h2 class="section-title">Simple, Transparent <span class="gradient-text">Pricing</span></h2>
-                <p class="section-subtitle">Choose the plan that fits your business. All plans include setup and
-                    training.</p>
+    <section class="py-24 bg-white dark:bg-gray-900" id="pricing">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-lightgreen text-brandgreen font-semibold text-xs uppercase tracking-wider">Pricing</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-4 mb-4">Simple, Transparent <span class="text-brandgreen">Pricing</span></h2>
+                <p class="text-gray-600 dark:text-gray-400 text-base">Choose the tier that fits your sales volume. All plans include onboarding setup.</p>
             </div>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>Starter</h3>
-                        <p class="pricing-desc">Perfect for small businesses just getting started</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Starter -->
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-2">Starter</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs mb-6">Perfect for small merchants getting started</p>
+                        <div class="mb-6">
+                            <span class="text-3xl font-extrabold text-gray-900 dark:text-white">₦75,000</span>
+                            <span class="text-gray-500 text-sm">/month</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Up to 500 conversations/mo</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> 1 WhatsApp Number</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Custom AI persona setup</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Standard analytics</li>
+                        </ul>
                     </div>
-                    <div class="pricing-amount">
-                        <span class="price-currency">₦</span>
-                        <span class="price-value">75,000</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li><span class="check">✓</span> Up to 500 conversations/month</li>
-                        <li><span class="check">✓</span> 1 WhatsApp Business number</li>
-                        <li><span class="check">✓</span> Custom AI training</li>
-                        <li><span class="check">✓</span> Basic analytics</li>
-                        <li><span class="check">✓</span> Email support</li>
-                    </ul>
-                    <a href="javascript:void(0)" onclick="openPaystackCheckout('starter', 7500000)" class="btn btn-outline">⚡ Pay & Start</a>
+                    <button onclick="openPaystackCheckout('starter', 7500000)" class="w-full py-3 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold text-sm hover:opacity-90 transition-opacity">⚡ Pay & Start</button>
                 </div>
-                <div class="pricing-card popular">
-                    <div class="popular-badge">Most Popular</div>
-                    <div class="pricing-header">
-                        <h3>Professional</h3>
-                        <p class="pricing-desc">For growing businesses that need more power</p>
+                <!-- Professional -->
+                <div class="p-8 rounded-2xl bg-white dark:bg-gray-950 border-2 border-brandgreen relative flex flex-col justify-between shadow-xl">
+                    <span class="absolute -top-3.5 right-6 px-3 py-1 rounded-full bg-brandgreen text-white font-semibold text-xs">Most Popular</span>
+                    <div>
+                        <h3 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-2">Professional</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs mb-6">For growing businesses scaling sales</p>
+                        <div class="mb-6">
+                            <span class="text-3xl font-extrabold text-gray-900 dark:text-white">₦150,000</span>
+                            <span class="text-gray-500 text-sm">/month</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Up to 2,000 conversations/mo</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> 1 WhatsApp Number</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Advanced AI training</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Full Analytics Dashboard</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Priority Support</li>
+                        </ul>
                     </div>
-                    <div class="pricing-amount">
-                        <span class="price-currency">₦</span>
-                        <span class="price-value">150,000</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li><span class="check">✓</span> Up to 2,000 conversations/month</li>
-                        <li><span class="check">✓</span> 1 WhatsApp Business number</li>
-                        <li><span class="check">✓</span> Advanced AI training</li>
-                        <li><span class="check">✓</span> Full analytics dashboard</li>
-                        <li><span class="check">✓</span> Priority support</li>
-                        <li><span class="check">✓</span> Lead export & CRM integration</li>
-                    </ul>
-                    <a href="javascript:void(0)" onclick="openPaystackCheckout('professional', 15000000)" class="btn btn-primary">⚡ Pay & Start</a>
+                    <button onclick="openPaystackCheckout('professional', 15000000)" class="w-full py-3 rounded-xl bg-brandgreen text-white font-semibold text-sm hover:bg-brandgreen/90 transition-colors shadow-md">⚡ Pay & Start</button>
                 </div>
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>Enterprise</h3>
-                        <p class="pricing-desc">For large businesses with high volume needs</p>
+                <!-- Enterprise -->
+                <div class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-2">Enterprise</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs mb-6">High volume merchants & real estate</p>
+                        <div class="mb-6">
+                            <span class="text-3xl font-extrabold text-gray-900 dark:text-white">₦350,000</span>
+                            <span class="text-gray-500 text-sm">/month</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Unlimited conversations</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Multiple WhatsApp Numbers</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Dedicated Account Manager</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brandgreen"></i> Custom Integrations</li>
+                        </ul>
                     </div>
-                    <div class="pricing-amount">
-                        <span class="price-currency">₦</span>
-                        <span class="price-value">350,000</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li><span class="check">✓</span> Unlimited conversations</li>
-                        <li><span class="check">✓</span> Multiple WhatsApp numbers</li>
-                        <li><span class="check">✓</span> Custom AI persona</li>
-                        <li><span class="check">✓</span> Advanced analytics + API</li>
-                        <li><span class="check">✓</span> Dedicated account manager</li>
-                        <li><span class="check">✓</span> Custom integrations</li>
-                    </ul>
-                    <a href="#contact" class="btn btn-outline">Contact Us</a>
+                    <a href="#contact" class="w-full py-3 text-center rounded-xl border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white font-semibold text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Contact Us</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA / Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <span class="section-tag">Get Started</span>
-                    <h2 class="section-title">Ready to Transform Your <span class="gradient-text">WhatsApp Sales?</span>
-                    </h2>
-                    <p>Fill out the form and we'll set up your AI sales agent within 24 hours. Start converting more
-                        leads today.</p>
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <span class="contact-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                            <span>Nigeria</span>
-                        </div>
+    <!-- Interactive Demo Section -->
+    <section class="py-24 bg-offwhite dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800" id="demo">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="px-4 py-1.5 rounded-full bg-lightgreen text-brandgreen font-semibold text-xs uppercase tracking-wider">Live Demo</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-4 mb-2">Test the AI Agent Live</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Send a message below to test how our sales agent answers inquiries in real time.</p>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
+                <div class="p-4 bg-lightgreen dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="font-display font-semibold text-sm text-gray-900 dark:text-white">SalesFlow AI Sandbox Demo</span>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" placeholder="Your full name" required>
+                <div id="demoMessages" class="p-6 h-80 overflow-y-auto space-y-4 text-sm font-sans bg-gray-50 dark:bg-gray-950">
+                    <div class="p-3 max-w-xs rounded-xl bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm border border-gray-200 dark:border-gray-700">
+                        Hello! I am SalesFlow AI. Ask me anything about our products, pricing, or delivery in Lagos!
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="you@company.com" required>
+                </div>
+                <div class="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex gap-2">
+                    <input type="text" id="demoInput" placeholder="Ask e.g. 'How much is Jordan 4?' or 'Do you deliver in Abuja?'" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen">
+                    <button id="demoSend" class="px-6 py-3 rounded-xl bg-brandgreen text-white font-semibold text-sm hover:bg-brandgreen/90 transition-colors">Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-24 bg-white dark:bg-gray-900" id="contact">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="px-4 py-1.5 rounded-full bg-lightgreen text-brandgreen font-semibold text-xs uppercase tracking-wider">Contact Us</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-4 mb-2">Ready to Automate Your WhatsApp Sales?</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Fill out the form below and we will onboard your business within 24 hours.</p>
+            </div>
+            
+            <form id="contactForm" class="p-8 rounded-2xl bg-offwhite dark:bg-gray-950 border border-gray-200 dark:border-gray-800 space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase mb-2">Full Name</label>
+                        <input type="text" id="name" required placeholder="Your name" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen">
                     </div>
-                    <div class="form-group">
-                        <label for="phone">WhatsApp Number</label>
-                        <input type="tel" id="phone" placeholder="+234 XXX XXX XXXX" required>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase mb-2">Email Address</label>
+                        <input type="email" id="email" required placeholder="you@company.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen">
                     </div>
-                    <div class="form-group">
-                        <label for="business">Business Type</label>
-                        <select id="business" required>
-                            <option value="">Select your industry</option>
-                            <option value="realestate">Real Estate</option>
-                            <option value="ecommerce">E-Commerce</option>
-                            <option value="hospitality">Hotel & Hospitality</option>
-                            <option value="education">Education</option>
-                            <option value="healthcare">Healthcare</option>
-                            <option value="automotive">Automotive</option>
-                            <option value="other">Other</option>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase mb-2">WhatsApp Number</label>
+                        <input type="tel" id="phone" required placeholder="+234 XXX XXX XXXX" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase mb-2">Industry</label>
+                        <select id="business" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen">
+                            <option value="">Select Industry</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="E-Commerce">E-Commerce & Retail</option>
+                            <option value="Hospitality">Hospitality & Hotels</option>
+                            <option value="Services">Professional Services</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="message">Tell us about your needs</label>
-                        <textarea id="message" rows="3"
-                            placeholder="Briefly describe your business and what you need..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full">
-                        <span>Get Your AI Agent →</span>
-                    </button>
-                </form>
-            </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase mb-2">Message / Requirements</label>
+                    <textarea id="message" rows="4" placeholder="Tell us briefly about your business..." class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 rounded-xl bg-brandgreen text-white font-semibold text-base hover:bg-brandgreen/90 transition-colors shadow-lg">Submit Request →</button>
+            </form>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-top">
-                <div class="footer-brand">
-                    <a href="#" class="logo">
-                        <span class="logo-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light); display: block;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 2 22 9 22 2"></polygon><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5"></path></svg></span>
-                        <span class="logo-text">SalesFlow<span class="logo-accent">AI</span></span>
-                    </a>
-                    <p>Sales na water. Empowering Nigerian businesses with AI-powered WhatsApp sales agents that
-                        convert leads into customers 24/7.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-col">
-                        <h4>Product</h4>
-                        <a href="#features">Features</a>
-                        <a href="#pricing">Pricing</a>
-                        <a href="#demo">Demo</a>
-                        <a href="login.html">Login</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Company</h4>
-                        <a href="#about">About Us</a>
-                        <a href="#contact">Contact</a>
-                        <a href="#" onclick="openPrivacyModal(event)">Privacy Policy</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Ecosystem & Connect</h4>
-                        <a href="https://nexisflow.online" target="_blank">NexisFlow Studio ↗</a>
-                        <a href="#">Twitter / X</a>
-                        <a href="#">LinkedIn</a>
-                    </div>
-                </div>
+    <footer class="py-12 bg-offwhite dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-xl tracking-tight text-gray-900 dark:text-white">SalesFlow<span class="text-brandgreen">AI</span></span>
+                <span class="text-gray-400 text-sm">| Sales na water 🇳🇬</span>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 NEXISFLOW LTD (RC 9659504). All rights reserved. SalesFlow AI is a flagship SaaS automation product of NEXISFLOW LTD. Sales na water | Nigeria</p>
-            </div>
+            <p class="text-xs text-gray-500">&copy; 2026 NEXISFLOW LTD (RC 9659504). All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Privacy Policy Modal -->
-    <div id="privacyModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
-        <div class="modal-content" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
-            <button onclick="closePrivacyModal()" style="position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: var(--transition);"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"><i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Privacy Policy</h3>
-            <div style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); text-align: left; max-height: 45vh; overflow-y: auto; padding-right: 10px;">
-                <p><strong>Effective Date:</strong> July 6, 2026</p>
-                <p>At SalesFlow AI (a flagship SaaS product of NEXISFLOW LTD, RC 9659504), we value your privacy and are committed to protecting the data of our merchants and their WhatsApp customers. This policy details how we handle information.</p>
-                
-                <h4 style="color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">1. Information We Collect</h4>
-                <p>We collect only the essential credentials required to run your WhatsApp AI integrations:</p>
-                <ul>
-                    <li><strong>Account Details:</strong> Business name, email address, and authentication credentials.</li>
-                    <li><strong>Integration Data:</strong> WhatsApp Phone Number IDs, Meta API Access Tokens, and conversation histories needed to generate relevant AI sales replies.</li>
-                </ul>
-                
-                <h4 style="color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">2. How We Use Data</h4>
-                <p>We use collected data solely to:</p>
-                <ul>
-                    <li>Generate accurate chat replies for your customer leads.</li>
-                    <li>Display conversations, contacts, and lead qualification metrics in your merchant dashboard.</li>
-                    <li>Improve AI prompt instruction accuracy for your specific business.</li>
-                </ul>
-                
-                <h4 style="color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">3. Data Security</h4>
-                <p>All credentials and WhatsApp message streams are processed securely. Access keys are stored in encrypted environments, and communication is encrypted in transit using industry-standard TLS protocols.</p>
-                
-                <h4 style="color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">4. Contact Us</h4>
-                <p>If you have questions about this policy or your data rights, please contact us via the form on the landing page.</p>
-            </div>
-            <button onclick="closePrivacyModal()" class="btn" style="margin-top: 30px; width: 100%; padding: 12px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border: none; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer; transition: var(--transition);">I Understand</button>
-        </div>
-    </div>
-
-    <script>
-        function openPrivacyModal(e) {
-            if (e) e.preventDefault();
-            const modal = document.getElementById('privacyModal');
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.style.opacity = '1';
-            }, 10);
-        }
-
-        function closePrivacyModal() {
-            const modal = document.getElementById('privacyModal');
-            modal.style.opacity = '0';
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-    </script>
-
-    <!-- Paystack Inline Checkout Gateway -->
+    <!-- Paystack Gateway & Scripts -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
     <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
         function openPaystackCheckout(planName, amountKobo) {
             if (typeof PaystackPop === 'undefined') {
                 alert('Paystack gateway loading... Please check your internet connection.');
@@ -624,7 +432,10 @@
                     ]
                 },
                 callback: function(response) {
-                    alert('🎉 Paystack Payment Successful!\nReference: ' + response.reference + '\n\nUpgrading your account tier to ' + planName.toUpperCase() + '...');
+                    alert('🎉 Paystack Payment Successful!
+Reference: ' + response.reference + '
+
+Upgrading your account tier to ' + planName.toUpperCase() + '...');
                     window.location.href = 'dashboard.html';
                 },
                 onClose: function() {
@@ -633,8 +444,103 @@
             });
             handler.openIframe();
         }
-    </script>
 
-    <script src="script.js"></script>
+        // Demo Chat Handler
+        const API_BASE = 'https://api.salesaiflow.online';
+        let chatHistory = [];
+        const demoInput = document.getElementById('demoInput');
+        const demoSend = document.getElementById('demoSend');
+        const demoMessages = document.getElementById('demoMessages');
+
+        function addMessage(text, isBot) {
+            const msg = document.createElement('div');
+            msg.className = `p-3 max-w-xs rounded-xl shadow-sm border ${isBot ? 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-700' : 'bg-brandgreen text-white ml-auto border-transparent'}`;
+            msg.innerHTML = `<p>${text}</p>`;
+            demoMessages.appendChild(msg);
+            demoMessages.scrollTop = demoMessages.scrollHeight;
+        }
+
+        async function handleDemoSend() {
+            const text = demoInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, false);
+            demoInput.value = '';
+
+            chatHistory.push({ role: "user", content: text });
+            if (chatHistory.length > 10) chatHistory.shift();
+
+            const typing = document.createElement('div');
+            typing.className = 'p-3 max-w-xs rounded-xl bg-white dark:bg-gray-800 text-gray-500 text-xs italic border border-gray-200 dark:border-gray-700';
+            typing.innerText = 'SalesFlow AI is typing...';
+            typing.id = 'typing';
+            demoMessages.appendChild(typing);
+            demoMessages.scrollTop = demoMessages.scrollHeight;
+
+            try {
+                const response = await fetch(`${API_BASE}/demo/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, history: chatHistory.slice(0, -1) })
+                });
+
+                const typingEl = document.getElementById('typing');
+                if (typingEl) typingEl.remove();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addMessage(data.reply, true);
+                    chatHistory.push({ role: "assistant", content: data.reply });
+                } else {
+                    addMessage("Thanks for your query! We build custom AI sales bots for WhatsApp. Submit the contact form below to get started!", true);
+                }
+            } catch (error) {
+                const typingEl = document.getElementById('typing');
+                if (typingEl) typingEl.remove();
+                addMessage("Thanks for your query! We build custom AI sales bots for WhatsApp. Submit the contact form below to get started!", true);
+            }
+        }
+
+        if (demoSend && demoInput) {
+            demoSend.addEventListener('click', handleDemoSend);
+            demoInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleDemoSend(); });
+        }
+
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerText = 'Sending Request...';
+            btn.disabled = true;
+
+            try {
+                await fetch("https://formsubmit.co/ajax/topebayo113@gmail.com", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify({
+                        Name: document.getElementById('name').value,
+                        Email: document.getElementById('email').value,
+                        Phone: document.getElementById('phone').value,
+                        Industry: document.getElementById('business').value,
+                        Message: document.getElementById('message').value
+                    })
+                });
+
+                btn.innerText = '✓ Request Sent! We will contact you within 24h.';
+                btn.style.backgroundColor = '#10b981';
+                e.target.reset();
+            } catch (error) {
+                btn.innerText = 'Submission failed. Please try again.';
+                btn.style.backgroundColor = '#ef4444';
+            }
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.backgroundColor = '';
+                btn.disabled = false;
+            }, 5000);
+        });
+    </script>
 </body>
 </html>
