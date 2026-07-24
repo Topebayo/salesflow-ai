@@ -4,39 +4,39 @@
 
 /* CSS Variables / Design Tokens */
 :root {
-    /* Colors - Vibrant Green & Deep Charcoal Dark Mode */
-    --primary: #10b981;       /* Vibrant green */
-    --primary-light: #22c55e; /* Bright green */
-    --primary-dark: #059669;  /* Deep pine green */
-    --accent: #121212;        /* Deep black/charcoal */
-    --accent-light: #27272a;  /* Charcoal */
-    --accent-dark: #09090b;   /* Jet black */
+    /* Colors - Clean Corporate Monochrome */
+    --primary: #121212;       /* Jet black */
+    --primary-light: #27272a; /* Dark gray */
+    --primary-dark: #000000;  /* Pure black */
+    --accent: #121212;        
+    --accent-light: #27272a;  
+    --accent-dark: #09090b;   
     
     /* RGB values for transparent overlays */
-    --primary-rgb: 16, 185, 129;
-    --primary-light-rgb: 34, 197, 94;
+    --primary-rgb: 18, 18, 18;
+    --primary-light-rgb: 39, 39, 42;
     --accent-rgb: 18, 18, 18;
     
     /* Background */
-    --bg-primary: #09090b;
-    --bg-secondary: #121212;
-    --bg-tertiary: #1c1917;
-    --bg-card: rgba(18, 18, 18, 0.6);
-    --bg-card-hover: rgba(39, 39, 42, 0.8);
-    --bg-navbar: rgba(9, 9, 11, 0.75);
+    --bg-primary: #fafafa;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f4f4f5;
+    --bg-card: #ffffff;
+    --bg-card-hover: #fafafa;
+    --bg-navbar: rgba(250, 250, 250, 0.95);
     
     /* Text */
-    --text-primary: #f4f3f0;  /* Soft warm off-white */
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
+    --text-primary: #121212;  
+    --text-secondary: #4b5563; 
+    --text-muted: #9ca3af;     
     
     /* Borders */
-    --border: rgba(255, 255, 255, 0.05);
-    --border-hover: rgba(255, 255, 255, 0.1);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.15);
     
     /* Effects */
-    --glow-primary: rgba(16, 185, 129, 0.2);
-    --glow-accent: rgba(18, 18, 18, 0.2);
+    --glow-primary: transparent;
+    --glow-accent: transparent;
     
     /* Typography */
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -256,6 +256,7 @@ img {
 }
 
 .gradient-orb {
+    display: none;
     position: absolute;
     border-radius: 50%;
     filter: blur(100px);
@@ -353,12 +354,11 @@ img {
 }
 
 .gradient-text {
-    color: var(--primary);
+    color: var(--text-primary);
 }
 
 @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%, 100% { opacity: 1; }
 }
 
 .hero-subtitle {
@@ -393,15 +393,16 @@ img {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: var(--primary);
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 20px var(--glow-primary);
+    border: 1px solid var(--primary-dark);
+    box-shadow: none;
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 40px var(--glow-primary);
+    transform: translateY(-2px);
+    background: var(--primary-light);
+    box-shadow: none;
 }
 
 .btn-secondary {
