@@ -17,12 +17,12 @@
     --primary-light-rgb: 39, 39, 42;
     --accent-rgb: 18, 18, 18;
     
-    /* Background */
-    --bg-primary: #fafafa;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #f4f4f5;
+    /* Background (Soft Water/Corporate Blue) */
+    --bg-primary: #f0f7ff;    /* Very soft water blue */
+    --bg-secondary: #ffffff;  /* Pure white */
+    --bg-tertiary: #e0f2fe;   /* Slightly deeper water blue */
     --bg-card: #ffffff;
-    --bg-card-hover: #fafafa;
+    --bg-card-hover: #f8fafc;
     --bg-navbar: rgba(250, 250, 250, 0.95);
     
     /* Text */
@@ -92,6 +92,8 @@ html {
 body {
     font-family: var(--font-main);
     background-color: var(--bg-primary);
+    background-image: radial-gradient(at top right, #e0f2fe 0%, transparent 50%), radial-gradient(at bottom left, #e0f2fe 0%, transparent 50%);
+    background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
