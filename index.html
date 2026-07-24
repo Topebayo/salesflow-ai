@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -31,18 +30,9 @@
             }
         }
     </script>
-    <script>
-        (function() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.classList.add('dark');
-            }
-        })();
-    </script>
     <style>
-        .theme-btn { cursor: pointer; background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 9999px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
-        .dark .theme-btn { border-color: rgba(255,255,255,0.2); color: #fff; }
-        .theme-btn:hover { background: rgba(0,0,0,0.05); }
-        .dark .theme-btn:hover { background: rgba(255,255,255,0.1); }
+        #demoMessages::-webkit-scrollbar { width: 4px; }
+        #demoMessages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -94,18 +84,13 @@
                     <span class="font-display font-bold text-xl sm:text-2xl tracking-tight text-gray-900 dark:text-white">SalesFlow<span class="text-brandgreen">AI</span></span>
                 </a>
                 <div class="flex items-center gap-4 sm:gap-6">
-                    <div class="hidden md:flex items-center gap-6 font-medium text-sm text-gray-600 dark:text-gray-400">
-                        <a href="#features" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Features</a>
-                        <a href="#how-it-works" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">How It Works</a>
-                        <a href="#pricing" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Pricing</a>
-                        <a href="#demo" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Demo</a>
-                        <a href="login.html" id="navAuthLink" class="hover:text-brandgreen dark:hover:text-brandgreen transition-colors">Login</a>
+                    <div class="hidden md:flex items-center gap-6 font-medium text-sm text-gray-600">
+                        <a href="#features" class="hover:text-brandgreen transition-colors">Features</a>
+                        <a href="#how-it-works" class="hover:text-brandgreen transition-colors">How It Works</a>
+                        <a href="#pricing" class="hover:text-brandgreen transition-colors">Pricing</a>
+                        <a href="login.html" id="navAuthLink" class="hover:text-brandgreen transition-colors">Login</a>
                     </div>
-                    <button onclick="toggleTheme()" class="theme-btn" aria-label="Toggle theme">
-                        <i class="fa-solid fa-sun dark:hidden"></i>
-                        <i class="fa-solid fa-moon hidden dark:inline"></i>
-                    </button>
-                    <a href="#contact" id="navCtaLink" class="inline-flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity">Get Started</a>
+                    <a href="#contact" id="navCtaLink" class="inline-flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gray-900 text-white font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity">Get Started</a>
                 </div>
             </nav>
 
@@ -141,24 +126,28 @@
             
         </div>
 
-        <!-- Right Side: LIGHT GREEN Backdrop -->
-        <div class="w-full lg:w-1/2 bg-lightgreen dark:bg-darkgreen relative min-h-[380px] sm:min-h-[480px] lg:min-h-screen flex items-center justify-center p-6 sm:p-8 lg:p-12 xl:p-16">
+        <!-- Right Side: LIGHT GREEN Backdrop with Live Demo Card -->
+        <div class="w-full lg:w-1/2 bg-lightgreen relative min-h-[420px] sm:min-h-[500px] lg:min-h-screen flex items-center justify-center p-4 sm:p-8 lg:p-12 xl:p-16">
             <!-- Decorative geometric shapes -->
-            <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-brandgreen opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+            <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-brandgreen opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
             
-            <!-- Centered Photo Card -->
-            <div class="relative z-10 w-full max-w-xl rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-4 border-white/60 dark:border-white/10 group bg-white dark:bg-gray-900">
-                <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80" alt="WhatsApp Sales Agent" class="w-full h-full object-cover aspect-[4/3] group-hover:scale-105 transition-transform duration-700">
-                
-                <!-- Floating Glass Card on top of image -->
-                <div class="absolute bottom-6 left-6 right-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border border-white/40 dark:border-gray-700/40 p-5 rounded-2xl z-20 flex items-center justify-between shadow-lg">
-                    <div>
-                        <p class="text-gray-900 dark:text-white font-semibold font-display text-base">SalesFlow AI Engine</p>
-                        <p class="text-gray-500 dark:text-gray-400 text-xs">Closing deals 24/7 on WhatsApp</p>
+            <!-- Live Demo Chat Card (Replaces Photo) -->
+            <div class="relative z-10 w-full max-w-md lg:max-w-lg bg-white rounded-2xl border border-gray-200/80 shadow-2xl overflow-hidden">
+                <div class="p-3.5 sm:p-4 bg-white border-b border-gray-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span class="font-display font-semibold text-xs sm:text-sm text-gray-900">SalesFlow AI Sandbox Demo</span>
                     </div>
-                    <div class="w-10 h-10 rounded-full bg-brandgreen flex items-center justify-center text-white shadow-md">
-                        <i class="fa-solid fa-bolt"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-brandgreen uppercase tracking-wider">Live</span>
+                </div>
+                <div id="demoMessages" class="p-4 sm:p-5 h-64 sm:h-72 lg:h-80 overflow-y-auto space-y-3 text-xs sm:text-sm font-sans bg-gray-50/50">
+                    <div class="p-3 max-w-[88%] rounded-2xl rounded-tl-sm bg-white text-gray-800 shadow-sm border border-gray-100 leading-relaxed">
+                        👋 Hello! I am SalesFlow AI. Ask me anything about products, pricing, or Lagos delivery!
                     </div>
+                </div>
+                <div class="p-2.5 sm:p-3 bg-white border-t border-gray-100 flex gap-2">
+                    <input type="text" id="demoInput" placeholder="Try asking: 'How much is Jordan 4?'" class="flex-1 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-xs sm:text-sm focus:outline-none focus:border-brandgreen min-w-0">
+                    <button id="demoSend" class="px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-brandgreen text-white font-semibold text-xs sm:text-sm hover:bg-brandgreen/90 transition-colors whitespace-nowrap shrink-0">Send</button>
                 </div>
             </div>
 
@@ -317,36 +306,7 @@
         </div>
     </section>
 
-    <!-- Interactive Demo Section -->
-    <section class="py-24 bg-offwhite dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800" id="demo">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <span class="px-4 py-1.5 rounded-full bg-lightgreen text-brandgreen font-semibold text-xs uppercase tracking-wider">Live Demo</span>
-                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-4 mb-2">Test the AI Agent Live</h2>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">Send a message below to test how our sales agent answers inquiries in real time.</p>
-            </div>
-            
-            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
-                <div class="p-4 bg-lightgreen dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                        <span class="font-display font-semibold text-sm text-gray-900 dark:text-white">SalesFlow AI Sandbox Demo</span>
-                    </div>
-                </div>
-                <div id="demoMessages" class="p-6 h-80 overflow-y-auto space-y-4 text-sm font-sans bg-gray-50 dark:bg-gray-950">
-                    <div class="p-3 max-w-xs rounded-xl bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm border border-gray-200 dark:border-gray-700">
-                        Hello! I am SalesFlow AI. Ask me anything about our products, pricing, or delivery in Lagos!
-                    </div>
-                </div>
-                <div class="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex gap-2">
-                    <input type="text" id="demoInput" placeholder="Ask e.g. 'How much is Jordan 4?' or 'Do you deliver in Abuja?'" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brandgreen">
-                    <button id="demoSend" class="px-6 py-3 rounded-xl bg-brandgreen text-white font-semibold text-sm hover:bg-brandgreen/90 transition-colors">Send</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
+    <!-- Footer -->
     <section class="py-24 bg-white dark:bg-gray-900" id="contact">
         <div class="max-w-4xl mx-auto px-6">
             <div class="text-center mb-12">
