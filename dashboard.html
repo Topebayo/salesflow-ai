@@ -2230,7 +2230,7 @@
             <a href="#" class="nav-item" onclick="showSection('settings', this)">
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
-            <a href="#" class="nav-item" onclick="showSection('settings', this); setTimeout(() => { const el = document.querySelector('.panel:last-child'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 100);">
+            <a href="#" class="nav-item" id="navBilling" onclick="showSection('settings', this); setTimeout(() => { const el = document.querySelector('.panel:last-child'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 100);">
                 <i class="fa-solid fa-credit-card" style="color: #10b981;"></i> Billing & Plans
             </a>
             <a href="#" class="nav-item" onclick="showSection('products', this)">
@@ -2257,7 +2257,7 @@
                 </div>
             </div>
             <div style="display: flex; gap: 12px; align-items: center;">
-                <button onclick="openPaystackCheckout('professional', 15000000)" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: Outfit; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(16,185,129,0.3); display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-bolt"></i> Upgrade Plan</button>
+                <button onclick="document.getElementById('navBilling').click()" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: Outfit; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(16,185,129,0.3); display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-bolt"></i> Upgrade Plan</button>
                 <div class="status-badge" id="apiStatus">
                     <div class="status-dot"></div>
                     Agent Active
