@@ -41,34 +41,7 @@
         const SUPABASE_URL = 'https://jmifkdmrybjueiipkqru.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptaWZrZG1yeWJqdWVpaXBrcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjI0MDAsImV4cCI6MjA5NDA5ODQwMH0.Ft8iqBoeDzkpaxfnn7p4sxKpdq3uDy0GVW_O1LnQALk';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        async function checkNavbarAuth() {
-            try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                const loggedIn = session || localStorage.getItem('supabase.auth.token') || localStorage.getItem('salesflow_user_id');
-                const authLink = document.getElementById('navAuthLink');
-                const ctaLink = document.getElementById('navCtaLink');
-                const heroBtn = document.getElementById('heroStartBtn');
-                
-                if (loggedIn) {
-                    if (authLink) {
-                        authLink.innerText = 'Account';
-                        authLink.href = 'dashboard.html';
-                    }
-                    if (ctaLink) {
-                        ctaLink.innerText = 'Dashboard →';
-                        ctaLink.href = 'dashboard.html';
-                    }
-                    if (heroBtn) {
-                        heroBtn.innerText = 'Go to Dashboard →';
-                        heroBtn.href = 'dashboard.html';
-                    }
-                }
-            } catch (e) {
-                console.error("checkNavbarAuth error:", e);
-            }
-        }
-        document.addEventListener('DOMContentLoaded', checkNavbarAuth);
+        // Removed dynamic auth checking for navigation as per user preference (always show Dashboard)
     </script>
 </head>
 <body class="bg-offwhite dark:bg-gray-950 text-gray-800 dark:text-gray-200 antialiased selection:bg-brandgreen selection:text-white transition-colors duration-300">
@@ -89,15 +62,15 @@
                         <a href="#features" class="hover:text-brandgreen transition-colors">Features</a>
                         <a href="#how-it-works" class="hover:text-brandgreen transition-colors">How It Works</a>
                         <a href="#pricing" class="hover:text-brandgreen transition-colors">Pricing</a>
-                        <a href="login.html" id="navAuthLink" class="hover:text-brandgreen transition-colors">Login</a>
+                        <a href="login.html" id="navAuthLink" class="hover:text-brandgreen transition-colors">Account</a>
                     </div>
-                    <a href="#contact" id="navCtaLink" class="inline-flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gray-900 text-white font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity">Get Started</a>
+                    <a href="dashboard.html" id="navCtaLink" class="inline-flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gray-900 text-white font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity">Dashboard →</a>
                 </div>
             </nav>
 
             <!-- Hero Content -->
             <div class="max-w-xl my-auto py-6 sm:py-0">
-                <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.15] sm:leading-[1.1] tracking-tight text-gray-900 dark:text-white mb-6">
+                <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.15] sm:leading-[1.1] tracking-tight text-gray-900 dark:text-white mb-6">
                     Sales Na Water. <br>
                     <span class="text-brandgreen">Your AI Sales Agent</span> That Never Sleeps.
                 </h1>
@@ -105,8 +78,8 @@
                     Turn your WhatsApp into a 24/7 revenue machine. Our AI agents engage leads, answer questions, handle objections, and close deals automatically.
                 </p>
                 <div class="flex flex-col sm:flex-row items-center gap-4">
-                    <a href="#contact" id="heroStartBtn" class="w-full sm:w-auto text-center px-8 py-4 rounded-xl bg-brandgreen text-white font-semibold text-base sm:text-lg shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 transition-all duration-300">
-                        Start Free Trial
+                    <a href="dashboard.html" id="heroStartBtn" class="w-full sm:w-auto text-center px-8 py-4 rounded-xl bg-brandgreen text-white font-semibold text-base sm:text-lg shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 transition-all duration-300">
+                        Go to Dashboard →
                     </a>
                     <a href="#demo" class="w-full sm:w-auto text-center px-8 py-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-base sm:text-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         Watch Demo
