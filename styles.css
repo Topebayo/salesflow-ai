@@ -353,12 +353,7 @@ img {
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, var(--primary-light), var(--accent), var(--primary-light));
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradient-shift 5s ease-in-out infinite;
+    color: var(--primary);
 }
 
 @keyframes gradient-shift {
@@ -705,7 +700,7 @@ img {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 24px;
 }
 
@@ -1358,10 +1353,7 @@ img {
     
     .hero-visual { display: none; }
     
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
+
     .pricing-grid {
         grid-template-columns: 1fr;
         max-width: 400px;
@@ -1421,10 +1413,7 @@ img {
     
     .hero-title { font-size: 2.2rem; }
     
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-    
+
     .step-card {
         grid-template-columns: auto 1fr;
         gap: 20px;
